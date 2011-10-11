@@ -11,7 +11,7 @@
 \author{Juan Alberto López Cavallotti}
 %\date{} % delete this line to display the current date
 
-\newcommand{\JDTO}{jDTO Binder}
+\newcommand{\JDTO}{jDTO Binder }
 
 %%% BEGIN DOCUMENT
 \begin{document}
@@ -19,13 +19,27 @@
 \maketitle
 \tableofcontents
 
-\section{Introduction}
+\section{\JDTO  User's Guide}
 \subsection{Motivation}
-This section will describe the motivation behind this framework.
+
+Welcome to \JDTO framework, the main goal of \JDTO is to leverage the boilerplate it takes to use
+the DTO pattern for robust software architectures. Mainly the incorrect use of DTOs have some strong
+disadvantages: 
+
+\begin{itemize}
+\item Multi powerful DTOs and the lost of lazy loading.
+\item High memory footprint (and unnecessary).
+\item Hard to maintain service layer API's.
+\end{itemize}
+
+The discussion of wether the DTO's are useful or not is left out of the picture. It depends specially on 
+the architect and the size of the application. As a personal opinion I like mixed architectures, there are
+moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \subsection{Quick Start}
+
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
-by adding it to your pom.xml under the dependencies section:
+by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
 
 \begin{verbatim}
      <dependencies>
@@ -35,11 +49,137 @@ by adding it to your pom.xml under the dependencies section:
             <artifactId>jdto</artifactId>
             <version>${jdto.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
      ...
      <dependencies>
 \end{verbatim}
 
+This's all what's required in terms of dependencies, so now we can start binding DTOs.
 
+\subsubsection{Bootstrapping the Binder}
+
+
+In order to bind DTO's a binder must be bootstrapped. At the moment two types of binders
+are supported: the core binder, and the spring framework binder\footnote{In order to use the spring framework binder, you should add the spring framework dependency.}.
+
+
+The following snippet shows how to bootstrap the core binder.
+
+\begin{verbatim}
+//init the binder
+DTOBinder binder = DTOBinderFactory.buildBinder();
+\end{verbatim}
+
+
+And how to bootstrap it to used within the spring framework xml configuration file:
+
+
+\begin{verbatim}
+<!-- THE DTO BINDER BEAN --> 
+<bean id="dtobinder" 
+    class="com.juancavallotti.jdto.spring.SpringDTOBinder" />
+\end{verbatim}
+
+Note: The binder instance is of the kind of instances you want to keep as singleton. This is because even though it can analyze a bean on the fly, it caches it's metadata to have a quicker access on the future.
+
+\subsubsection{Basic DTO Binding}
+
+Once we have our binder instance bootstrapped, we can start binding objects. \JDTO uses the "convention over configuration"
+methodology, therefore if you don't add any kind of mapping it will assume default values as a convention. 
+
+At the moment the only way to configure DTO's is by using some of the framework annotations. Alternative ways such as XML configuration may be added on the future to support frameworks which don't take kindly server-side annotations such as GWT.
+
+In the following example there's one property bound by convention and the other one bound by configuration.
+
+\begin{verbatim}
+//bind entities
+MixedEntity entity = new MixedEntity();
+entity.setSomeString("hello world!");
+entity.setSomeInt(15);
+        
+BasicDTO dto = binder.bindFromBusinessObject(BasicDTO.class, entity);
+        
+logger.info(dto.toString());
+\end{verbatim}
+
+The relevant entity and DTO declarations are:
+
+\begin{verbatim}
+ public class MixedEntity {
+    private String someString;
+    private int someInt;
+    private double someDouble;
+    private Date someDate;
+    
+    ... //getters and setters
+}
+
+public class BasicDTO {
+    private String someString;
+    
+    @Source("someInt")
+    private int personAge;
+    
+    ... //getters and setters
+}
+\end{verbatim}
+
+You may want to keep track of the \texttt{MixedEntity} structure for it will be used on the future
+to demonstrate features of \JDTO.
+
+The first attribute \texttt{someString} is bound by convention, and the second one is bound
+by configuration using the \texttt{@Source} annotation.
+
+\subsection{Simple Field Binding}
+
+To bind simple fields you want to use the \texttt{@Source} annotation type.
+This annotation type can take four parameters but only three are commented in this section:
+
+\begin{itemize}
+ \item value: Indicates the source field to read from, can be a property path.
+ \item merger: An implementation of \texttt{SinglePropertyValueMerger} which will take care of the transformation of this item as a single thing.
+ \item mergerParam: A string param which may help the merger to decide how to convert the value.
+\end{itemize}
+
+Users are encouraged to create their own implementations. \textbf{\underline{Important Note}}: The user should see
+the value mergers as singleton, therefore the use of instance variables is discouraged unless you know what you're doing.
+
+
+\subsubsection{List of Built-in field Mergers}
+
+The following is a complete list of the built-in single field mergers and a brief explanation:
+
+\begin{itemize}
+ \item \texttt{DateFormatMerger}: Formats a Date or Calendar instance by applying a format String.
+ \item \texttt{DecimalFormatMerger}: Format any number by applying a format String.
+ \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
+ \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
+\end{itemize}
+
+Here is an example usage of the \texttt{DateFormatMerger}, it will output something like "2011/10/11".
+
+\begin{verbatim}
+@Source(value = "someDate", 
+    merger=DateFormatMerger.class, mergerParam="yyyy/MM/dd")
+private String formattedDate;
+\end{verbatim}
+
+\subsubsection{Transient Values}
+
+There are cases when we want to ignore some of the fields of a DTO. In these cases the user may add the \texttt{@DTOTransient} annotation to the field and it will be ignored by the binder.
+
+\subsection{Binding a List of Business Objects}
+
+\JDTO is capable of binding whole lists of business objects to DTOs. To do this, the binder has an utility method to bind a list of business objects: \texttt{bindFromBusinessObjectList}.
 
 
 \end{document}
