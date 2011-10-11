@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,35 +35,40 @@ class SimpleBinderDelegate implements Serializable {
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
 
-        //for now we only accept one business object.
-        Object bo = businessObjects[0];
-
         T ret = BeanInstanceUtils.createInstance(dtoClass);
 
         HashMap<String, FieldMetadata> propertyMappings = metadata.getFieldMetadata();
+
+        //the map of source beans by name
+        HashMap<String, Object> sourceBeans = new HashMap<String, Object>();
+
         //iterate through the properties and read the values from the business objects.
         for (String targetProperty : propertyMappings.keySet()) {
-            
+
             //get the configuration for the DTO objects.
             FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
-            
+
             //create a buffer for the source values.
             List<Object> sourceValues = new ArrayList<Object>();
-            
+
             //get a list of the properties to read for this DTO
             List<String> sourceProperties = fieldMetadata.getSourceFields();
-            
+
+
+
             //read all the values.
             for (String sourceProperty : sourceProperties) {
-                Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
-                Object finalValue = applyMergeToSingleField(sourceValue, sourceProperty, fieldMetadata);
+                
+                populateSourceBeans(sourceBeans, metadata, fieldMetadata, businessObjects);
+                
+                Object finalValue = applyMergeToSingleField(sourceBeans, sourceProperty, fieldMetadata);
                 sourceValues.add(finalValue);
             }
-            
-            
+
+
             //merge the values into one
             MultiPropertyValueMerger merger = fieldMetadata.getPropertyValueMerger();
-            
+
             Object targetValue = null;
 
             if (fieldMetadata.isCascadePresent()) {
@@ -145,24 +151,24 @@ class SimpleBinderDelegate implements Serializable {
 
         return ret;
     }
-    
+
     private List convertValueToList(Object value) {
-        
+
         if (value instanceof List) {
             return (List) value;
         }
-        
+
         if (value instanceof Collection) {
-            return new ArrayList((Collection)value);
+            return new ArrayList((Collection) value);
         }
-        
+
         if (value.getClass().isArray()) {
-            return Arrays.asList((Object[])value);
+            return Arrays.asList((Object[]) value);
         }
-        
+
         return null;
     }
-    
+
     //***************** REVERSE PROCESS ************************//
     /**
      * This is the modest reverse process. Not thaat useful but stay tuned :)
@@ -172,50 +178,59 @@ class SimpleBinderDelegate implements Serializable {
      * @param dto
      * @return 
      */
-    <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
+     <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
         BeanMetadata metadata = findBeanMetadata(metadataMap, dto.getClass());
-        
+
         T ret = BeanInstanceUtils.createInstance(entityClass);
-        
+
         HashMap<String, FieldMetadata> mappings = metadata.getFieldMetadata();
-        
+
         for (String source : mappings.keySet()) {
-            
+
             FieldMetadata fieldMetadata = mappings.get(source);
-            
+
             //as documented we do not support dissasembling compound properties.
             if (fieldMetadata.getSourceFields().size() != 1) {
                 continue;
             }
-            
+
             //we currently dont support field uncascading
             //but we might on the future.
             if (fieldMetadata.isCascadePresent()) {
                 continue;
             }
-            
+
             //this is the only possibility left.
             String target = fieldMetadata.getSourceFields().get(0);
-            
+
             //no need to unmerge
             //so we're ready to copy!
             Object value = modifier.readPropertyValue(source, dto);
-            
+
             //and set
             modifier.writePropertyValue(target, value, ret);
         }
-        
-        
+
+
         return ret;
     }
-    
-    private Object applyMergeToSingleField(Object sourceValue, String sourceProperty, FieldMetadata fieldMetadata) {
+
+    private Object applyMergeToSingleField(HashMap<String, Object> sourceBeans, String sourceProperty, FieldMetadata fieldMetadata) {
         SinglePropertyValueMerger merger = fieldMetadata.getSourceMergers().get(sourceProperty);
         String mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
+        String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
+        
+        Object bo = sourceBeans.get(sourceBean);
+        
+        if (bo == null) {
+            throw new IllegalStateException("could not find source bean with name: " + sourceBean);
+        }
+        
+        Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
         
         return merger.mergeObjects(sourceValue, mergerExtraParam);
     }
-    
+
     //GETTERS AND SETTERS
     public BeanInspector getInspector() {
         return inspector;
@@ -233,4 +248,22 @@ class SimpleBinderDelegate implements Serializable {
         this.modifier = modifier;
     }
 
+    private void populateSourceBeans(HashMap<String, Object> sourceBeans, BeanMetadata metadata, FieldMetadata fieldMetadata, Object[] bos) {
+        
+        //clear the mappings
+        sourceBeans.clear();
+        
+        //populate, by default the mapping on the field or else, the one on the ben.
+        String[] names = (ArrayUtils.isEmpty(fieldMetadata.getSourceBeanNames())) ? 
+                metadata.getDefaultBeanNames() : fieldMetadata.getSourceBeanNames();
+        
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            Object bean = bos[i];
+            sourceBeans.put(name, bean);
+        }
+        
+        //add the default bean name.
+        sourceBeans.put("", bos[0]);
+    }
 }

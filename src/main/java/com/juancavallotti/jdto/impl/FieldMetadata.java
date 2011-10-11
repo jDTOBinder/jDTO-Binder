@@ -16,8 +16,10 @@ public class FieldMetadata implements Serializable {
     private List<String> sourceFields;
     private HashMap<String, SinglePropertyValueMerger> sourceMergers;
     private HashMap<String, String> sourceMergersParams;
+    private HashMap<String, String> sourceBeans;
     private String mergerParameter;
     private MultiPropertyValueMerger propertyValueMerger;
+    private String[] sourceBeanNames;
     
     /**
      * convenience attribute.
@@ -33,6 +35,7 @@ public class FieldMetadata implements Serializable {
     public FieldMetadata() {
         sourceMergers = new HashMap<String, SinglePropertyValueMerger>();
         sourceMergersParams = new HashMap<String, String>();
+        sourceBeans = new HashMap<String, String>();
     }
 
     public String getMergerParameter() {
@@ -106,10 +109,26 @@ public class FieldMetadata implements Serializable {
     public void setSourceMergersParams(HashMap<String, String> sourceMergersParams) {
         this.sourceMergersParams = sourceMergersParams;
     }
+
+    public String[] getSourceBeanNames() {
+        return sourceBeanNames;
+    }
+
+    public void setSourceBeanNames(String[] sourceBeanNames) {
+        this.sourceBeanNames = sourceBeanNames;
+    }
+
+    public HashMap<String, String> getSourceBeans() {
+        return sourceBeans;
+    }
+
+    public void setSourceBeans(HashMap<String, String> sourceBeans) {
+        this.sourceBeans = sourceBeans;
+    }
     
-    
-    public void addSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String extraParam) {
+    public void addSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String extraParam, String sourceBean) {
         sourceMergers.put(propertyName, merger);
         sourceMergersParams.put(propertyName, extraParam);
+        sourceBeans.put(propertyName, sourceBean);
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 public class BeanMetadata implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    private String[] defaultBeanNames;
     private HashMap<String, FieldMetadata> fieldMetadata;
     
     public BeanMetadata() {
@@ -46,6 +47,14 @@ public class BeanMetadata implements Serializable {
             fieldMetadata.put(beanProperty, ret);
         }
         return ret;
+    }
+
+    public String[] getDefaultBeanNames() {
+        return defaultBeanNames;
+    }
+
+    public void setDefaultBeanNames(String[] defaultBeanNames) {
+        this.defaultBeanNames = defaultBeanNames;
     }
     
 }
