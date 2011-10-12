@@ -1,17 +1,18 @@
 
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{xspace}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 
 % See the ``Article customise'' template for come common customisations
 
-\title{jDTO Binder Guide}
+\title{jDTO Binder 0.2 User's Guide}
 \author{Juan Alberto López Cavallotti}
 %\date{} % delete this line to display the current date
 
-\newcommand{\JDTO}{jDTO Binder }
+\newcommand{\JDTO}{jDTO Binder\xspace}
 
 %%% BEGIN DOCUMENT
 \begin{document}
@@ -19,8 +20,9 @@
 \maketitle
 \tableofcontents
 
-\section{\JDTO  User's Guide}
-\subsection{Motivation}
+\newpage
+\section{Motivation}
+
 
 Welcome to \JDTO framework, the main goal of \JDTO is to leverage the boilerplate it takes to use
 the DTO pattern for robust software architectures. Mainly the incorrect use of DTOs have some strong
@@ -32,11 +34,12 @@ disadvantages:
 \item Hard to maintain service layer API's.
 \end{itemize}
 
-The discussion of wether the DTO's are useful or not is left out of the picture. It depends specially on 
+The discussion of wether the DTOs are useful or not is left out of the picture. It depends specially on 
 the architect and the size of the application. As a personal opinion I like mixed architectures, there are
 moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
-\subsection{Quick Start}
+\section{Quick Start}
+
 
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
 by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
@@ -65,7 +68,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
 
 This's all what's required in terms of dependencies, so now we can start binding DTOs.
 
-\subsubsection{Bootstrapping the Binder}
+\subsection{Bootstrapping the Binder}
 
 
 In order to bind DTO's a binder must be bootstrapped. At the moment two types of binders
@@ -91,7 +94,8 @@ And how to bootstrap it to used within the spring framework xml configuration fi
 
 Note: The binder instance is of the kind of instances you want to keep as singleton. This is because even though it can analyze a bean on the fly, it caches it's metadata to have a quicker access on the future.
 
-\subsubsection{Basic DTO Binding}
+\subsection{Basic DTO Binding}
+
 
 Once we have our binder instance bootstrapped, we can start binding objects. \JDTO uses the "convention over configuration"
 methodology, therefore if you don't add any kind of mapping it will assume default values as a convention. 
@@ -139,7 +143,8 @@ to demonstrate features of \JDTO.
 The first attribute \texttt{someString} is bound by convention, and the second one is bound
 by configuration using the \texttt{@Source} annotation.
 
-\subsection{Simple Field Binding}
+\section{Simple Field Binding}
+
 
 To bind simple fields you want to use the \texttt{@Source} annotation type.
 This annotation type can take four parameters but only three are commented in this section:
@@ -154,7 +159,8 @@ Users are encouraged to create their own implementations. \textbf{\underline{Imp
 the value mergers as singleton, therefore the use of instance variables is discouraged unless you know what you're doing.
 
 
-\subsubsection{List of Built-in field Mergers}
+\subsection{List of Built-in field Mergers}
+
 
 The following is a complete list of the built-in single field mergers and a brief explanation:
 
@@ -173,13 +179,161 @@ Here is an example usage of the \texttt{DateFormatMerger}, it will output someth
 private String formattedDate;
 \end{verbatim}
 
-\subsubsection{Transient Values}
+\subsection{Transient Values}
+
 
 There are cases when we want to ignore some of the fields of a DTO. In these cases the user may add the \texttt{@DTOTransient} annotation to the field and it will be ignored by the binder.
 
-\subsection{Binding a List of Business Objects}
+\section{Binding a List of Business Objects}
+
 
 \JDTO is capable of binding whole lists of business objects to DTOs. To do this, the binder has an utility method to bind a list of business objects: \texttt{bindFromBusinessObjectList}.
+
+In the following sample code you can see how a list of business objects is converted into a List of DTOs. \JDTO has adopted the \texttt{List} collection as favorite type because it has the concept of insertion-oder, so if you had the business objects previously sorted, then the order remains. Also the framework needs a collection that has the possibility to access elements by index, so \texttt{List} was the right choice.
+
+\begin{verbatim}
+LinkedList<SimpleEntity> simpleEntities = new LinkedList<SimpleEntity>();
+simpleEntities.add(new SimpleEntity("simple 1", 12, 45.56, true));
+simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
+
+List<FormatDTO> dtos = 
+    binder.bindFromBusinessObjectList(FormatDTO.class, simpleEntities);
+\end{verbatim}
+
+
+\section{Cascade Binding}
+
+
+\JDTO by default copies values, it does not clone instances so is up to the value merger object to decide wether to clone, format, duplicate, or anything else. 
+There are situations where you build a DTO (for example a Bill DTO) which is related to a single or a list of other DTOs. In this case the deep copy process will fail producing unexpected results. For this cases the framework provides an annotation type \texttt{DTOCascade} to instruct the binder it should build a DTO related instance.
+
+The DTO Cascading feature supports different kinds of source fields:
+
+\begin{itemize}
+\item Single Value: A single association can be used as a source.
+\item Collection: Any type of collection can be used as source.
+\item Array: Any array can be used as a source. 
+\end{itemize}
+
+
+The target DTO type is inferred by convention or configuration. By convention the following rules apply:
+
+
+\begin{itemize}
+ \item If the target field is not a collection or array, then its type is used as the resulting DTO type.
+ \item If the target field is a collection, then the generic type parameter is used as the resulting DTO type. If the generic type parameter is not present, the user will have to provide it as a configuration option.
+ \item If the target field is an array, then the type of the components is used to create a DTO.
+ \item For both collection and array targets, the source must be a collection or the ValueMerger must produce a collection.
+\end{itemize}
+
+The target DTO type can be configured as a parameter of the \texttt{DTOCascade} annotation type. The following example illustrates some usage of DTO Cascading.
+
+\begin{verbatim}
+ public class ComplexArrayDTO {
+    
+    @DTOCascade
+    @Source("sourceList")
+    private FormatDTO[] formatDtos;
+    ... // GETTERS AND SETTERS
+}
+\end{verbatim}
+
+\section{Compound Source Binding}
+
+\JDTO supports composing the value of a target field out of multiple sources. For this purpose it provides the \texttt{@Sources} annotation type and the \texttt{MultiPropertyValueMerger} interface to merge the sources.
+The user can safely rely on the parameters sent to the value merger are in the same order as defined on the \texttt{@Sources} annotation type.
+
+The default value merger for the \texttt{@Sources} annotation type does not merge values, it just returns the first not-null element received or null if none.
+
+\subsection{List of Built-in Multi Property Value Mergers}
+
+\begin{itemize}
+ \item \texttt{FirstObjectPropertyValueMerger}: This is the default merger, it returns the first non-null value.
+ \item \texttt{StringFormatMerger} as described before, this merger uses the String.format method to merge all the provided values into a single formatted string.
+\end{itemize}
+
+
+The following example illustrates how Multi Property Value Mergers can be used for both, single and multiple source configurations:
+
+\begin{verbatim}
+ public class FormatDTO {
+    
+    @Source(value="aDouble", merger=StringFormatMerger.class, 
+        mergerParam="$ %.2f")
+    private String price;
+    
+    @Sources(value={@Source("aDouble"), @Source("anInt")}, 
+            merger=StringFormatMerger.class, mergerParam="%.2f %08d")
+    private String compound;
+    
+    ... // GETTERS AND SETTERS
+}
+\end{verbatim}
+
+
+\section{Multiple Business Objects Sources}
+
+\JDTO supports merging values for multiple source beans. In order to use this feature the framework provides the \texttt{@SourceNames} annotation type. The following example illustrates the basic usage of this feature:
+
+
+\begin{verbatim}
+@SourceNames({"bean1", "bean2", "bean3"})
+public class MultiSourceDTO {
+    
+    @Source(value="aString") // default bean1
+    private String source1;
+    @Source(value="aString", sourceBean="bean2")
+    private String source2;
+    @Source(value="aString", sourceBean="bean3")
+    private String source3;
+    
+    ... // GETTERS AND SETTERS
+}
+\end{verbatim}
+
+The \texttt{@SourceNames} annotation can be used either on class level or in property level. When used at the class level acts as the default setting for all source fields. When used at the property level it overrides the settings for the class.
+
+All of the methods on the binder instance are varargs and the parameters order must match the bean names order for the framework to read the source properties the right way.
+
+Multi source properties also support multi bean sources and all the features it implies, the following example illustrates the power of multi source, multi bean DTO binding:
+
+\begin{verbatim}
+@SourceNames({"bean1", "bean2"})
+public class MultiSourceDTO2 {
+    @Source("aString") //using bean1 as default
+    private String string1;
+    
+    @Sources(value={@Source("anInt"), 
+            @Source(value = "theDate", 
+            sourceBean="bean2", 
+            merger=DateFormatMerger.class, 
+            mergerParam="dd/MM/yyyy")}, 
+        merger=StringFormatMerger.class, mergerParam="%02d %s")
+    private String string2;
+    
+    
+    @Source(value = "theCalendar", sourceBean="bean2", 
+        merger=DateFormatMerger.class, mergerParam="dd/MM/yyyy")
+    private String string3;
+
+    ... //GETTERS AND SETTERS
+}
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \end{document}
