@@ -13,6 +13,8 @@
 
     <!-- to control the versions of the dependencies. -->
     <properties>
+        <cdi.version>1</cdi.version>
+        <cdiapi.version>1.0</cdiapi.version>
         <commonslang.version>2.6</commonslang.version>
         <junit.version>4.9</junit.version>
         <slf4j.version>1.6.2</slf4j.version>
@@ -41,6 +43,19 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    <!-- for the integration with cdi -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${cdi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>${cdiapi.version}</version>
             <scope>provided</scope>
         </dependency>
     <!-- test dependencies -->
