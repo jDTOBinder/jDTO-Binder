@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for injecting via CDI. <br />
  * 
- * In order to use this bean you MUST add the following dependency:
+ * In order to use this bean you MUST add the following dependency 
+ * (typically provided ona CDI-enabled environment):
  * <br />
  * Grroup ID: javax.inject <br />
  * Artifact ID: javax.inject <br />
