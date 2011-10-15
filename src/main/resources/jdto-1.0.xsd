@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://juancavallotti.com/jdto/1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://juancavallotti.com/jdto/1.0">
+    
+    <!-- the root element -->
+    <xsd:element name="dto-mapping">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <!-- can contain a list of zero to many dto elements -->
+                    <xsd:element ref="dto" /> 
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <!-- the dto element -->
+    <xsd:element name="dto">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <!-- can containa a list of source names -->
+                    <xsd:element ref="sourceNames" maxOccurs="1" /> 
+                    <!-- can containa a list of source fields -->
+                    <xsd:element ref="field" />
+                </xsd:choice>
+            </xsd:sequence>
+            <!-- this is the type of the dto required -->
+            <xsd:attribute name="type" type="xsd:string" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+    <!-- the field element -->
+    <xsd:element name="field">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice>
+                    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                        <!-- can contain a list of soruce elements -->
+                        <xsd:element ref="source" />
+                    </xsd:choice>
+                </xsd:choice>
+            </xsd:sequence>
+            <!-- the attributes of the field -->
+            <xsd:attribute name="name" type="xsd:string" />
+            <xsd:attribute name="merger" type="xsd:string" />
+            <xsd:attribute name="mergerParam" type="xsd:string" />
+            <xsd:attribute name="transient" type="xsd:boolean" />
+            <xsd:attribute name="cascade" type="xsd:boolean" />
+        </xsd:complexType>
+    </xsd:element>
+    <!-- the source element -->
+    <xsd:element name="source">
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" />
+            <xsd:attribute name="bean" type="xsd:string" />
+            <xsd:attribute name="merger" type="xsd:string" />
+            <xsd:attribute name="mergerParam" type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+    <!-- the bean name element, for naming source beans -->
+    <xsd:element name="beanName" type="xsd:string" />
+    <!-- the source names element, for multi bean source -->
+    <xsd:element name="sourceNames">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element ref="beanName" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
