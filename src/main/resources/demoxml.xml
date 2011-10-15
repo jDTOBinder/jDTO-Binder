@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto-mapping 
+    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 jdto-1.0.xsd">
+        
+        <dto type="com.juancavallotti.PersonDTO">
+            <sourceNames>
+                <beanName>bean1</beanName>
+                <beanName>bean2</beanName>
+                <beanName>bean3</beanName>
+            </sourceNames>
+            <field name="personAge" cascade="true" >
+                <source name="test" bean="bean1" />
+            </field>
+        </dto>
+</dto-mapping>

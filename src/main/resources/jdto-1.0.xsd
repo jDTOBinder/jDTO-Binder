@@ -5,6 +5,14 @@
     
     <!-- the root element -->
     <xsd:element name="dto-mapping">
+        <xsd:annotation>
+            <xsd:documentation>
+                DTO mapping root element, define here the elements you intend to
+                map as DTOs, note that non-mapped DTOs are also considered and 
+                treated with default values but by declaring them inside the 
+                metadata generated is cached on the binder bootstrap process.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">
@@ -16,6 +24,14 @@
     </xsd:element>
     <!-- the dto element -->
     <xsd:element name="dto">
+        <xsd:annotation>
+            <xsd:documentation>
+                This element defines a DTO on the application. By convention
+                all fields on the DTO will be considered as target fields and
+                if no explicit mapping present, the framework will look for
+                source attributes with the same name.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">
@@ -31,6 +47,12 @@
     </xsd:element>
     <!-- the field element -->
     <xsd:element name="field">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents a field of the DTO element. Any fields not declatred
+                here will take default values.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:choice>
@@ -50,6 +72,11 @@
     </xsd:element>
     <!-- the source element -->
     <xsd:element name="source">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents a source field from a bean.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexType>
             <xsd:attribute name="name" type="xsd:string" />
             <xsd:attribute name="bean" type="xsd:string" />
@@ -61,6 +88,12 @@
     <xsd:element name="beanName" type="xsd:string" />
     <!-- the source names element, for multi bean source -->
     <xsd:element name="sourceNames">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents the list of bean names needed to work with multi-source
+                beans.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">

@@ -1,19 +1,37 @@
 
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{xspace}
 \usepackage{hyperref}
+\usepackage{listings}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 
 % See the ``Article customize'' template for come common customizations
 
-\title{jDTO Binder 0.2 User's Guide}
+\title{jDTO Binder 0.3 User's Guide}
 \author{Juan Alberto López Cavallotti}
 %\date{} % delete this line to display the current date
 
+%customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
+\lstnewenvironment{java}
+{\lstset{
+		language=Java, 
+		basicstyle=\small\sffamily, 
+		frame=line, 
+		commentstyle=\sffamily\textit, 
+		numbers=left, 
+		numberstyle=\ttfamily,
+		aboveskip=5mm,
+		belowskip=5mm,
+		breaklines=true,
+		breakautoindent=true,
+		showstringspaces=false
+	}
+}
+{}
 
 \hypersetup{
 			pdfauthor={Juan Alberto López Cavallotti},
@@ -84,10 +102,11 @@ are supported: the core binder, and the spring framework binder\footnote{In orde
 
 The following snippet shows how to bootstrap the core binder.
 
-\begin{verbatim}
+
+\begin{java}
 //init the binder
 DTOBinder binder = DTOBinderFactory.buildBinder();
-\end{verbatim}
+\end{java}
 
 \subsubsection{Integration with the Spring Framework}
 
@@ -105,20 +124,22 @@ Note: The binder instance is of the kind of instances you want to keep as single
 
 Once configured, the bean could be injected by any regular way, for example:
 
-\begin{verbatim}
+
+\begin{java}
 @Autowired
 private DTOBinder binder;
-\end{verbatim}
+\end{java}
 
 \subsubsection{Integration with CDI}
 
 \JDTO library is configured as a CDI jar and it provides a way to inject the DTO binder instance into your own beans. In the following example is shown the typical case of injection via CDI:
 
-\begin{verbatim}
+
+\begin{java}
 @Inject
 @CdiDtoBinder //this qualifier is required
 private DTOBinder binder;
-\end{verbatim}
+\end{java}
 
 The \texttt{@CdiDtoBinder} qualifier annotation is required because there are multiple implementations of the DTOBinder on the classpath. You could rather inject using \texttt{CdiDtoBinderBean} as the property type, but that would increment the amount of coupling in your system and it would be harder for you to write test cases with mock objects.
 
@@ -132,7 +153,8 @@ At the moment the only way to configure DTO's is by using some of the framework 
 
 In the following example there's one property bound by convention and the other one bound by configuration.
 
-\begin{verbatim}
+
+\begin{java}
 //bind entities
 MixedEntity entity = new MixedEntity();
 entity.setSomeString("hello world!");
@@ -141,11 +163,12 @@ entity.setSomeInt(15);
 BasicDTO dto = binder.bindFromBusinessObject(BasicDTO.class, entity);
         
 logger.info(dto.toString());
-\end{verbatim}
+\end{java}
 
 The relevant entity and DTO declarations are:
 
-\begin{verbatim}
+
+\begin{java}
  public class MixedEntity {
     private String someString;
     private int someInt;
@@ -163,7 +186,7 @@ public class BasicDTO {
     
     ... //getters and setters
 }
-\end{verbatim}
+\end{java}
 
 You may want to keep track of the \texttt{MixedEntity} structure for it will be used on the future
 to demonstrate features of \JDTO.
@@ -201,11 +224,12 @@ The following is a complete list of the built-in single field mergers and a brie
 
 Here is an example usage of the \texttt{DateFormatMerger}, it will output something like "2011/10/11".
 
-\begin{verbatim}
+
+\begin{java}
 @Source(value = "someDate", 
     merger=DateFormatMerger.class, mergerParam="yyyy/MM/dd")
 private String formattedDate;
-\end{verbatim}
+\end{java}
 
 \subsection{Transient Values}
 
@@ -219,14 +243,15 @@ There are cases when we want to ignore some of the fields of a DTO. In these cas
 
 In the following sample code you can see how a list of business objects is converted into a List of DTOs. \JDTO has adopted the \texttt{List} collection as favorite type because it has the concept of insertion-oder, so if you had the business objects previously sorted, then the order remains. Also the framework needs a collection that has the possibility to access elements by index, so \texttt{List} was the right choice.
 
-\begin{verbatim}
-LinkedList<SimpleEntity> simpleEntities = new LinkedList<SimpleEntity>();
+
+\begin{java}
+LinkedList<SimpleEntity> simpleEntities = 
+    new LinkedList<SimpleEntity>();
 simpleEntities.add(new SimpleEntity("simple 1", 12, 45.56, true));
 simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
 
-List<FormatDTO> dtos = 
-    binder.bindFromBusinessObjectList(FormatDTO.class, simpleEntities);
-\end{verbatim}
+List<FormatDTO> dtos = binder.bindFromBusinessObjectList(FormatDTO.class, simpleEntities);
+\end{java}
 
 
 \section{Cascade Binding}
@@ -256,7 +281,8 @@ The target DTO type is inferred by convention or configuration. By convention th
 
 The target DTO type can be configured as a parameter of the \texttt{DTOCascade} annotation type. The following example illustrates some usage of DTO Cascading.
 
-\begin{verbatim}
+
+\begin{java}
  public class ComplexArrayDTO {
     
     @DTOCascade
@@ -264,7 +290,7 @@ The target DTO type can be configured as a parameter of the \texttt{DTOCascade} 
     private FormatDTO[] formatDtos;
     ... // GETTERS AND SETTERS
 }
-\end{verbatim}
+\end{java}
 
 \section{Compound Source Binding}
 
@@ -283,7 +309,8 @@ The default value merger for the \texttt{@Sources} annotation type does not merg
 
 The following example illustrates how Multi Property Value Mergers can be used for both, single and multiple source configurations:
 
-\begin{verbatim}
+
+\begin{java}
  public class FormatDTO {
     
     @Source(value="aDouble", merger=StringFormatMerger.class, 
@@ -296,7 +323,7 @@ The following example illustrates how Multi Property Value Mergers can be used f
     
     ... // GETTERS AND SETTERS
 }
-\end{verbatim}
+\end{java}
 
 
 \section{Multiple Business Objects Sources}
@@ -304,7 +331,8 @@ The following example illustrates how Multi Property Value Mergers can be used f
 \JDTO supports merging values for multiple source beans. In order to use this feature the framework provides the \texttt{@SourceNames} annotation type. The following example illustrates the basic usage of this feature:
 
 
-\begin{verbatim}
+
+\begin{java}
 @SourceNames({"bean1", "bean2", "bean3"})
 public class MultiSourceDTO {
     
@@ -317,7 +345,7 @@ public class MultiSourceDTO {
     
     ... // GETTERS AND SETTERS
 }
-\end{verbatim}
+\end{java}
 
 The \texttt{@SourceNames} annotation can be used either on class level or in property level. When used at the class level acts as the default setting for all source fields. When used at the property level it overrides the settings for the class.
 
@@ -325,7 +353,8 @@ All of the methods on the binder instance are varargs and the parameters order m
 
 Multi source properties also support multi bean sources and all the features it implies, the following example illustrates the power of multi source, multi bean DTO binding:
 
-\begin{verbatim}
+
+\begin{java}
 @SourceNames({"bean1", "bean2"})
 public class MultiSourceDTO2 {
     @Source("aString") //using bean1 as default
@@ -339,14 +368,47 @@ public class MultiSourceDTO2 {
         merger=StringFormatMerger.class, mergerParam="%02d %s")
     private String string2;
     
-    
     @Source(value = "theCalendar", sourceBean="bean2", 
         merger=DateFormatMerger.class, mergerParam="dd/MM/yyyy")
     private String string3;
 
     ... //GETTERS AND SETTERS
 }
-\end{verbatim}
+\end{java}
+
+
+\section{Reverse Binding: DTO To Business Object}
+
+\JDTO is capable of reading DTO data and extract a business object of a given type by using the source fields (in the mapping) as target fields for the business object. Even though no extra configuration is required, this process is not as powerful as the original conversion. There are some hidden tricks here, for example, suppose your original business object had four integer fields that where added by some custom field merger. On the reverse process, how would the merger know how to unmerge these values?. 
+
+By design, \JDTO sacrificed this capability of going back and forth 100\% for the flexibility of populating DTOs in a complex way. If you would like a more robust reverse conversion, you could add binding annotations to the business object and treat is as if it was a DTO helping the merge process by writing your own custom reverse-mergers.
+
+The following snippet demonstrates how to apply reverse binding to extract a business object out of a DTO.
+
+
+
+\begin{java}
+//create a basic entity
+SimpleEntity entity = new SimpleEntity("test", 123, 345.35, true);
+
+//try and build a DTO out of the same entity.
+SimpleEntity dto = 
+    binder.bindFromBusinessObject(SimpleEntity.class, entity);
+
+//change things on the dto
+dto.setAnInt(10);
+dto.setaBoolean(false);
+dto.setaDouble(20.20);
+dto.setaString("Changed!");
+
+entity = binder.extractFromDto(SimpleEntity.class, dto);
+
+
+assertEquals(10, entity.getAnInt());
+assertEquals(false, entity.isaBoolean());
+assertEquals(20.20, entity.getaDouble(), 0.0001);
+assertEquals("Changed!", entity.getaString());
+\end{java}
 
 
 
