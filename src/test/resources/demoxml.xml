@@ -2,17 +2,15 @@
 <dto-mapping 
     xmlns="http://juancavallotti.com/jdto/1.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 jdto-1.0.xsd">
+    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 http://juancavallotti.com/jdto-1.0.xsd">
         
-        <!--  -->
-        <dto type="com.juancavallotti.Class">
+        <dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
             <sourceNames>
                 <beanName>bean1</beanName>
-                <beanName>bean2</beanName>
-                <beanName>bean3</beanName>
             </sourceNames>
-            <field name="personAge" cascade="true" >
-                <source name="test" bean="bean1" />
+            <field>
+                <source></source>
             </field>
         </dto>
+        
 </dto-mapping>
