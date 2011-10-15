@@ -20,7 +20,8 @@ class DTOElement implements Serializable {
     private static final long serialVersionUID = 1L;
     private String type;
     private List<String> beanNames;
-
+    private List<DTOTargetField> targetFields;
+    
     public DTOElement() {
     }
     
@@ -43,5 +44,13 @@ class DTOElement implements Serializable {
         this.beanNames = beanNames;
     }
     
+    @XmlElement(name = "field")
+    public List<DTOTargetField> getTargetFields() {
+        return targetFields;
+    }
+
+    public void setTargetFields(List<DTOTargetField> targetFields) {
+        this.targetFields = targetFields;
+    }
     
 }

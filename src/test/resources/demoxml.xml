@@ -8,8 +8,8 @@
             <sourceNames>
                 <beanName>bean1</beanName>
             </sourceNames>
-            <field>
-                <source></source>
+            <field name="dtoName" cascade="true" transient="true" merger="myMerger" mergerParam="param" cascadeType="type">
+                <source bean="bean1" merger="singleMerger" mergerParam="ddmmyy" name="aString" />
             </field>
         </dto>
         

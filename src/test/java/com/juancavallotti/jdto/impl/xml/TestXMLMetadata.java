@@ -33,6 +33,22 @@ public class TestXMLMetadata {
             for (String stringNames : dTOElement.getBeanNames()) {
                 assertFalse(StringUtils.isEmpty(stringNames));
             }
+            //check for the fields
+            for (DTOTargetField dTOTargetField : dTOElement.getTargetFields()) {
+                assertNotNull(dTOTargetField.getFieldName());
+                assertNotNull(dTOTargetField.getFieldType());
+                assertNotNull(dTOTargetField.getMerger());
+                assertNotNull(dTOTargetField.getMergerParam());
+                assertTrue(dTOTargetField.isCascade());
+                assertTrue(dTOTargetField.isDtoTransient());
+                assertFalse(dTOTargetField.getSources().isEmpty());
+                for (DTOSourceField dTOSourceField : dTOTargetField.getSources()) {
+                    assertNotNull(dTOSourceField.getMerger());
+                    assertNotNull(dTOSourceField.getMergerParam());
+                    assertNotNull(dTOSourceField.getName());
+                    assertNotNull(dTOSourceField.getSourceBean());
+                }
+            }
         }
     }
     

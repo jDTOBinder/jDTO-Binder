@@ -34,9 +34,9 @@
         </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
+                <!-- can containa a list of source names -->
+                <xsd:element ref="sourceNames" maxOccurs="1" /> 
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">
-                    <!-- can containa a list of source names -->
-                    <xsd:element ref="sourceNames" maxOccurs="1" /> 
                     <!-- can containa a list of source fields -->
                     <xsd:element ref="field" />
                 </xsd:choice>
@@ -63,11 +63,20 @@
                 </xsd:choice>
             </xsd:sequence>
             <!-- the attributes of the field -->
-            <xsd:attribute name="name" type="xsd:string" />
+            <xsd:attribute name="name" type="xsd:string" use="required" />
             <xsd:attribute name="merger" type="xsd:string" />
             <xsd:attribute name="mergerParam" type="xsd:string" />
             <xsd:attribute name="transient" type="xsd:boolean" />
             <xsd:attribute name="cascade" type="xsd:boolean" />
+            <xsd:attribute name="cascadeType" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The type (class) of the target collection field. Use
+                        this only if target type cannot be guessed by looking
+                        up the generic type parameters.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
     <!-- the source element -->
