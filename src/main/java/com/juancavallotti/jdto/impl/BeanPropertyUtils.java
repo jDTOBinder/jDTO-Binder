@@ -213,7 +213,7 @@ class BeanPropertyUtils {
      * @param targetClass
      * @return 
      */
-     static Method findSetterMethod(String property, Class targetClass) {
+    static Method findSetterMethod(String property, Class targetClass) {
         //we're not accepting the object class
         if (targetClass == Object.class) {
             return null;
@@ -258,5 +258,114 @@ class BeanPropertyUtils {
         }
 
         return findSetterMethod(property, targetClass.getSuperclass());
+    }
+    
+    /**
+     * Makes discovery of all of the class methods by its getters. <br />
+     * This method will recurse into the inheritance hierarchy and will stop
+     * on the Object class, finding appropiate getter methods.
+     * @param cls the class to ve traversed
+     * @return 
+     */
+    static HashMap<String, Method> discoverPropertiesByGetters(Class cls) {
+        
+        HashMap<String, Method> methods = new HashMap<String, Method>();
+        
+        //declare a buffer
+        Class currentClass = cls;
+        
+        
+        //loop to find 
+        while(currentClass != Object.class) {
+            
+            for (Method method : currentClass.getDeclaredMethods()) {
+                if (isGetterMethod(method)) {
+                    String propertyName = convertToPropertyName(method);
+                    methods.put(propertyName, method);
+                }
+            }
+            
+            currentClass = currentClass.getSuperclass();
+        }
+        
+        return methods;
+        
+    }
+    
+    static boolean isSetterMethod(Method method) {
+        return isAccessorMethod(method, 1, false, "set");
+    }
+    
+    /**
+     * Check if a method is an getter accessor or not. The checks are not 
+     * comprehensive, for example any non-boolean method could start with "is"
+     * and be taken in account, but there should be no problem with that.
+     * @param method
+     * @return 
+     */
+    static boolean isGetterMethod(Method method) {
+        return isAccessorMethod(method, 0, true, "get", "is");
+    }
+    
+    
+    /**
+     * Determine wether a method is accessor or not, by looking at some properties.
+     * @param method
+     * @param maxParams
+     * @param hasReturnType 
+     * @param prefixes
+     * @return 
+     */
+    private static boolean isAccessorMethod(Method method, int maxParams, boolean hasReturnType, String... prefixes) {
+        
+        //first of all, we only want public methods.
+        if (!Modifier.isPublic(method.getModifiers())) {
+            return false;
+        }
+        
+        //check if the method should return something or not.
+        if (hasReturnType) {
+            if (method.getReturnType() == Void.TYPE) {
+                return false;
+            }
+        }
+        
+        //check the method parameter length
+        int parameterAmount = method.getParameterTypes().length;
+        
+        if (parameterAmount > maxParams) {
+            return false;
+        }
+        
+        //check the naming conventions
+        String methodName = method.getName();
+        if (!StringUtils.startsWithAny(methodName, prefixes)) {
+            return false;
+        }
+        
+        //well everything has succeeded, then is an accessor!
+        
+        return true;
+    }
+    
+    /**
+     * Remove the accessor prefix from name and the bean capitalization.
+     * This can be used by getters and setters.
+     * @param method
+     * @return 
+     */
+    private static String convertToPropertyName(Method method) {
+        String methodName = method.getName();
+        
+        if (StringUtils.startsWith(methodName, "set")) {
+            methodName = StringUtils.removeStart(methodName, "set");
+        } else if (StringUtils.startsWith(methodName, "is")) {
+            methodName = StringUtils.removeStart(methodName, "is");
+        } else if (StringUtils.startsWith(methodName, "get")) {
+            methodName = StringUtils.removeStart(methodName, "get");
+        }
+        
+        //remove the first capital
+        return StringUtils.uncapitalize(methodName);
     }
 }

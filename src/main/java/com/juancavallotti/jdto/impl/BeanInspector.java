@@ -30,7 +30,7 @@ class BeanInspector implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(BeanInspector.class);
 
-    protected <T> BeanMetadata inspectBean(Class<T> beanClass) {
+    <T> BeanMetadata inspectBean(Class<T> beanClass) {
 
         logger.debug("Strarting analysis of " + beanClass.toString());
         try {
