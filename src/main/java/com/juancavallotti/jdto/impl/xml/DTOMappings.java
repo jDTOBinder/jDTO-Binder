@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * The DTO Mappgins root element.
  * @author juancavallotti
  */
 @XmlRootElement(name = "dto-mapping")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-class DTOMappings implements Serializable {
+public class DTOMappings implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

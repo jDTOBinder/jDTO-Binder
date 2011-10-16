@@ -9,7 +9,9 @@ import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Utility class for extracting properties by matching fields and getter methods.
+ * Utility class for extracting properties by matching fields and getter methods. <br /> 
+ * THIS IS NOT PART OF JDTO PUBLIC API AND REGULAR USERS SHOULD NOT RELY ON THIS CLASS. <br />
+ * IT IS MADE PUBLIC JUST FOR PACKAGE ORGANISATION REASONS
  * @author juancavallotti
  */
 class BeanPropertyUtils {
@@ -205,7 +207,13 @@ class BeanPropertyUtils {
         return findGetterMethod(property, targetClass.getSuperclass());
     }
 
-    static Method findSetterMethod(String property, Class targetClass) {
+    /**
+     * Find a setter method out of a property name.
+     * @param property
+     * @param targetClass
+     * @return 
+     */
+     static Method findSetterMethod(String property, Class targetClass) {
         //we're not accepting the object class
         if (targetClass == Object.class) {
             return null;

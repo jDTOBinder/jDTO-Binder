@@ -1,5 +1,9 @@
 package com.juancavallotti.jdto.impl.xml;
 
+import com.juancavallotti.jdto.impl.XMLBeanInspector;
+import com.juancavallotti.jdto.dtos.XMLTesterDTO;
+import java.util.HashMap;
+import com.juancavallotti.jdto.impl.BeanMetadata;
 import org.apache.commons.lang.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,6 +54,15 @@ public class TestXMLMetadata {
                 }
             }
         }
+    }
+    
+    @Test
+    public void testBuildMetadata() {
+        HashMap<Class, BeanMetadata> metadata = inspector.buildMetadata();
+        
+        assertNotNull(metadata);
+        
+        assertTrue("resulting metadata should contain info about the configured bean", metadata.containsKey(XMLTesterDTO.class));
     }
     
 }

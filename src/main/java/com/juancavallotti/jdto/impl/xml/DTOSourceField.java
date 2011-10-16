@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * The DTO source field mappings.
  * @author juancavallotti
  */
 @XmlRootElement(name = "source")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-class DTOSourceField implements Serializable {
+public class DTOSourceField implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public DTOSourceField() {

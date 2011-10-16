@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * the DTO target field XML element
  * @author juancavallotti
  */
 @XmlRootElement(name = "field")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-class DTOTargetField implements Serializable{
+public class DTOTargetField implements Serializable{
     private static final long serialVersionUID = 1L;
     
     private String fieldName;

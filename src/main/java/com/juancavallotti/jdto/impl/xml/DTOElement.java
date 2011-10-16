@@ -10,12 +10,12 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
+ * Represents a DTOElement of an XML file.
  * @author juancavallotti
  */
 @XmlRootElement(name = "dto")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-class DTOElement implements Serializable {
+public class DTOElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String type;
