@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * 
  * @author juancavallotti
  */
-public class TestXMLMetadata {
+public class TestXMLParsing {
     
     static XMLBeanInspector inspector;
     

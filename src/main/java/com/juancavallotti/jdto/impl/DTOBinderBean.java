@@ -2,6 +2,7 @@ package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.BeanModifier;
 import com.juancavallotti.jdto.DTOBinder;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +31,19 @@ public class DTOBinderBean implements DTOBinder {
      */
     public DTOBinderBean() {
         implementationDelegate = new SimpleBinderDelegate(this);
-        implementationDelegate.setInspector(new BeanInspector());
+        implementationDelegate.setInspector(new AnnotationBeanInspector());
     }
-
+    
+    /**
+     * Build a binder instance which will read its configuration from an
+     * XML File received as the constructo parameter
+     * @param xmlFile an input stream for the XML config file.
+     */
+    public DTOBinderBean(InputStream xmlFile) {
+        implementationDelegate = new SimpleBinderDelegate(this);
+        implementationDelegate.setInspector(new XMLBeanInspector(xmlFile));
+    }
+    
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
         return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
     }

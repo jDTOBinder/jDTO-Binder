@@ -6,9 +6,8 @@ import com.juancavallotti.jdto.impl.xml.DTOTargetField;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Collections;
+import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
@@ -20,11 +19,71 @@ import org.slf4j.LoggerFactory;
  * XML Configuration reader.
  * @author juancavallotti
  */
-public class XMLBeanInspector implements Serializable {
+public class XMLBeanInspector extends AbstractBeanInspector implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(XMLBeanInspector.class);
-
+    
+    /**
+     * Build the metadata for fields.
+     * @param propertyName
+     * @param readAccessor
+     * @param beanClass
+     * @return 
+     */
+    @Override
+    FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass) {
+        
+        FieldMetadata metadata = buildDefaultFieldMetadata(propertyName);
+        
+        if (!targetFieldMappings.containsKey(beanClass.getName())) {
+            logger.info("No settings for bean: "+beanClass.getName()+" using default values...");
+            return metadata;
+        }
+        
+        //build metadata from an xml file.
+        DTOTargetField config = targetFieldMappings.get(beanClass.getName()).get(propertyName);
+        
+        //if no config, then apply default.
+        if (config == null) {
+            return metadata;
+        }
+        
+        //the most basic check, the transient check.
+        if (config.isDtoTransient()) {
+            metadata.setFieldTransient(true);
+            return metadata;
+        }
+        
+        //try to apply the cascade logic.
+        
+        
+        //read the source propertyies.
+        XMLBeanMetadataReader.readSourceFields(propertyName, config, metadata);
+        
+        
+        return metadata;
+    }
+    
+    /**
+     * Read the source bean names for a given class.
+     * @param beanClass
+     * @return 
+     */
+    @Override
+    String[] readSourceBeanNames(Class beanClass) {
+        String beanClassName = beanClass.getName();
+        
+        //get the xml configuration
+        DTOElement element = configuredDtos.get(beanClassName);
+        
+        if (element == null) {
+            return defaultSourceBeanNames();
+        }
+        
+        return XMLBeanMetadataReader.readDefaultBeanNames(element);
+    }
+    
     /**
      * Get an instance of XMLBeanInspector which reads configuration over a 
      * package resource.
@@ -53,8 +112,10 @@ public class XMLBeanInspector implements Serializable {
         }
     }
     private final DTOMappings mappings;
-    private final BeanInspector inspector;
-
+    //convenience map to access easily class and fields config.
+    private final HashMap<String, DTOElement> configuredDtos;
+    private final HashMap<String, HashMap<String, DTOTargetField>> targetFieldMappings;
+    
     /**
      * Read the XML file which can be read by accessing the input stream taken 
      * as a parameter.
@@ -67,9 +128,28 @@ public class XMLBeanInspector implements Serializable {
         }
 
         mappings = parseXML(xmlStream);
-        inspector = new BeanInspector();
+        configuredDtos = new HashMap<String, DTOElement>();
+        targetFieldMappings = new HashMap<String, HashMap<String,DTOTargetField>>();
+        
+        //populate the target field mappings.
+        for (DTOElement dto : mappings.getElements()) {
+            
+            HashMap<String, DTOTargetField> fieldsMapping = new HashMap<String, DTOTargetField>();
+            
+            for (DTOTargetField targetField : dto.getTargetFields()) {
+                fieldsMapping.put(targetField.getFieldName(), targetField);
+            }
+            
+            configuredDtos.put(dto.getType(), dto);
+            targetFieldMappings.put(dto.getType(), fieldsMapping);
+        }
     }
-
+    
+    /**
+     * Perform the parsing of the XML File
+     * @param xmlStream
+     * @return 
+     */
     private DTOMappings parseXML(InputStream xmlStream) {
         try {
             JAXBContext context = JAXBContext.newInstance(DTOMappings.class);
@@ -94,13 +174,16 @@ public class XMLBeanInspector implements Serializable {
     }
 
     /**
-     * Build the bean metadata based on the information recovered on the xml 
+     * Build the bean metadata based on the information recovered on the xml on
+     * an eager way!
      * parsing process
      * @return 
      */
     public synchronized HashMap<Class, BeanMetadata> buildMetadata() {
         HashMap<Class, BeanMetadata> ret = new HashMap<Class, BeanMetadata>();
-
+        
+        
+        //for each configured dto, build its metadata.
         for (DTOElement dtoElement : mappings.getElements()) {
             Class dtoClass = XMLBeanMetadataReader.safeGetClass(dtoElement.getType());
             if (dtoClass == null) {
@@ -108,63 +191,11 @@ public class XMLBeanInspector implements Serializable {
                 continue;
             }
 
-            BeanMetadata dtoMetadata = buildBeanMetadata(dtoClass, dtoElement);
+            BeanMetadata dtoMetadata = super.inspectBean(dtoClass);
             ret.put(dtoClass, dtoMetadata);
         }
 
         return ret;
     }
 
-    /**
-     * This is where things happen for real!
-     * @param dtoClass
-     * @param dtoElement
-     * @return 
-     */
-    private BeanMetadata buildBeanMetadata(Class dtoClass, DTOElement dtoElement) {
-
-        //use a standard inspector to read the field metadata.
-        //then mapped values will override the default values and everyone is happy.
-        //this may cause strange behavior when the targer bean is annotated.
-
-        BeanMetadata ret = inspector.inspectBean(dtoClass);
-
-        //the most easy part, the bean source names.
-        ret.setDefaultBeanNames(XMLBeanMetadataReader.readDefaultBeanNames(dtoElement));
-
-        //build the map with the field metadata
-        HashMap<String, FieldMetadata> fieldsMetadata = ret.getFieldMetadata();
-
-        ret.setFieldMetadata(fieldsMetadata);
-
-        List<DTOTargetField> configuredFields = (dtoElement.getTargetFields() == null)
-                ? Collections.EMPTY_LIST : dtoElement.getTargetFields();
-
-
-
-
-        //go through the configured fields.
-        for (DTOTargetField dtoTargetField : configuredFields) {
-
-            //the name of the target property is mandatory.
-            String targetFieldName = dtoTargetField.getFieldName();
-
-            //if the field is transient then remove it
-            if (dtoTargetField.isDtoTransient()) {
-                fieldsMetadata.remove(targetFieldName);
-                continue;
-            }
-
-            //build the metadata
-            FieldMetadata fieldMetadata = XMLBeanMetadataReader.readFieldMetadata(dtoClass, dtoTargetField);
-            
-            if (fieldMetadata.isFieldTransient()) {
-                continue;
-            }
-            
-            fieldsMetadata.put(targetFieldName, fieldMetadata);
-        }
-
-        return ret;
-    }
 }

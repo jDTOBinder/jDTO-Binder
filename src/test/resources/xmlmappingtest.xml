@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto-mapping 
+    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 http://juancavallotti.com/jdto-1.0.xsd">
+        
+    <dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
+            
+        <field name="aString" transient="true" />
+        
+        <!-- A field bound to another field. -->
+        <field name="dtoName">
+            <source name="aString" />
+        </field>
+    </dto>
+        
+</dto-mapping>

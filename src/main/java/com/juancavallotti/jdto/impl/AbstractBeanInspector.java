@@ -5,8 +5,10 @@ import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import com.juancavallotti.jdto.mergers.FirstObjectPropertyValueMerger;
 import com.juancavallotti.jdto.mergers.IdentityPropertyValueMerger;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +79,7 @@ abstract class AbstractBeanInspector {
      * @return 
      */
     abstract String[] readSourceBeanNames(Class beanClass);
-    
+
     /**
      * Build the default field metadata for a single field. This can be used either
      * to base your configuration on the standard and override as needed or
@@ -87,7 +89,7 @@ abstract class AbstractBeanInspector {
      */
     FieldMetadata buildDefaultFieldMetadata(String propertyName) {
         FieldMetadata ret = new FieldMetadata();
-        
+
         //set the cascade
         ret.setCascadePresent(defaultCascadePresent());
         ret.setCascadeTargetClass(defaultCascadeTargetClass());
@@ -95,14 +97,16 @@ abstract class AbstractBeanInspector {
         ret.setFieldTransient(defaultFieldTransient());
         ret.setMergerParameter(defaultMergerParameter());
         ret.setPropertyValueMerger(defaultMultiPropertyMerger());
-        ret.setSourceBeanNames(defaultSourceBeanNames());
-        ret.setSourceFields(Arrays.asList(propertyName));
-        ret.setSourceMergers(defaultSinglePropertyMerger(propertyName));
-        ret.setSourceMergersParams(defaultSinglePropertyMergerParams(propertyName));
+        ret.setSourceBeanNames(defaultFieldSourceBeanNames());
+        
+        //the default source fields is the same property name.
+        ret.setSourceFields(defaultSourceFields(propertyName));
+        //set the data associated with the single property value merger
+        ret.setSinglePropertyValueMerger(propertyName, defaultSinglePropertyMerger(), defaultMergerParameter(), defaultSourceBeanName());
         
         //and that is the default field metadata.
         //later on it can be used to customise it on other ways.
-        
+
         return ret;
     }
 
@@ -110,32 +114,32 @@ abstract class AbstractBeanInspector {
      * Encapuslate the default value for cascade present.
      * @return 
      */
-    boolean defaultCascadePresent() {
+    static boolean defaultCascadePresent() {
         return false;
     }
-    
+
     /**
      * as the default cascade is false, then it is safe to set null
      * as the default cascade target class.
      * @return 
      */
-    Class defaultCascadeTargetClass() {
+    static Class defaultCascadeTargetClass() {
         return null;
     }
-    
+
     /**
      * The default cascade type is safe to be null also.
      * @return 
      */
-    CascadeType defaultCascadeType() {
+    static CascadeType defaultCascadeType() {
         return null;
     }
-    
+
     /**
      * the default is all fields are not transient.
      * @return 
      */
-    boolean defaultFieldTransient() {
+    static boolean defaultFieldTransient() {
         return false;
     }
 
@@ -143,58 +147,138 @@ abstract class AbstractBeanInspector {
      * An empty string is the default merger parameter.
      * @return 
      */
-    String defaultMergerParameter() {
+    static String defaultMergerParameter() {
         return "";
     }
     
     /**
+     * The defailt source bean name is ""
+     * @return 
+     */
+    static String defaultSourceBeanName() {
+        return "";
+    }
+
+    /**
      * The default multi property merger is the first value.
      * @return 
      */
-    MultiPropertyValueMerger defaultMultiPropertyMerger() {
+    static MultiPropertyValueMerger defaultMultiPropertyMerger() {
         return InstancePool.getOrCreate(FirstObjectPropertyValueMerger.class);
     }
-
-    
     //to save energy
     private static final String[] defaultSrouceBeanNames = {""};
+    private static final String[] defaultFieldSrouceBeanNames = {};
+    
     
     /**
      * The default source bean names. DO NOT CHANGE!!
      * @return 
      */
-    String[] defaultSourceBeanNames() {
+    static String[] defaultSourceBeanNames() {
         return defaultSrouceBeanNames;
     }
     
+    /**
+     * The default source bean fields should be an empty array.
+     * @return 
+     */
+    static String[] defaultFieldSourceBeanNames() {
+        return defaultFieldSrouceBeanNames;
+    }
+
     /**
      * The default single property merger map.
      * @param propertyName
      * @return 
      */
-    HashMap<String, SinglePropertyValueMerger> defaultSinglePropertyMerger(String propertyName) {
+    static HashMap<String, SinglePropertyValueMerger> defaultSinglePropertyMerger(String propertyName) {
         HashMap<String, SinglePropertyValueMerger> ret = new HashMap<String, SinglePropertyValueMerger>();
         ret.put(propertyName, defaultSinglePropertyMerger());
         return ret;
     }
-    
+
     /**
      * The default single property merger params.
      * @param propertyName
      * @return 
      */
-    HashMap<String, String> defaultSinglePropertyMergerParams(String propertyName) {
+    static HashMap<String, String> defaultSinglePropertyMergerParams(String propertyName) {
         HashMap<String, String> ret = new HashMap<String, String>();
         ret.put(propertyName, "");
         return ret;
     }
-    
+
     /**
      * The default single property merger instance.
      * @return 
      */
-    SinglePropertyValueMerger defaultSinglePropertyMerger() {
+    static SinglePropertyValueMerger defaultSinglePropertyMerger() {
         return InstancePool.getOrCreate(IdentityPropertyValueMerger.class);
     }
-   
+
+    /**
+     * Build the default source fields list.
+     * @param propertyName
+     * @return 
+     */
+    static List<String> defaultSourceFields(String propertyName) {
+        LinkedList<String> ret = new LinkedList<String>();
+        ret.add(propertyName);
+        return ret;
+    }
+
+    /**
+     * Applies the cascade logic in a generic way.
+     * @param cascade
+     * @param accesorType 
+     * @param target 
+     */
+    static void applyCascadeLogic(Class cascadeTargetType, Method readAccesor, FieldMetadata target) {
+
+        CascadeType cascadeType = null;
+        
+        Class accessorType = readAccesor.getReturnType();
+        target.setCascadePresent(true);
+        
+        if (List.class.isAssignableFrom(accessorType)) {
+            cascadeType = CascadeType.COLLECTION;
+        } else if (accessorType.isArray()) {
+            cascadeType = CascadeType.ARRAY;
+        } else {
+            cascadeType = CascadeType.SINGLE;
+        }
+
+        //if the target type is pressent on the annotation, then all is quite simple
+        if (cascadeTargetType != null && cascadeTargetType != Object.class) {
+            target.setCascadeTargetClass(cascadeTargetType);
+        } else { //if not, then inferit by the declaration on the dto.
+            Class targetType = inferTypeOfProperty(accessorType, readAccesor.getGenericReturnType(), cascadeType);
+            target.setCascadeTargetClass(targetType);
+        }
+
+        target.setCascadeType(cascadeType);
+    }
+
+    /**
+     * Try to infer the type of a property, if the property is a collection, then
+     * try to infer generic type. <br />
+     * COPIED FROM BEAN INSPECTOR - //TODO UNIFY THIS INTO JUST ONE METHOD
+     * @param field
+     * @param ter
+     * @param cascadeType
+     * @return 
+     */
+    private static Class inferTypeOfProperty(Class accessorType, Type accesorGenericType, CascadeType cascadeType) {
+
+        switch (cascadeType) {
+            case SINGLE:
+                return accessorType;
+            case ARRAY:
+                return accessorType.getComponentType();
+            case COLLECTION:
+                return BeanPropertyUtils.getGenericTypeParameter(accesorGenericType);
+        }
+        return null;
+    }
 }

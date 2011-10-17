@@ -35,7 +35,7 @@
         <xsd:complexType>
             <xsd:sequence>
                 <!-- can containa a list of source names -->
-                <xsd:element ref="sourceNames" maxOccurs="1" /> 
+                <xsd:element ref="sourceNames" minOccurs="0" maxOccurs="1" /> 
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">
                     <!-- can containa a list of source fields -->
                     <xsd:element ref="field" />
@@ -54,12 +54,10 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexType>
-            <xsd:sequence>
-                <xsd:choice>
-                    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:sequence minOccurs="0">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
                         <!-- can contain a list of soruce elements -->
-                        <xsd:element ref="source" />
-                    </xsd:choice>
+                    <xsd:element ref="source" />
                 </xsd:choice>
             </xsd:sequence>
             <!-- the attributes of the field -->

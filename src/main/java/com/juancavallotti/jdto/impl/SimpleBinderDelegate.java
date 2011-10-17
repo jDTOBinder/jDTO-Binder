@@ -21,12 +21,11 @@ class SimpleBinderDelegate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private final DTOBinderBean binderBean;
-    private BeanInspector inspector;
+    private AbstractBeanInspector inspector;
     private BeanModifier modifier;
     private static final Logger logger = LoggerFactory.getLogger(SimpleBinderDelegate.class);
 
     SimpleBinderDelegate(DTOBinderBean binderBean) {
-        inspector = new BeanInspector();
         this.binderBean = binderBean;
     }
 
@@ -232,11 +231,11 @@ class SimpleBinderDelegate implements Serializable {
     }
 
     //GETTERS AND SETTERS
-    public BeanInspector getInspector() {
+    public AbstractBeanInspector getInspector() {
         return inspector;
     }
 
-    public void setInspector(BeanInspector inspector) {
+    public void setInspector(AbstractBeanInspector inspector) {
         this.inspector = inspector;
     }
 

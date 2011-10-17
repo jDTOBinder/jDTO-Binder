@@ -126,7 +126,7 @@ public class FieldMetadata implements Serializable {
         this.sourceBeans = sourceBeans;
     }
     
-    public void addSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String extraParam, String sourceBean) {
+    public void setSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String extraParam, String sourceBean) {
         sourceMergers.put(propertyName, merger);
         sourceMergersParams.put(propertyName, extraParam);
         sourceBeans.put(propertyName, sourceBean);
