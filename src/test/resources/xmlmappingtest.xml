@@ -2,8 +2,10 @@
 <dto-mapping 
     xmlns="http://juancavallotti.com/jdto/1.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 http://juancavallotti.com/jdto-1.0.xsd">
-        
+    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 
+        http://juancavallotti.com/jdto-1.0.xsd">
+    
+    <!-- to test simple binding -->
     <dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
             
         <field name="aString" transient="true" />
@@ -13,5 +15,57 @@
             <source name="aString" />
         </field>
     </dto>
+    <!-- to test cascade logic -->
+    <dto type="com.juancavallotti.jdto.dtos.ComplexDTO">
+        <field name="cascadedField" cascade="true">
+            <source name="association" />
+        </field>
+        <field name="stringField">
+            <source name="name" />
+        </field>
+    </dto>
+    
+    <!-- test the association feature -->
+    <dto type="com.juancavallotti.jdto.dtos.SimpleAssociationDTO">
+        <field name="firstString">
+            <source name="myString" />
+        </field>
+        <field name="secondString">
+            <source name="related.aString" />
+        </field>
+    </dto>
         
+    <!-- test the compound merger feature -->
+    <dto type="com.juancavallotti.jdto.dtos.FormatDTO">
+        <!-- single field merger test -->
+        <field  name="price">
+            <source name="aDouble" 
+            merger="com.juancavallotti.jdto.mergers.StringFormatMerger"
+            mergerParam="$ %.2f" />
+        </field>
+        <!-- multiple field merger test -->
+        <field name="compound" mergerParam="%.2f %08d" 
+        merger="com.juancavallotti.jdto.mergers.StringFormatMerger">
+            <source name="aDouble" />
+            <source name="anInt" /> 
+        </field>
+    </dto>
+    
+    <!-- test the multi source feature -->
+    <dto type="com.juancavallotti.jdto.dtos.MultiSourceDTO">
+        <sourceNames>
+            <beanName>bean1</beanName>
+            <beanName>bean2</beanName>
+            <beanName>bean3</beanName>
+        </sourceNames>
+        <field name="source1">
+            <source name="aString" bean="bean1" />
+        </field>
+        <field name="source2">
+            <source name="aString" bean="bean2" />
+        </field>
+        <field name="source3">
+            <source name="aString" bean="bean3" />
+        </field>
+    </dto>
 </dto-mapping>

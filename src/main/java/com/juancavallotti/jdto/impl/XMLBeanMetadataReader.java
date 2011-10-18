@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 
 /**
  * Contains static methods to help reading the metadata of xml configuration objects.
@@ -269,11 +268,26 @@ class XMLBeanMetadataReader {
             String sourceBeanName = StringUtils.isEmpty(sourceField.getSourceBean())
                     ? XMLBeanInspector.defaultSourceBeanName()
                     : sourceField.getSourceBean();
-            
+
             //finally set the metadata
             metadata.getSourceFields().add(sourceFieldName);
             metadata.setSinglePropertyValueMerger(sourceFieldName, merger, mergerParam, sourceBeanName);
         }
 
+    }
+
+    static void readTargetFieldConfig(String propertyName, DTOTargetField config, FieldMetadata metadata) {
+
+        
+        MultiPropertyValueMerger merger = (MultiPropertyValueMerger) (StringUtils.isEmpty(config.getMerger()) 
+                                            ? XMLBeanInspector.defaultMultiPropertyMerger()
+                                            : InstancePool.getOrCreate(safeGetClass(config.getMerger())));
+        
+        String mergerParameter = StringUtils.isEmpty(config.getMergerParam())
+                ? XMLBeanInspector.defaultMergerParameter()
+                : config.getMergerParam();
+        
+        metadata.setPropertyValueMerger(merger);
+        metadata.setMergerParameter(mergerParameter);
     }
 }

@@ -124,7 +124,7 @@ abstract class AbstractBeanInspector {
      * @return 
      */
     static Class defaultCascadeTargetClass() {
-        return null;
+        return Object.class;
     }
 
     /**

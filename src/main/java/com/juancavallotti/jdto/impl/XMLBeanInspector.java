@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(XMLBeanInspector.class);
-    
+
     /**
      * Build the metadata for fields.
      * @param propertyName
@@ -33,38 +34,47 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      */
     @Override
     FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass) {
-        
+
         FieldMetadata metadata = buildDefaultFieldMetadata(propertyName);
-        
+
         if (!targetFieldMappings.containsKey(beanClass.getName())) {
-            logger.info("No settings for bean: "+beanClass.getName()+" using default values...");
+            logger.info("No settings for bean: " + beanClass.getName() + " using default values...");
             return metadata;
         }
-        
+
         //build metadata from an xml file.
         DTOTargetField config = targetFieldMappings.get(beanClass.getName()).get(propertyName);
-        
+
         //if no config, then apply default.
         if (config == null) {
             return metadata;
         }
-        
+
         //the most basic check, the transient check.
         if (config.isDtoTransient()) {
             metadata.setFieldTransient(true);
             return metadata;
         }
-        
-        //try to apply the cascade logic.
-        
-        
+
         //read the source propertyies.
         XMLBeanMetadataReader.readSourceFields(propertyName, config, metadata);
         
+        //read the target configuration.
+        XMLBeanMetadataReader.readTargetFieldConfig(propertyName, config, metadata);
         
+        //try to apply the cascade logic.
+        if (config.isCascade()) {
+            //then we'll need to apply the cascade logic.
+            Class targetClass = StringUtils.isEmpty(config.getFieldType())
+                    ? defaultCascadeTargetClass()
+                    : XMLBeanMetadataReader.safeGetClass(config.getFieldType());
+
+            applyCascadeLogic(targetClass, readAccessor, metadata);
+        }
+
         return metadata;
     }
-    
+
     /**
      * Read the source bean names for a given class.
      * @param beanClass
@@ -73,17 +83,17 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     @Override
     String[] readSourceBeanNames(Class beanClass) {
         String beanClassName = beanClass.getName();
-        
+
         //get the xml configuration
         DTOElement element = configuredDtos.get(beanClassName);
-        
+
         if (element == null) {
             return defaultSourceBeanNames();
         }
-        
+
         return XMLBeanMetadataReader.readDefaultBeanNames(element);
     }
-    
+
     /**
      * Get an instance of XMLBeanInspector which reads configuration over a 
      * package resource.
@@ -115,7 +125,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     //convenience map to access easily class and fields config.
     private final HashMap<String, DTOElement> configuredDtos;
     private final HashMap<String, HashMap<String, DTOTargetField>> targetFieldMappings;
-    
+
     /**
      * Read the XML file which can be read by accessing the input stream taken 
      * as a parameter.
@@ -129,22 +139,22 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
 
         mappings = parseXML(xmlStream);
         configuredDtos = new HashMap<String, DTOElement>();
-        targetFieldMappings = new HashMap<String, HashMap<String,DTOTargetField>>();
-        
+        targetFieldMappings = new HashMap<String, HashMap<String, DTOTargetField>>();
+
         //populate the target field mappings.
         for (DTOElement dto : mappings.getElements()) {
-            
+
             HashMap<String, DTOTargetField> fieldsMapping = new HashMap<String, DTOTargetField>();
-            
+
             for (DTOTargetField targetField : dto.getTargetFields()) {
                 fieldsMapping.put(targetField.getFieldName(), targetField);
             }
-            
+
             configuredDtos.put(dto.getType(), dto);
             targetFieldMappings.put(dto.getType(), fieldsMapping);
         }
     }
-    
+
     /**
      * Perform the parsing of the XML File
      * @param xmlStream
@@ -181,8 +191,8 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      */
     public synchronized HashMap<Class, BeanMetadata> buildMetadata() {
         HashMap<Class, BeanMetadata> ret = new HashMap<Class, BeanMetadata>();
-        
-        
+
+
         //for each configured dto, build its metadata.
         for (DTOElement dtoElement : mappings.getElements()) {
             Class dtoClass = XMLBeanMetadataReader.safeGetClass(dtoElement.getType());
@@ -197,5 +207,4 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
 
         return ret;
     }
-
 }
