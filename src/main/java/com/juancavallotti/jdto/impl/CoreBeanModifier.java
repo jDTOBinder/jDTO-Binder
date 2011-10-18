@@ -137,7 +137,7 @@ public class CoreBeanModifier implements BeanModifier {
                         Method setter = findProperSetter(property, actualInstance.getClass());
                         //try to create a new made up value.
                         //this may not always be possible.
-                        Object madeUpValue = BeanInstanceUtils.createInstance(getter.getReturnType());
+                        Object madeUpValue = BeanClassUtils.createInstance(getter.getReturnType());
                         if (madeUpValue == null) {
                             logger.info("Found null on property path and couldn't make up the new value");
                             return;

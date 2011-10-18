@@ -11,8 +11,6 @@ import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * WARNING: THIS CLASS IS NOT PART OF JDTO PUBLIC API
@@ -23,8 +21,7 @@ import org.slf4j.LoggerFactory;
 public class XMLBeanInspector extends AbstractBeanInspector implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = LoggerFactory.getLogger(XMLBeanInspector.class);
-
+    
     /**
      * Build the metadata for fields.
      * @param propertyName
@@ -67,7 +64,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
             //then we'll need to apply the cascade logic.
             Class targetClass = StringUtils.isEmpty(config.getFieldType())
                     ? defaultCascadeTargetClass()
-                    : XMLBeanMetadataReader.safeGetClass(config.getFieldType());
+                    : BeanClassUtils.safeGetClass(config.getFieldType());
 
             applyCascadeLogic(targetClass, readAccessor, metadata);
         }
@@ -195,7 +192,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
 
         //for each configured dto, build its metadata.
         for (DTOElement dtoElement : mappings.getElements()) {
-            Class dtoClass = XMLBeanMetadataReader.safeGetClass(dtoElement.getType());
+            Class dtoClass = BeanClassUtils.safeGetClass(dtoElement.getType());
             if (dtoClass == null) {
                 logger.warn("could not find bean of type: " + dtoElement.getType() + " so i will ignore it!");
                 continue;

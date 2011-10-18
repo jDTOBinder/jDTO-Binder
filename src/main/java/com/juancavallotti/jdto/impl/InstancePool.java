@@ -37,7 +37,7 @@ public class InstancePool implements Serializable {
         T ret = (T) instances.get(cls);
         
         if (ret == null) {
-            ret = BeanInstanceUtils.createInstance(cls);
+            ret = BeanClassUtils.createInstance(cls);
             instances.put(cls, ret);
         }
         

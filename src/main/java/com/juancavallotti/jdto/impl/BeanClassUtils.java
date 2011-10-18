@@ -1,5 +1,6 @@
 package com.juancavallotti.jdto.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,10 +9,10 @@ import org.slf4j.LoggerFactory;
  * on this class handle reflective creation exceptions and log them properly.
  * @author juancavallotti
  */
-class BeanInstanceUtils {
-    
-    private static final Logger logger = LoggerFactory.getLogger(BeanInstanceUtils.class);
-    
+class BeanClassUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(BeanClassUtils.class);
+
     /**
      * Create a new instance of a class or log the exception if the class is
      * not instanceable. This method will return null on the last case.
@@ -25,6 +26,25 @@ class BeanInstanceUtils {
         } catch (Throwable t) {
             logger.error("Could not create bean instance of class " + cls.toString(), t);
             throw new RuntimeException(t);
+        }
+    }
+
+    /**
+     * Try to find a class out of a string or return null;
+     * @param type
+     * @return 
+     */
+    static Class safeGetClass(String type) {
+        //if no type then no class :D
+        if (StringUtils.isEmpty(type)) {
+            return null;
+        }
+
+        try {
+            return Class.forName(type);
+        } catch (Exception ex) {
+            logger.error("Error while trying to read the dto class", ex);
+            return null;
         }
     }
 }

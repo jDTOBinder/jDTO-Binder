@@ -34,7 +34,7 @@ class SimpleBinderDelegate implements Serializable {
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
 
-        T ret = BeanInstanceUtils.createInstance(dtoClass);
+        T ret = BeanClassUtils.createInstance(dtoClass);
 
         HashMap<String, FieldMetadata> propertyMappings = metadata.getFieldMetadata();
 
@@ -180,7 +180,7 @@ class SimpleBinderDelegate implements Serializable {
      <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
         BeanMetadata metadata = findBeanMetadata(metadataMap, dto.getClass());
 
-        T ret = BeanInstanceUtils.createInstance(entityClass);
+        T ret = BeanClassUtils.createInstance(entityClass);
 
         HashMap<String, FieldMetadata> mappings = metadata.getFieldMetadata();
 
