@@ -33,6 +33,21 @@
 }
 {}
 
+\lstnewenvironment{xml}
+{\lstset{
+		language=Xml, 
+		basicstyle=\small\sffamily, 
+		frame=line, 
+		commentstyle=\sffamily\textit, 
+		aboveskip=5mm,
+		belowskip=5mm,
+		breaklines=true,
+		breakautoindent=true,
+		showstringspaces=false
+	}
+}
+{}
+
 \hypersetup{
 			pdfauthor={Juan Alberto López Cavallotti},
 			pdftitle= {jDTO Binder User's Guide},
@@ -69,7 +84,7 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
 by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
 
-\begin{verbatim}
+\begin{xml}
      <dependencies>
      ...
         <dependency>
@@ -89,14 +104,14 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         </dependency>
      ...
      <dependencies>
-\end{verbatim}
+\end{xml}
 
 This's all what's required in terms of dependencies, so now we can start binding DTOs.
 
 \subsection{Bootstrapping the Binder}
 
 
-In order to bind DTO's a binder must be bootstrapped. At the moment two types of binders
+In order to bind DTOs, a binder must be bootstrapped. At the moment two types of binders
 are supported: the core binder, and the spring framework binder\footnote{In order to use the spring framework binder, you should add the spring framework dependency.}.
 
 
@@ -108,21 +123,41 @@ The following snippet shows how to bootstrap the core binder.
 DTOBinder binder = DTOBinderFactory.buildBinder();
 \end{java}
 
+You may also bootstrap the DTO binder based on an XML configuration file, for this matter you'll have to provide an \texttt{InputStream} instance pointing to the XML configuration file, the following is an example of how you can bootstrap the binder this way:
+
+
+\begin{java}
+DTOBinder binder = DTOBinderFactory.buildBinder(
+    DTOBinder.class.getResourceAsStream("/xmlmappingtest.xml"));
+\end{java}
+
 \subsubsection{Integration with the Spring Framework}
 
+\JDTO provides out-of-the-box integration with the spring framework. By default \JDTO uses annotation-based configuration for the binder, here is how to bootstrap it to used within the spring framework xml configuration file:
 
-And how to bootstrap it to used within the spring framework xml configuration file:
 
-
-\begin{verbatim}
+\begin{xml}
 <!-- THE DTO BINDER BEAN --> 
 <bean id="dtobinder" 
     class="com.juancavallotti.jdto.spring.SpringDTOBinder" />
-\end{verbatim}
+\end{xml}
+
+
+You may want to use an XML configuration file instead of regular annotations. The spring framework integration
+provides a way to configure the DTO Binder instance to read the xml configuration file.
+
+
+\begin{xml}
+<!-- THE DTO BINDER BEAN --> 
+<bean class="com.juancavallotti.jdto.spring.SpringDTOBinder">
+    <property name="xmlConfig" value="classpath:/dtos.xml" />
+</bean>
+\end{xml}
+
 
 Note: The binder instance is of the kind of instances you want to keep as singleton. This is because even though it can analyze a bean on the fly, it caches it's metadata to have a quicker access on the future.
 
-Once configured, the bean could be injected by any regular way, for example:
+Once configured, you can inject the binder bean as usual, for example:
 
 
 \begin{java}
@@ -412,15 +447,130 @@ assertEquals("Changed!", entity.getaString());
 
 
 
+\section{XML Configuration}
+
+\JDTO by default binds the DTOs using annotations but this is not the only option, there are some cases in which annotations are not convenient or even not available. For this cases, \JDTO provides a way to configure the DTO binding on a convenient XML file.
+
+As this framework is built with the convention over configuration philosophy, you can start working with practically no configuration and customize just some things. All the properties of a DTO are taken in account unless you explicitly declare them as transient. All DTOs declared on the XML file are loaded and analyzed eagerly, and non-configured DTOs are analyzed lazily the first time they're used.
 
 
+Finally, the XML configuration file currently supports all the features the Annotation configuration support. There may be some additions on the future to make simpler the configuration.
 
 
+Rather than explaining again the whole feature set, some examples will be shown and with the hope they're clear enough. Nevertheless a XML schema is available and most popular IDEs allow auto completion out of the schema.
 
 
+\subsection{Basic XML Setup}
+
+It is recommended to create an xml file on the default package called dtos.xml, and in its empty form should look like this:
+
+\begin{xml}
+<?xml version="1.0" encoding="UTF-8"?>
+<dto-mapping 
+    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 
+                        http://juancavallotti.com/jdto-1.0.xsd">
+        
+</dto-mapping>
+\end{xml}
 
 
+\subsection{Simple XML Binding}
 
+The following snippet demonstrates a DTO mapped in a really simple fashion:
+
+\begin{xml}
+<!-- to test simple binding -->
+<dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
+
+    <field name="aString" transient="true" />
+
+    <!-- A field bound to another field. -->
+    <field name="dtoName">
+        <source name="aString" />
+    </field>
+</dto>
+\end{xml}
+
+\subsection{Navigating Associations}
+
+The following snippet demonstrates a mapping which goes through property paths:
+
+\begin{xml}
+<!-- test the association feature -->
+<dto type="com.juancavallotti.jdto.dtos.SimpleAssociationDTO">
+    <field name="firstString">
+        <source name="myString" />
+    </field>
+    <field name="secondString">
+        <source name="related.aString" />
+    </field>
+</dto>
+\end{xml}
+
+\subsection{Cascaded Mapping}
+
+The following snippet demonstrates how the cascade logic can be mapped:
+
+\begin{xml}
+<!-- to test cascade logic -->
+<dto type="com.juancavallotti.jdto.dtos.ComplexDTO">
+    <field name="cascadedField" cascade="true">
+        <source name="association" />
+    </field>
+    <field name="stringField">
+        <source name="name" />
+    </field>
+</dto>
+\end{xml}
+
+
+\subsection{Property Mergers}
+
+The following snippet demonstrates how various property mergers can be configured:
+
+\begin{xml}
+<!-- test the compound merger feature -->
+<dto type="com.juancavallotti.jdto.dtos.FormatDTO">
+    <!-- single field merger test -->
+    <field  name="price">
+        <source name="aDouble" 
+        merger="com.juancavallotti.jdto.mergers.StringFormatMerger"
+        mergerParam="$ %.2f" />
+    </field>
+    <!-- multiple field merger test -->
+    <field name="compound" mergerParam="%.2f %08d" 
+    merger="com.juancavallotti.jdto.mergers.StringFormatMerger">
+        <source name="aDouble" />
+        <source name="anInt" /> 
+    </field>
+</dto>
+\end{xml}
+
+\subsection{Multiple Source Beans}
+
+The following snippet demonstrates how you can configure mappings with multiple bean sources:
+
+\begin{xml}
+<!-- test the multi source feature -->
+<dto type="com.juancavallotti.jdto.dtos.MultiSourceDTO">
+    <sourceNames>
+        <beanName>bean1</beanName>
+        <beanName>bean2</beanName>
+        <beanName>bean3</beanName>
+    </sourceNames>
+    <field name="source1">
+        <source name="aString" bean="bean1" />
+    </field>
+    <field name="source2">
+        <source name="aString" bean="bean2" />
+    </field>
+    <field name="source3">
+        <source name="aString" bean="bean3" />
+    </field>
+</dto> 
+\end{xml}
 
 
 
