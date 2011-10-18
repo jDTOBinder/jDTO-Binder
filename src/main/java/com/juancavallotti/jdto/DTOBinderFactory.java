@@ -34,11 +34,9 @@ public class DTOBinderFactory {
      * @return 
      */
     public static DTOBinder buildBinder(InputStream xmlFile) {
-        DTOBinderBean bean = new DTOBinderBean(xmlFile);
+        DTOBinderBean bean = new DTOBinderBean(xmlFile, true);
 
         bean.setBeanModifier(new CoreBeanModifier());
-        bean.setMetadata(new HashMap<Class, BeanMetadata>());
-
         return bean;
 
     }

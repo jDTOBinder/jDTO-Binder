@@ -39,15 +39,23 @@ public class DTOBinderBean implements DTOBinder {
      * XML File received as the constructo parameter
      * @param xmlFile an input stream for the XML config file.
      */
-    public DTOBinderBean(InputStream xmlFile) {
+    public DTOBinderBean(InputStream xmlFile, boolean eagerLoad) {
         implementationDelegate = new SimpleBinderDelegate(this);
-        implementationDelegate.setInspector(new XMLBeanInspector(xmlFile));
+        XMLBeanInspector xmlInspector = new XMLBeanInspector(xmlFile);
+        implementationDelegate.setInspector(xmlInspector);
+        
+        if (eagerLoad) {
+            setMetadata(xmlInspector.buildMetadata());
+        }
+        
     }
     
+    @Override
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
         return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
     }
 
+    @Override
     public <T> List<T> bindFromBusinessObjectList(Class<T> dtoClass, List... businessObjectsLists) {
         //this will apply repeatedly the conversion results to a list.
         Object[] paramsBuffer = new Object[businessObjectsLists.length];
@@ -71,6 +79,7 @@ public class DTOBinderBean implements DTOBinder {
         return ret;
     }
 
+    @Override
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return implementationDelegate.extractFromDto(metadata, businessObjectClass, dto);
     }
