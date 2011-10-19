@@ -2,11 +2,12 @@
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{xspace}
-\usepackage{hyperref}
+\usepackage[colorlinks=true,linkcolor=black]{hyperref}
 \usepackage{listings}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
+
 
 % See the ``Article customize'' template for come common customizations
 
@@ -115,12 +116,12 @@ In order to bind DTOs, a binder must be bootstrapped. At the moment two types of
 are supported: the core binder, and the spring framework binder\footnote{In order to use the spring framework binder, you should add the spring framework dependency.}.
 
 
-The following snippet shows how to bootstrap the core binder.
+The following snippet shows how to bootstrap the core binder, the core binder is kept as a singleton instance, so it's safe to call the \texttt{getBinder()} method at any time, and the same instance will be returned.
 
 
 \begin{java}
-//init the binder
-DTOBinder binder = DTOBinderFactory.buildBinder();
+//init the binder as a singleton.
+DTOBinder binder = DTOBinderFactory.getBinder();
 \end{java}
 
 You may also bootstrap the DTO binder based on an XML configuration file, for this matter you'll have to provide an \texttt{InputStream} instance pointing to the XML configuration file, the following is an example of how you can bootstrap the binder this way:
@@ -130,6 +131,8 @@ You may also bootstrap the DTO binder based on an XML configuration file, for th
 DTOBinder binder = DTOBinderFactory.buildBinder(
     DTOBinder.class.getResourceAsStream("/xmlmappingtest.xml"));
 \end{java}
+
+The bean analysis over XML file is kind of expensive (not much but kind of) so to get the best performance you should keep that bean as a singleton.
 
 \subsubsection{Integration with the Spring Framework}
 
@@ -255,6 +258,8 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{DecimalFormatMerger}: Format any number by applying a format String.
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
+ \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
+ \item \texttt{SumProductMerger}: Add all the results of a multiplication between properties, for example an SQL equivalent would be: \texttt{SELECT sum(itemPrice * amount * taxRate) FROM billItems }
 \end{itemize}
 
 Here is an example usage of the \texttt{DateFormatMerger}, it will output something like "2011/10/11".
