@@ -1,6 +1,7 @@
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.BeanModifier;
+import com.juancavallotti.jdto.BeanModifierAware;
 import com.juancavallotti.jdto.MultiPropertyValueMerger;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import java.io.Serializable;
@@ -67,12 +68,13 @@ class SimpleBinderDelegate implements Serializable {
 
             //merge the values into one
             MultiPropertyValueMerger merger = fieldMetadata.getPropertyValueMerger();
-
+            
             Object targetValue = null;
 
             if (fieldMetadata.isCascadePresent()) {
                 targetValue = applyCascadeLogic(sourceValues, fieldMetadata);
             } else {
+                injectContextIfNeeded(merger);
                 targetValue = merger.mergeObjects(sourceValues, fieldMetadata.getMergerParameter());
             }
 
@@ -227,6 +229,7 @@ class SimpleBinderDelegate implements Serializable {
         
         Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
         
+        injectContextIfNeeded(merger);
         return merger.mergeObjects(sourceValue, mergerExtraParam);
     }
 
@@ -264,5 +267,14 @@ class SimpleBinderDelegate implements Serializable {
         
         //add the default bean name.
         sourceBeans.put("", bos[0]);
+    }
+
+    private void injectContextIfNeeded(Object target) {
+        
+        if (target instanceof BeanModifierAware) {
+            BeanModifierAware bma = (BeanModifierAware) target;
+            bma.setBeanModifier(modifier);
+        }
+        
     }
 }

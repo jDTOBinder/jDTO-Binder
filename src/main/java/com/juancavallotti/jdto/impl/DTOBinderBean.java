@@ -90,7 +90,7 @@ public class DTOBinderBean implements DTOBinder {
         return metadata;
     }
 
-    public void setMetadata(HashMap<Class, BeanMetadata> metadata) {
+    public final void setMetadata(HashMap<Class, BeanMetadata> metadata) {
         this.metadata = metadata;
     }
     
