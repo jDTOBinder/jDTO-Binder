@@ -61,7 +61,7 @@ abstract class AbstractBeanInspector {
                     continue;
                 }
 
-                logger.info("\tBound " + propertyName + " to " + metadata.getSourceFields().toString());
+                logger.debug("\tBound " + propertyName + " to " + metadata.getSourceFields().toString());
 
 
                 ret.putFieldMetadata(propertyName, metadata);
