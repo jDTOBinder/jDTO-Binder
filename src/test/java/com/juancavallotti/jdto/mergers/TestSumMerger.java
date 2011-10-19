@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Test if the sum merger and the sum product merger are working fine.
  * @author juan
  */
 public class TestSumMerger {

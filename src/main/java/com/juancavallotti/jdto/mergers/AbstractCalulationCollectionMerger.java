@@ -3,9 +3,7 @@ package com.juancavallotti.jdto.mergers;
 import com.juancavallotti.jdto.BeanModifier;
 import com.juancavallotti.jdto.BeanModifierAware;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
+import com.juancavallotti.jdto.impl.util.UniversalIterable;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -39,26 +37,15 @@ public abstract class AbstractCalulationCollectionMerger implements SingleProper
      * @return the result of the calculation.
      */
     protected abstract Double processCalculation(Iterable collection, String extraParam);
-
+    
+    
+    /**
+     * Convert the input into an iterable instance.
+     * @param input
+     * @return 
+     */
     private Iterable convertInput(Object input) {
-        if (input instanceof Iterable) {
-            return (Iterable) input;
-        }
-
-        //if we found an array, then we better convert it to something we
-        //can iterate withoth too much effort.
-        //TODO - IMPLEMENT A BETTER SOLUTION
-        if (input.getClass().isArray()) {
-            ArrayList ret = new ArrayList();
-
-            for (int i = 0; i < Array.getLength(input); i++) {
-                ret.add(Array.get(input, i));
-            }
-            return ret;
-        }
-
-        //if everything else fails.
-        return Collections.EMPTY_LIST;
+        return new UniversalIterable(input);
     }
     
     /**
