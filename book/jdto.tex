@@ -62,7 +62,7 @@
 \tableofcontents
 
 \newpage
-\section{Motivation}
+\section{Introduction}
 
 
 Welcome to \JDTO framework, the main goal of \JDTO is to leverage the boilerplate it takes to use
@@ -78,6 +78,15 @@ disadvantages:
 The discussion of wether the DTOs are useful or not is left out of the picture. It depends specially on 
 the architect and the size of the application. As a personal opinion I like mixed architectures, there are
 moments where DTOs are useful and there are moments where DTOs are a heavy load.
+
+
+\subsection{Getting the Source}
+
+Currently, \JDTO is hosted as an open source github project and licensed with the Apache 2 open source license. You can find the source code deployed on \JDTO maven repository or in github. The github project url is: 
+
+https://github.com/juancavallotti/jDTO-Binder
+
+You may contribute by submitting a bug or extending the framework in different ways.
 
 \section{Quick Start}
 
@@ -105,6 +114,19 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         </dependency>
      ...
      <dependencies>
+\end{xml}
+
+You also want to add the \JDTO repository to your pom.xml file:
+
+\begin{xml}
+     <repositories>
+        <repository>
+            <id>com.juancavallotti</id>
+            <name>jdto</name>
+            <url>http://juancavallotti.com/maven2</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 \end{xml}
 
 This's all what's required in terms of dependencies, so now we can start binding DTOs.
