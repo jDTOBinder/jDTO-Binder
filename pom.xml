@@ -24,6 +24,14 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+      <!-- Enabling the use of FTP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
     </build>
     <properties>
         <cdi.version>1</cdi.version>
@@ -78,4 +86,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <!-- deployment -->
+    <distributionManagement>
+        <repository>
+            <id>ftp-repository</id>
+            <url>ftp://juancavallotti.com/public_html/maven2</url>
+        </repository>
+    </distributionManagement>
 </project>
