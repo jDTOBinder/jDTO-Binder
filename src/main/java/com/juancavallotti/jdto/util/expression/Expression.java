@@ -19,6 +19,7 @@ package com.juancavallotti.jdto.util.expression;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -279,6 +280,14 @@ public final class Expression implements Serializable {
      */
     public void setVariable(String var, Number value) {
         varValues.put(var, value);
+    }
+    
+    /**
+     * Get all of the variable names for this expresion.
+     * @return 
+     */
+    public Set<String> getVariableNames() {
+        return varValues.keySet();
     }
     
     /**

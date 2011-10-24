@@ -39,6 +39,8 @@ class VariableTerm implements ExpressionTerm, Serializable {
         this.variableName = variableName;
         this.variableMap = variableMap;
         this.resolver = resolver;
+        //put the variable name as a key on the variable map
+        variableMap.put(variableName, null);
     }
     
     /**
