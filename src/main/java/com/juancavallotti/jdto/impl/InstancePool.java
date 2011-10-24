@@ -28,11 +28,33 @@ public class InstancePool implements Serializable {
     
     private static final InstancePool instance = new InstancePool();
     
+    /**
+     * Get a named instace from this instance pool.
+     * @param <T>
+     * @param name
+     * @return 
+     */
+    public synchronized static <T> T getNamedInstance(String name) {
+        return (T) instance.namedInstances.get(name);
+    }
+    
+    /**
+     * Put a named instance on this instance pool.
+     * @param <T>
+     * @param name
+     * @param value 
+     */
+    public synchronized static <T> void putNamedInstance(String name, T value) {
+        instance.namedInstances.put(name, value);
+    }
+    
     private InstancePool() {
         instances = new HashMap<Class, Object>();
+        namedInstances = new HashMap<String, Object>(); 
     }
     
     private HashMap<Class, Object> instances;
+    private HashMap<String, Object> namedInstances;
     
     /**
      * Get the current instance of this instance pool.

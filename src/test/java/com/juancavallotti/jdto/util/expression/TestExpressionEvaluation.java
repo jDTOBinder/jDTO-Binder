@@ -100,4 +100,21 @@ public class TestExpressionEvaluation {
         
         assertEquals(expectedResult, result, 0.00001);
     }
+    
+    @Test
+    public void testVariableRepeatedParameterizedExpression() {
+        
+        String expression = "amount * price + (amount * price * 0.2)";
+        
+        Expression exp = new Expression(expression);
+        
+        exp.setVariable("amount", 5);
+        exp.setVariable("price", 10);
+        
+        double expectedResult = 60.0;
+        double result = exp.evaluate();
+        
+        assertEquals(expectedResult, result, 0.00001);
+        
+    }
 }
