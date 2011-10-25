@@ -11,7 +11,7 @@
 
 % See the ``Article customize'' template for come common customizations
 
-\title{jDTO Binder 0.3 User's Guide}
+\title{jDTO Binder 0.4 User's Guide}
 \author{Juan Alberto López Cavallotti}
 %\date{} % delete this line to display the current date
 
@@ -280,9 +280,13 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{DecimalFormatMerger}: Format any number by applying a format String.
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
+ \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
- \item \texttt{SumProductMerger}: Add all the results of a multiplication between properties, for example an SQL equivalent would be: \texttt{SELECT sum(itemPrice * amount * taxRate) FROM billItems }
+ \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
+ \item \texttt{SumProductMerger}: Add all the results of a multiplication between properties for each value of a bean collection or array, for example an SQL equivalent would be: \texttt{SELECT sum(itemPrice * amount * taxRate) FROM billItems }. This is a convenience implementation which should be picked instead of \texttt{SumExpressionMerger} because is more efficient.
 \end{itemize}
+
+\underline{Note about expression evaluation}: Currently the expression evaluation API supports only five operators: addition (+), subtraction (-), multiplication (*), division(/), and pow (\symbol{94}). Also it supports negative numbers and any amount of balanced parenthesis. If the expression is not well formed, the framework will throw an \texttt{IllegalArgumentException}.
 
 Here is an example usage of the \texttt{DateFormatMerger}, it will output something like "2011/10/11".
 
