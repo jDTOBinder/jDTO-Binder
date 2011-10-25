@@ -21,11 +21,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * DO NOT USE THIS CLASS AS IS NOT PART OF JDTO PUBLIC API <br />
+ * 
  * Utility class for creating instances of classes by reflection. The methods
  * on this class handle reflective creation exceptions and log them properly.
  * @author juancavallotti
  */
-class BeanClassUtils {
+public class BeanClassUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(BeanClassUtils.class);
 
@@ -36,7 +38,7 @@ class BeanClassUtils {
      * @param cls
      * @return 
      */
-    static <T> T createInstance(Class<T> cls) {
+    public static <T> T createInstance(Class<T> cls) {
         try {
             return cls.newInstance();
         } catch (Throwable t) {

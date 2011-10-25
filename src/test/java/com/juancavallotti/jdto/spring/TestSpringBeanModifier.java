@@ -45,8 +45,9 @@ public class TestSpringBeanModifier {
         
         BeanWrapperBeanModifier modifier = new BeanWrapperBeanModifier();
         
-        modifier.writePropertyValue("association.related", "lalala", testIt);
+        modifier.writePropertyValue("association.related.aString", "lalala", testIt);
         
-        assertNull(testIt.getAssociation());
+        //this should be not null because the modifier should have made up missing values on path.
+        assertNotNull(testIt.getAssociation());
     }
 }

@@ -16,8 +16,12 @@
 
 package com.juancavallotti.jdto;
 
+import com.juancavallotti.jdto.impl.DTOBinderBean;
+import com.juancavallotti.jdto.dtos.SimpleAssociationDTO;
 import com.juancavallotti.jdto.entities.AnnotatedEntity;
+import com.juancavallotti.jdto.entities.SimpleAssociation;
 import com.juancavallotti.jdto.entities.SimpleEntity;
+import com.juancavallotti.jdto.spring.BeanWrapperBeanModifier;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,11 +35,11 @@ import static org.junit.Assert.*;
 public class TestReverseBinding {
     
     
-    private static DTOBinder binder;
+    private static DTOBinderBean binder;
     
     @BeforeClass
     public static void globalInit() {
-        binder = DTOBinderFactory.buildBinder();
+        binder = (DTOBinderBean) DTOBinderFactory.buildBinder();
     }
     
     /**
@@ -85,5 +89,36 @@ public class TestReverseBinding {
         assertNull(entity.getThirdString());
         assertEquals("Mike", entity.getFirstString());
         assertEquals("Myers", entity.getSecondString());
+    }
+    
+    @Test
+    public void testAssociationReverseBinding() {
+        SimpleAssociationDTO dto = new SimpleAssociationDTO();
+        dto.setFirstString("myFirstString");
+        dto.setSecondString("theAssociatedString");
+        
+        
+        SimpleAssociation entity = binder.extractFromDto(SimpleAssociation.class, dto);
+        
+        assertEquals(dto.getFirstString(), entity.getMyString());
+        assertNotNull("related entity should not be null", entity.getRelated());
+        assertEquals(dto.getSecondString(), entity.getRelated().getaString());
+    }
+
+    @Test
+    public void testAssociationReverseBindingSpring() {
+        
+        binder.setBeanModifier(new BeanWrapperBeanModifier());
+        
+        SimpleAssociationDTO dto = new SimpleAssociationDTO();
+        dto.setFirstString("myFirstString");
+        dto.setSecondString("theAssociatedString");
+        
+        
+        SimpleAssociation entity = binder.extractFromDto(SimpleAssociation.class, dto);
+        
+        assertEquals(dto.getFirstString(), entity.getMyString());
+        assertNotNull("related entity should not be null", entity.getRelated());
+        assertEquals(dto.getSecondString(), entity.getRelated().getaString());
     }
 }

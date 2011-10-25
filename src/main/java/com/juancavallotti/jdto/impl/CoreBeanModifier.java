@@ -160,12 +160,13 @@ public class CoreBeanModifier implements BeanModifier {
                             logger.info("Found null on property path and couldn't make up the new value");
                             return;
                         }
-                        actualInstance = madeUpValue;
+                        //set the instance into the target object.
+                        setter.invoke(actualInstance, madeUpValue);
+                        value = madeUpValue;
                     } else {
                         logger.info("Found null on property path and I'm not configured to create new instances");
                         return;
                     }
-                    return;
                 }
 
                 actualInstance = value;

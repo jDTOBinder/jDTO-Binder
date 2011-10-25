@@ -17,13 +17,17 @@
 package com.juancavallotti.jdto.spring;
 
 import com.juancavallotti.jdto.BeanModifier;
+import com.juancavallotti.jdto.impl.BeanClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 
 /**
- * Reads and write property values using the Spring framework {@link BeanWrapper}.
+ * Reads and write property values using the Spring framework {@link BeanWrapper}. <br />
+ * When trying to write, this bean will try if possible to make up for missing
+ * instances on the association path.
  * @author juancavallotti
  */
 public class BeanWrapperBeanModifier implements BeanModifier{
@@ -59,8 +63,38 @@ public class BeanWrapperBeanModifier implements BeanModifier{
     public void writePropertyValue(String propertyPath, Object value, Object instance) {
         BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(instance);
         
+        
+        //check and make up for missing association parts.
+        StringBuilder builder = new StringBuilder();
+        
+        String[] subProps = StringUtils.split(propertyPath, '.');
+        
+        //go through all the parts but one
+        for (int i = 0; i < subProps.length - 1; i++) {
+            String prop = subProps[i];
+            
+            if (i > 0) {
+                builder.append(".");
+            }
+            
+            builder.append(prop);
+            
+            Object partialValue = beanWrapper.getPropertyValue(builder.toString());
+            if (partialValue == null) {
+                //make up for it
+                Class propCls = beanWrapper.getPropertyType(builder.toString());
+                Object madeUpValue = BeanClassUtils.createInstance(propCls);
+                if (madeUpValue != null) {
+                    if (beanWrapper.isWritableProperty(builder.toString())) {
+                        beanWrapper.setPropertyValue(builder.toString(), madeUpValue);
+                    }
+                }
+            }
+        }
+        
+        
         if (!beanWrapper.isWritableProperty(propertyPath)) {
-            logger.info("Cannot read property path "+propertyPath+" of bean", instance);
+            logger.info("Cannot write property path "+propertyPath+" of bean", instance);
             return;
         }
         
