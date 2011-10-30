@@ -251,8 +251,8 @@ public final class Expression implements Serializable {
             } else {
                 //try to build a compound term and push it.
                 Operator op = Operator.getOperaorByString(token);
-                ExpressionTerm left = termStack.pop();
-                ExpressionTerm right = termStack.pop();
+                ExpressionTerm right = termStack.pop(); //first is the right side
+                ExpressionTerm left = termStack.pop(); //and then the left side
                 
                 ExpressionTerm term = new CompoundTerm(op, left, right);
                 termStack.push(term);

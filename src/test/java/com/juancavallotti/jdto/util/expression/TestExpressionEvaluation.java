@@ -47,7 +47,42 @@ public class TestExpressionEvaluation {
 
         assertEquals(expectedResult, result, 0.00001);
     }
+    
+    @Test
+    public void testDivision() {
+        String expression = "1/100";
+        double expectedResult = 0.01;
+        
+        Expression exp = new Expression(expression);
+        double result = exp.evaluate();
+        
+        assertEquals(expectedResult, result, 0.00001);
+    }
+    
+    @Test
+    public void testSubstraction() {
+        String expression = "100 - 50";
+        double expectedResult = 50;
+        
+        Expression exp = new Expression(expression);
+        double result = exp.evaluate();
+        
+        assertEquals(expectedResult, result, 0.00001);
+    }
 
+    @Test
+    public void testPow() {
+        String expression = "4 ^ 3";
+        double expectedResult = 64;
+        
+        Expression exp = new Expression(expression);
+        double result = exp.evaluate();
+        
+        assertEquals(expectedResult, result, 0.00001);
+    }
+    
+    
+    
     @Test
     public void testSimpleVariables() {
 
