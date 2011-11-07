@@ -33,13 +33,17 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
      * applied to a {@link Date} or {@link Calendar} instance.
      * @param value
      * @param extraParam
-     * @return 
+     * @return the formatted value or null if the value argument is null.
      */
     @Override
     public String mergeObjects(Object value, String extraParam) {
+        
+        if (value == null) {
+            return null;
+        }
+        
         if (!(value instanceof Calendar) && !(value instanceof Date)) {
             throw new IllegalArgumentException("source value is not a Date or Calendar instance!!");
-            
         }
         
         //create a dateformat with the format String
