@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
     
     /**
-     * 356.25 Days to compensate for leap years.
+     * 365.25 Days to compensate for leap years.
      */
     private static final long YEARS_L = 31557600000L;
     private static final long WEEKS_L = 604800000L;
