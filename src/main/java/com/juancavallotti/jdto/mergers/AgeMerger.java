@@ -16,12 +16,16 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
     
-    private static final long YEARS_L = 31536000000L;
+    /**
+     * 356.25 Days to compensate for leap years.
+     */
+    private static final long YEARS_L = 31557600000L;
     private static final long WEEKS_L = 604800000L;
     private static final long DAYS_L = 86400000L;
     
     /**
-     * A year in milliseconds. This doesn't take in account leap years.
+     * A year in milliseconds. This doesn't take really in account leap years
+     * but it contains a factor to compensate them every 4 years.
      */
     public static final String YEARS = Long.toString(YEARS_L);
     /**
