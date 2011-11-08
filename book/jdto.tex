@@ -194,16 +194,25 @@ private DTOBinder binder;
 
 \subsubsection{Integration with CDI}
 
-\JDTO library is configured as a CDI jar and it provides a way to inject the DTO binder instance into your own beans. In the following example is shown the typical case of injection via CDI:
+\JDTO library provides a CDI jar and also a way to inject the DTO binder instance into your own beans. Due to some restrictions on the design of CDI, it was a decision to make this integration as a separate library, so you must change your pom dependencies to:
+
+\begin{xml}
+    <dependency>
+        <groupId>com.juancavallotti</groupId>
+        <artifactId>jdto-cdi</artifactId>
+        <version>${jdto.version}</version>
+    </dependency>
+\end{xml}
+
+In the following example is shown the typical case of injection via CDI:
 
 
 \begin{java}
 @Inject
-@CdiDtoBinder //this qualifier is required
 private DTOBinder binder;
 \end{java}
 
-The \texttt{@CdiDtoBinder} qualifier annotation is required because there are multiple implementations of the DTOBinder on the classpath. You could rather inject using \texttt{CdiDtoBinderBean} as the property type, but that would increment the amount of coupling in your system and it would be harder for you to write test cases with mock objects.
+The jdto-cdi dependency has as implicit dependency the jdto framework so you should not have to add it explicitly, nevertheless you may add it if that is your taste.
 
 \subsection{Basic DTO Binding}
 

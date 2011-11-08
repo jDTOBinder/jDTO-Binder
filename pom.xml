@@ -21,9 +21,22 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.juancavallotti</groupId>
     <artifactId>jdto-all</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>pom</packaging>
     <name>jDTO Binder</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <modules>
         <module>jdto</module>
         <module>jdto-cdi</module>
@@ -31,7 +44,7 @@
     
     <!-- version management of dependencies -->
     <properties>
-        <current.version>0.5-SNAPSHOT</current.version>
+        <current.version>0.5</current.version>
         <cdi.version>1</cdi.version>
         <commonslang.version>2.6</commonslang.version>
         <junit.version>4.9</junit.version>
