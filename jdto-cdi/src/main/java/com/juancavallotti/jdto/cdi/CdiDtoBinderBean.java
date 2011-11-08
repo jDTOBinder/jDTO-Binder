@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * 
  * //field
  * &#64;Inject
- * &#64;CdiDtoBinder
  * private DTOBinder binder; 
  * 
  * </pre>
@@ -49,7 +48,6 @@ import org.slf4j.LoggerFactory;
  * @author juancavallotti
  */
 @Singleton
-@CdiDtoBinder
 public final class CdiDtoBinderBean extends DTOBinderBean {
         
     private static final long serialVersionUID = 1L;
@@ -60,7 +58,7 @@ public final class CdiDtoBinderBean extends DTOBinderBean {
      * This uses the core bean modifier and empty metadata.
      */
     public CdiDtoBinderBean() {
-        logger.debug("Begin building SpringDTOBinder bean.");
+        logger.debug("Begin building CdiDtoBinderBean.");
         setBeanModifier(new CoreBeanModifier());
         logger.debug("BeanModifier is BeanWrapperBeanModofier");
         setMetadata(new HashMap<Class, BeanMetadata>());
