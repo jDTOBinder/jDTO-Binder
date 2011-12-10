@@ -51,53 +51,83 @@ class SimpleBinderDelegate implements Serializable {
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
 
-        T ret = BeanClassUtils.createInstance(dtoClass);
+        //the returned object.
+        T ret = null;
+
+        //the immutable constructor args list
+        ArrayList immutableConstructorArgs = null;
+
+        //build the appropiate object.
+        if (metadata.isImmutableBean()) {
+            immutableConstructorArgs = new ArrayList();
+        } else {
+            ret = BeanClassUtils.createInstance(dtoClass);
+        }
+
+
 
         HashMap<String, FieldMetadata> propertyMappings = metadata.getFieldMetadata();
 
         //the map of source beans by name
         HashMap<String, Object> sourceBeans = new HashMap<String, Object>();
 
-        //iterate through the properties and read the values from the business objects.
-        for (String targetProperty : propertyMappings.keySet()) {
-
-            //get the configuration for the DTO objects.
-            FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
-
-            //create a buffer for the source values.
-            List<Object> sourceValues = new ArrayList<Object>();
-
-            //get a list of the properties to read for this DTO
-            List<String> sourceProperties = fieldMetadata.getSourceFields();
-
-
-
-            //read all the values.
-            for (String sourceProperty : sourceProperties) {
-                
-                populateSourceBeans(sourceBeans, metadata, fieldMetadata, businessObjects);
-                
-                Object finalValue = applyMergeToSingleField(sourceBeans, sourceProperty, fieldMetadata);
-                sourceValues.add(finalValue);
+        if (metadata.isImmutableBean()) {
+            for (FieldMetadata fieldMetadata : metadata.getConstructorArgs()) {
+                Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
+                //if the object is immutable, then we need to store the value.
+                immutableConstructorArgs.add(targetValue);
             }
-
-
-            //merge the values into one
-            MultiPropertyValueMerger merger = fieldMetadata.getPropertyValueMerger();
-            
-            Object targetValue = null;
-
-            if (fieldMetadata.isCascadePresent()) {
-                targetValue = applyCascadeLogic(sourceValues, fieldMetadata);
-            } else {
-                injectContextIfNeeded(merger);
-                targetValue = merger.mergeObjects(sourceValues, fieldMetadata.getMergerParameter());
+        } else {
+            //iterate through the properties and read the values from the business objects.
+            for (String targetProperty : propertyMappings.keySet()) {
+                //get the configuration for the DTO objects.
+                FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
+                Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
+                modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
+        }
 
-            modifier.writePropertyValue(targetProperty, targetValue, ret);
+        //finally, if the bean is immutable, build the instance with the values!
+        if (metadata.isImmutableBean()) {
+            ret = BeanClassUtils.createInstance(dtoClass, metadata.getImmutableConstructor(), immutableConstructorArgs);
         }
 
         return ret;
+    }
+
+    private <T> Object buildTargetValue(BeanMetadata metadata, FieldMetadata fieldMetadata, T ret, HashMap<String, Object> sourceBeans, Object... businessObjects) {
+        //create a buffer for the source values.
+        List<Object> sourceValues = new ArrayList<Object>();
+
+        //get a list of the properties to read for this DTO
+        List<String> sourceProperties = fieldMetadata.getSourceFields();
+
+
+
+        //read all the values.
+        for (String sourceProperty : sourceProperties) {
+
+            populateSourceBeans(sourceBeans, metadata, fieldMetadata, businessObjects);
+
+            Object finalValue = applyMergeToSingleField(sourceBeans, sourceProperty, fieldMetadata);
+            sourceValues.add(finalValue);
+        }
+
+
+        //merge the values into one
+        MultiPropertyValueMerger merger = fieldMetadata.getPropertyValueMerger();
+
+        Object targetValue = null;
+
+        if (fieldMetadata.isCascadePresent()) {
+            targetValue = applyCascadeLogic(sourceValues, fieldMetadata);
+        } else {
+            injectContextIfNeeded(merger);
+            targetValue = merger.mergeObjects(sourceValues, fieldMetadata.getMergerParameter());
+        }
+
+        //return the value
+        return targetValue;
     }
 
     /**
@@ -236,15 +266,15 @@ class SimpleBinderDelegate implements Serializable {
         SinglePropertyValueMerger merger = fieldMetadata.getSourceMergers().get(sourceProperty);
         String mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
         String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
-        
+
         Object bo = sourceBeans.get(sourceBean);
-        
+
         if (bo == null) {
             throw new IllegalStateException("could not find source bean with name: " + sourceBean);
         }
-        
+
         Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
-        
+
         injectContextIfNeeded(merger);
         return merger.mergeObjects(sourceValue, mergerExtraParam);
     }
@@ -267,30 +297,30 @@ class SimpleBinderDelegate implements Serializable {
     }
 
     private void populateSourceBeans(HashMap<String, Object> sourceBeans, BeanMetadata metadata, FieldMetadata fieldMetadata, Object[] bos) {
-        
+
         //clear the mappings
         sourceBeans.clear();
-        
+
         //populate, by default the mapping on the field or else, the one on the ben.
-        String[] names = (ArrayUtils.isEmpty(fieldMetadata.getSourceBeanNames())) ? 
-                metadata.getDefaultBeanNames() : fieldMetadata.getSourceBeanNames();
-        
+        String[] names = (ArrayUtils.isEmpty(fieldMetadata.getSourceBeanNames()))
+                ? metadata.getDefaultBeanNames() : fieldMetadata.getSourceBeanNames();
+
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
             Object bean = bos[i];
             sourceBeans.put(name, bean);
         }
-        
+
         //add the default bean name.
         sourceBeans.put("", bos[0]);
     }
 
     private void injectContextIfNeeded(Object target) {
-        
+
         if (target instanceof BeanModifierAware) {
             BeanModifierAware bma = (BeanModifierAware) target;
             bma.setBeanModifier(modifier);
         }
-        
+
     }
 }

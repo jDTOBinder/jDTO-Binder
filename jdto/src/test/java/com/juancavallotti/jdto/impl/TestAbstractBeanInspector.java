@@ -17,6 +17,8 @@
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.entities.SimpleEntity;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,19 @@ public class TestAbstractBeanInspector extends AbstractBeanInspector{
         assertTrue(discoveredProperties.contains("anInt"));
         assertTrue(discoveredProperties.contains("aDouble"));
         assertTrue(discoveredProperties.contains("aBoolean"));
+    }
+
+    @Override
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
+        fail("Simple entity is not immutable.");
+        return null;
+    }
+
+    @Override
+    Constructor findAppropiateConstructor(Class beanClass) {
+        //some constructor will do.
+        Constructor ret = beanClass.getConstructors()[0];
+        return ret;
     }
     
 }

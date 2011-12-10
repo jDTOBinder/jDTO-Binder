@@ -17,12 +17,14 @@
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.annotation.DTOCascade;
+import com.juancavallotti.jdto.annotation.DTOConstructor;
 import com.juancavallotti.jdto.annotation.DTOTransient;
 import com.juancavallotti.jdto.annotation.Source;
 import com.juancavallotti.jdto.annotation.SourceNames;
 import com.juancavallotti.jdto.annotation.Sources;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -47,9 +49,9 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         //we have the settings so we can apply them.
         HashMap<Class, Annotation> propertyAnnotations = readAnnotations(propertyName, readAccessor, beanClass);
 
-        applySettingsToFieldMetadata(ret, propertyName, readAccessor, propertyAnnotations);
+        applySettingsToFieldMetadata(ret, propertyName, null, readAccessor, propertyAnnotations);
         
-        applyMergerSettings(propertyName, readAccessor, propertyAnnotations, ret);
+        applyMergerSettings(propertyName, propertyAnnotations, ret);
         
         return ret;
     }
@@ -121,7 +123,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         }
     }
 
-    private void applySettingsToFieldMetadata(FieldMetadata target, String propertyName, Method readAccessor, HashMap<Class, Annotation> annotations) {
+    private void applySettingsToFieldMetadata(FieldMetadata target, String propertyName, Class constructorArgType, Method readAccessor, HashMap<Class, Annotation> annotations) {
 
         //by default, this is bound to the property name.
         //we may not want this on future steps but for now it's ok
@@ -165,8 +167,9 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         }
 
         //if the cascade is present, then apply the conditions for cascading.
+        //the constructor arg type and the read accessor can be both null.
         if (cascade != null) {
-            applyCascadeLogic(cascade.targetType(), readAccessor, target);
+            applyCascadeLogic(cascade.targetType(), constructorArgType, readAccessor, target);
         }
 
     }
@@ -185,7 +188,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         }
     }
 
-    private void applyMergerSettings(String propertyName, Method accessorMethod, HashMap<Class, Annotation> annotations, FieldMetadata metadata) {
+    private void applyMergerSettings(String propertyName, HashMap<Class, Annotation> annotations, FieldMetadata metadata) {
         Source simpleMapping = (Source) annotations.get(Source.class);
         Sources compoundMapping = (Sources) annotations.get(Sources.class);
         SourceNames sourceNames = (SourceNames) annotations.get(SourceNames.class);
@@ -233,5 +236,40 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         }
 
         return annotation.value();
+    }
+
+    @Override
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
+        //the parameter index is not quite useful here.
+        String propertyName = "arg"+parameterIndex;
+        
+        //build the default metadata;
+        FieldMetadata ret = buildDefaultFieldMetadata(propertyName);
+        
+        HashMap<Class, Annotation> annotations = new HashMap<Class, Annotation>();
+        
+        //map the annotations for simple use.
+        for (Annotation annotation : parameterAnnotations) {
+            annotations.put(annotation.annotationType(), annotation);
+        }
+        
+        applySettingsToFieldMetadata(ret, propertyName, parameterType, null, annotations);
+        applyMergerSettings(propertyName, annotations, ret);
+        
+        return ret;
+    }
+
+    @Override
+    Constructor findAppropiateConstructor(Class beanClass) {
+        Constructor[] beanConstructors = beanClass.getConstructors();
+        
+        for (Constructor constructor : beanConstructors) {
+            if (constructor.isAnnotationPresent(DTOConstructor.class)) {
+                return constructor;
+            }
+        }
+        
+        //return the last constructor.
+        return beanConstructors[beanConstructors.length - 1];
     }
 }

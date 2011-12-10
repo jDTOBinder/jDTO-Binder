@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.MultiPropertyValueMerger;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import com.juancavallotti.jdto.mergers.FirstObjectPropertyValueMerger;
 import com.juancavallotti.jdto.mergers.IdentityPropertyValueMerger;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -43,30 +44,17 @@ abstract class AbstractBeanInspector {
      <T> BeanMetadata inspectBean(Class<T> beanClass) {
         logger.debug("Strarting analysis of " + beanClass.toString());
         try {
+            //check if the bean is immutable by the lack of the default constructor.
+            boolean isImmutable = !BeanClassUtils.hasDefaultConstructor(beanClass);
 
             //the returned metadata.
-            BeanMetadata ret = new BeanMetadata();
+            BeanMetadata ret = new BeanMetadata(isImmutable);
 
-            HashMap<String, Method> beanGetters = BeanPropertyUtils.discoverPropertiesByGetters(beanClass);
-
-            //the standard cycle for analyzing a bean.
-            for (String propertyName : beanGetters.keySet()) {
-
-                FieldMetadata metadata = buildFieldMetadata(propertyName, beanGetters.get(propertyName), beanClass);
-
-                //if the field is transient, then do not add it.
-                if (metadata.isFieldTransient()) {
-                    //nothing to bind, this could happen if the field is tansient
-                    //or not found.
-                    continue;
-                }
-
-                logger.debug("\tBound " + propertyName + " to " + metadata.getSourceFields().toString());
-
-
-                ret.putFieldMetadata(propertyName, metadata);
+            if (isImmutable) {
+                inspectImmutableBean(beanClass, ret);
+            } else {
+                inspectMutableBean(beanClass, ret);
             }
-
 
             String[] sourceBeanNames = readSourceBeanNames(beanClass);
 
@@ -80,6 +68,48 @@ abstract class AbstractBeanInspector {
         }
     }
 
+    private <T> void inspectMutableBean(Class<T> beanClass, BeanMetadata beanMetadata) {
+        HashMap<String, Method> beanGetters = BeanPropertyUtils.discoverPropertiesByGetters(beanClass);
+
+        //the standard cycle for analyzing a bean.
+        for (String propertyName : beanGetters.keySet()) {
+
+            FieldMetadata metadata = buildFieldMetadata(propertyName, beanGetters.get(propertyName), beanClass);
+
+            //if the field is transient, then do not add it.
+            if (metadata.isFieldTransient()) {
+                //nothing to bind, this could happen if the field is tansient
+                //or not found.
+                continue;
+            }
+
+            logger.debug("\tBound " + propertyName + " to " + metadata.getSourceFields().toString());
+
+
+            beanMetadata.putFieldMetadata(propertyName, metadata);
+        }
+    }
+
+    private <T> void inspectImmutableBean(Class<T> beanClass, BeanMetadata beanMetadata) {
+        Constructor constructor = findAppropiateConstructor(beanClass);
+
+        //set the constructor to use in metadata.
+        beanMetadata.setImmutableConstructor(constructor);
+
+        //go through the parameters
+        Class[] types = constructor.getParameterTypes();
+        Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
+
+        for (int i = 0; i < types.length; i++) {
+            Class type = types[i];
+            Annotation[] annotations = paramAnnotations[i];
+
+            FieldMetadata metadata = buildFieldMetadata(i, type, annotations);
+
+            beanMetadata.addConstructorArgMetadata(metadata);
+        }
+    }
+
     /**
      * Build the field metadata for a given field.
      * @param propertyName
@@ -90,11 +120,27 @@ abstract class AbstractBeanInspector {
     abstract FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass);
 
     /**
+     * 
+     * @param parameterIndex
+     * @param parameterType
+     * @param parameterAnnotations
+     * @return 
+     */
+    abstract FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations);
+
+    /**
      * Read the source names out of a class or whatever :)
      * @param beanClass
      * @return 
      */
     abstract String[] readSourceBeanNames(Class beanClass);
+
+    /**
+     * Read the constructor to use for creating an instance of an immutable class.
+     * @param beanClass
+     * @return 
+     */
+    abstract Constructor findAppropiateConstructor(Class beanClass);
 
     /**
      * Build the default field metadata for a single field. This can be used either
@@ -114,12 +160,12 @@ abstract class AbstractBeanInspector {
         ret.setMergerParameter(defaultMergerParameter());
         ret.setPropertyValueMerger(defaultMultiPropertyMerger());
         ret.setSourceBeanNames(defaultFieldSourceBeanNames());
-        
+
         //the default source fields is the same property name.
         ret.setSourceFields(defaultSourceFields(propertyName));
         //set the data associated with the single property value merger
         ret.setSinglePropertyValueMerger(propertyName, defaultSinglePropertyMerger(), defaultMergerParameter(), defaultSourceBeanName());
-        
+
         //and that is the default field metadata.
         //later on it can be used to customise it on other ways.
 
@@ -166,7 +212,7 @@ abstract class AbstractBeanInspector {
     static String defaultMergerParameter() {
         return "";
     }
-    
+
     /**
      * The defailt source bean name is ""
      * @return 
@@ -185,8 +231,7 @@ abstract class AbstractBeanInspector {
     //to save energy
     private static final String[] defaultSrouceBeanNames = {""};
     private static final String[] defaultFieldSrouceBeanNames = {};
-    
-    
+
     /**
      * The default source bean names. DO NOT CHANGE!!
      * @return 
@@ -194,7 +239,7 @@ abstract class AbstractBeanInspector {
     static String[] defaultSourceBeanNames() {
         return defaultSrouceBeanNames;
     }
-    
+
     /**
      * The default source bean fields should be an empty array.
      * @return 
@@ -246,17 +291,20 @@ abstract class AbstractBeanInspector {
 
     /**
      * Applies the cascade logic in a generic way.
-     * @param cascade
-     * @param accesorType 
-     * @param target 
+     * @param cascadeTargetType the target type for the cascade logic
+     * @param accesorType the type of the accessor if available
+     * @param readAccesor in most cases the type of the accessor will be inferred by the read accessor.
+     * @param target the target field metadata.
      */
-    static void applyCascadeLogic(Class cascadeTargetType, Method readAccesor, FieldMetadata target) {
+    static void applyCascadeLogic(Class cascadeTargetType, Class accessorType, Method readAccesor, FieldMetadata target) {
 
         CascadeType cascadeType = null;
-        
-        Class accessorType = readAccesor.getReturnType();
+
+        if (accessorType == null) {
+            accessorType = readAccesor.getReturnType();
+        }
         target.setCascadePresent(true);
-        
+
         if (List.class.isAssignableFrom(accessorType)) {
             cascadeType = CascadeType.COLLECTION;
         } else if (accessorType.isArray()) {
@@ -268,7 +316,7 @@ abstract class AbstractBeanInspector {
         //if the target type is pressent on the annotation, then all is quite simple
         if (cascadeTargetType != null && cascadeTargetType != Object.class) {
             target.setCascadeTargetClass(cascadeTargetType);
-        } else { //if not, then inferit by the declaration on the dto.
+        } else if (readAccesor != null) { //if not, then inferit by the declaration on the dto.
             Class targetType = inferTypeOfProperty(accessorType, readAccesor.getGenericReturnType(), cascadeType);
             target.setCascadeTargetClass(targetType);
         }

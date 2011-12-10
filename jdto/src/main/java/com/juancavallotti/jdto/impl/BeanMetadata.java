@@ -18,7 +18,9 @@ package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.MultiPropertyValueMerger;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,11 +32,32 @@ public class BeanMetadata implements Serializable {
     
     private String[] defaultBeanNames;
     private HashMap<String, FieldMetadata> fieldMetadata;
+    private boolean immutableBean;
+    private List<FieldMetadata> constructorArgs;
+    private Constructor immutableConstructor;
     
+    /**
+     * Initialize the metadata object for a standard bean.
+     */
     public BeanMetadata() {
         fieldMetadata = new HashMap<String, FieldMetadata>();
     }
     
+    
+    /**
+     * Initialize the metadata object. If the argument is true, then make the
+     * initialization optimized for immutable beans, otherwise, make the normal
+     * initalization.
+     * @param immutableBean 
+     */
+    public BeanMetadata(boolean immutableBean) {
+        if (immutableBean) {
+            this.immutableBean = immutableBean;
+            constructorArgs = new LinkedList<FieldMetadata>();
+        } else {
+            fieldMetadata = new HashMap<String, FieldMetadata>();
+        }
+    }
     
     void putFieldMetadata(String beanProperty, List<String> sourceProperties, MultiPropertyValueMerger merger) {
         FieldMetadata metadata = getMetadata(beanProperty);
@@ -44,6 +67,14 @@ public class BeanMetadata implements Serializable {
     
     void putFieldMetadata(String beanProperty, FieldMetadata metadata) {
         fieldMetadata.put(beanProperty, metadata);
+    }
+    
+    /**
+     * Add an extra field metadata matched with a constructor argument.
+     * @param metadata 
+     */
+    void addConstructorArgMetadata(FieldMetadata metadata) {
+        constructorArgs.add(metadata);
     }
     
     //GETTERS AND SETTERS
@@ -71,6 +102,22 @@ public class BeanMetadata implements Serializable {
 
     public void setDefaultBeanNames(String[] defaultBeanNames) {
         this.defaultBeanNames = defaultBeanNames;
+    }
+
+    public List<FieldMetadata> getConstructorArgs() {
+        return constructorArgs;
+    }
+
+    public boolean isImmutableBean() {
+        return immutableBean;
+    }
+
+    public Constructor getImmutableConstructor() {
+        return immutableConstructor;
+    }
+
+    public void setImmutableConstructor(Constructor immutableConstructor) {
+        this.immutableConstructor = immutableConstructor;
     }
     
 }

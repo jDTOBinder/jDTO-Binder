@@ -22,6 +22,8 @@ import com.juancavallotti.jdto.impl.xml.DTOTargetField;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
@@ -82,7 +84,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
                     ? defaultCascadeTargetClass()
                     : BeanClassUtils.safeGetClass(config.getFieldType());
 
-            applyCascadeLogic(targetClass, readAccessor, metadata);
+            applyCascadeLogic(targetClass, null, readAccessor, metadata);
         }
 
         return metadata;
@@ -219,5 +221,15 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
         }
 
         return ret;
+    }
+
+    @Override
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    Constructor findAppropiateConstructor(Class beanClass) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

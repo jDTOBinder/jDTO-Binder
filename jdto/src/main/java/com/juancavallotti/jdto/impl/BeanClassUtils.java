@@ -16,6 +16,8 @@
 
 package com.juancavallotti.jdto.impl;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,8 @@ public class BeanClassUtils {
 
     /**
      * Create a new instance of a class or log the exception if the class is
-     * not instanceable. This method will return null on the last case.
+     * not instanceable. This method will rethrow any exception as an unchecked
+     * {@link RuntimeException}.
      * @param <T>
      * @param cls
      * @return 
@@ -46,7 +49,46 @@ public class BeanClassUtils {
             throw new RuntimeException(t);
         }
     }
-
+    
+    /**
+     * Create a new instance of a class using a specific constructor or log the
+     * exception if the class is not instanceable. This method will rethrow any
+     * exception as an unchecked {@link RuntimeException}.
+     * @param <T>
+     * @param cls
+     * @param constructor
+     * @param argValues
+     * @return 
+     */
+    public static <T> T createInstance(Class<T> cls, Constructor constructor, ArrayList argValues) {
+        try {
+            Object[] args = argValues.toArray();
+            return (T) constructor.newInstance(args);
+        } catch (Throwable t) {
+            logger.error("Could not create bean instance of class" + cls.toString(), t);
+            throw new RuntimeException(t);
+        }
+    }
+    
+    /**
+     * Check if the class has a default constructor.
+     * @param cls
+     * @return 
+     */
+    public static boolean hasDefaultConstructor(Class cls) {
+        
+        Constructor[] constructors = cls.getConstructors();
+        
+        //go through all the constructors trying to find one with no
+        //parameters
+        for (Constructor constructor : constructors) {
+            if (constructor.getParameterTypes().length == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Try to find a class out of a string or return null;
      * @param type
