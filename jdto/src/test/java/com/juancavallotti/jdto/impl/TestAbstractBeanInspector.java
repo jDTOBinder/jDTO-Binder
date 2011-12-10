@@ -66,7 +66,7 @@ public class TestAbstractBeanInspector extends AbstractBeanInspector{
     }
 
     @Override
-    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations, Class beanClass) {
         fail("Simple entity is not immutable.");
         return null;
     }

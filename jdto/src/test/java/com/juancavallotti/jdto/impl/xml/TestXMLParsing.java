@@ -46,13 +46,26 @@ public class TestXMLParsing {
         DTOMappings mappings = inspector.getMappings();
         
         assertFalse(mappings.getElements().isEmpty());
-        
+                
         for (DTOElement dTOElement : mappings.getElements()) {
             assertFalse(StringUtils.isEmpty(dTOElement.getType()));
             assertFalse(dTOElement.getBeanNames().isEmpty());
             for (String stringNames : dTOElement.getBeanNames()) {
                 assertFalse(StringUtils.isEmpty(stringNames));
             }
+            
+            //check for the constructor args
+            for (DTOConstructorArg dTOConstructorArg : dTOElement.getConstructorArgs()) {
+                assertNotNull(dTOConstructorArg.getFieldType());
+                assertNotNull(dTOConstructorArg.getMerger());
+                assertNotNull(dTOConstructorArg.getMergerParam());
+                assertNotNull(dTOConstructorArg.getOrder());
+                assertNotNull(dTOConstructorArg.getType());
+                assertNotNull(dTOConstructorArg.isCascade());
+                assertNotNull(dTOConstructorArg.getSources());
+                assertFalse(dTOConstructorArg.getSources().isEmpty());
+            }
+            
             //check for the fields
             for (DTOTargetField dTOTargetField : dTOElement.getTargetFields()) {
                 assertNotNull(dTOTargetField.getFieldName());

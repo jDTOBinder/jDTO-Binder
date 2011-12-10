@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.MultiPropertyValueMerger;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
+import com.juancavallotti.jdto.impl.xml.DTOConstructorArg;
 import com.juancavallotti.jdto.impl.xml.DTOElement;
 import com.juancavallotti.jdto.impl.xml.DTOSourceField;
+import com.juancavallotti.jdto.impl.xml.DTOTargetConfig;
 import com.juancavallotti.jdto.impl.xml.DTOTargetField;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -57,10 +58,10 @@ class XMLBeanMetadataReader {
      * @param config
      * @return 
      */
-    static void readSourceFields(String propertyName, DTOTargetField config, FieldMetadata metadata) {
+    static void readSourceFields(String propertyName, List<DTOSourceField> sources, FieldMetadata metadata) {
 
         //if no source field metadata then keep it default
-        if (config.getSources() == null || config.getSources().isEmpty()) {
+        if (sources == null || sources.isEmpty()) {
             return;
         }
 
@@ -68,7 +69,7 @@ class XMLBeanMetadataReader {
         //first clear the source field list
         metadata.getSourceFields().clear();
 
-        for (DTOSourceField sourceField : config.getSources()) {
+        for (DTOSourceField sourceField : sources) {
 
             String sourceFieldName = sourceField.getName();
 
@@ -96,17 +97,17 @@ class XMLBeanMetadataReader {
 
     }
 
-    static void readTargetFieldConfig(String propertyName, DTOTargetField config, FieldMetadata metadata) {
+    static void readTargetFieldConfig(String propertyName, DTOTargetConfig config, FieldMetadata metadata) {
 
-        
-        MultiPropertyValueMerger merger = (MultiPropertyValueMerger) (StringUtils.isEmpty(config.getMerger()) 
-                                            ? XMLBeanInspector.defaultMultiPropertyMerger()
-                                            : InstancePool.getOrCreate(BeanClassUtils.safeGetClass(config.getMerger())));
-        
+
+        MultiPropertyValueMerger merger = (MultiPropertyValueMerger) (StringUtils.isEmpty(config.getMerger())
+                ? XMLBeanInspector.defaultMultiPropertyMerger()
+                : InstancePool.getOrCreate(BeanClassUtils.safeGetClass(config.getMerger())));
+
         String mergerParameter = StringUtils.isEmpty(config.getMergerParam())
                 ? XMLBeanInspector.defaultMergerParameter()
                 : config.getMergerParam();
-        
+
         metadata.setPropertyValueMerger(merger);
         metadata.setMergerParameter(mergerParameter);
     }

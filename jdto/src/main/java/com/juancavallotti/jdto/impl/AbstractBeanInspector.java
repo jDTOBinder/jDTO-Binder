@@ -104,7 +104,7 @@ abstract class AbstractBeanInspector {
             Class type = types[i];
             Annotation[] annotations = paramAnnotations[i];
 
-            FieldMetadata metadata = buildFieldMetadata(i, type, annotations);
+            FieldMetadata metadata = buildFieldMetadata(i, type, annotations, beanClass);
 
             beanMetadata.addConstructorArgMetadata(metadata);
         }
@@ -120,13 +120,14 @@ abstract class AbstractBeanInspector {
     abstract FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass);
 
     /**
-     * 
+     * Build the field metadata for a constructor argument.
      * @param parameterIndex
      * @param parameterType
      * @param parameterAnnotations
+     * @param beanClass
      * @return 
      */
-    abstract FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations);
+    abstract FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations, Class beanClass);
 
     /**
      * Read the source names out of a class or whatever :)

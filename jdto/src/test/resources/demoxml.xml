@@ -8,6 +8,11 @@
             <sourceNames>
                 <beanName>bean1</beanName>
             </sourceNames>
+            <immutableConstructor>
+                <arg type="java.lang.String" order="0" cascade="true" cascadeType="tyoe" merger="merger" mergerParam="mparam">
+                    <source bean="bean1" merger="singleMerger" mergerParam="aaaa" name="aString" />
+                </arg>
+            </immutableConstructor>
             <field name="dtoName" cascade="true" transient="true" merger="myMerger" mergerParam="param" cascadeType="type">
                 <source bean="bean1" merger="singleMerger" mergerParam="ddmmyy" name="aString" />
             </field>

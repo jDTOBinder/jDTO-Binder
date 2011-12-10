@@ -107,4 +107,20 @@ public class BeanClassUtils {
             return null;
         }
     }
+    
+    /**
+     * Find a constructor in the class for the argument types. This method converts
+     * any checked exception in unchecked exception.
+     * @param cls
+     * @param types
+     * @return 
+     */
+    static Constructor safeGetConstructor(Class cls, Class[] types) {
+        try {
+            return cls.getDeclaredConstructor(types);
+        } catch (Exception ex) {
+            logger.error("Error while trying to find constructor for class "+cls.getCanonicalName(), ex);
+            throw new RuntimeException("Error while trying to find constructor for class "+cls.getCanonicalName(), ex);
+        }
+    }
 }

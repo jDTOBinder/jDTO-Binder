@@ -31,4 +31,15 @@
                 <source name="test" bean="bean1" />
             </field>
         </dto>
+        
+        <dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+            <immutableConstructor>
+                <arg order="0" type="java.lang.String">
+                    <source name="test" bean="bean1" />
+                </arg>
+                <arg order="1" type="java.lang.Number">
+                    <source name="pepe" />
+                </arg>
+            </immutableConstructor>
+        </dto>
 </dto-mapping>

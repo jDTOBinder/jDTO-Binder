@@ -239,7 +239,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
     }
 
     @Override
-    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations, Class beanClass) {
         //the parameter index is not quite useful here.
         String propertyName = "arg"+parameterIndex;
         

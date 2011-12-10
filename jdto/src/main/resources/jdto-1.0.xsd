@@ -51,8 +51,11 @@
         </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
-                <!-- can containa a list of source names -->
+                <!-- can contain a list of source names -->
                 <xsd:element ref="sourceNames" minOccurs="0" maxOccurs="1" /> 
+                <!-- can contan a list of constructor args -->
+                <xsd:element ref="immutableConstructor" minOccurs="0" maxOccurs="1" />
+                <!-- the fields -->
                 <xsd:choice minOccurs="0" maxOccurs="unbounded">
                     <!-- can containa a list of source fields -->
                     <xsd:element ref="field" />
@@ -124,6 +127,50 @@
                     <xsd:element ref="beanName" />
                 </xsd:choice>
             </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="immutableConstructor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents the list of constructor args for an immutable DTO.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                    <xsd:element ref="arg" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="arg">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents a constructor argument for a DTO.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence minOccurs="1">
+                <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                        <!-- can contain a list of soruce elements -->
+                    <xsd:element ref="source" />
+                </xsd:choice>
+            </xsd:sequence>
+            <!-- the attributes of the field -->
+            <xsd:attribute name="type" type="xsd:string" use="required" />
+            <xsd:attribute name="order" type="xsd:integer" />
+            <xsd:attribute name="merger" type="xsd:string" />
+            <xsd:attribute name="mergerParam" type="xsd:string" />
+            <xsd:attribute name="cascade" type="xsd:boolean" />
+            <xsd:attribute name="cascadeType" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The type (class) of the target collection field. Use
+                        this only if target type cannot be guessed by looking
+                        up the generic type parameters.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.juancavallotti.jdto.impl.xml;
 
-package com.juancavallotti.jdto.annotation;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Indicates the annotated property is transsient and therefore should not
- * be considered on the DTO binding process. <br />
- * 
- * A constructor argument cannot be transient since it doesnt make sense for 
- * immutable objects.
+ * Common configuration for DTO targets over XML
  * @author juancavallotti
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-public @interface DTOTransient {
+public interface DTOTargetConfig {
+
+    @XmlAttribute(name = "cascadeType")
+    String getFieldType();
+
+    @XmlAttribute
+    String getMerger();
+
+    @XmlAttribute
+    String getMergerParam();
+
+    @XmlElement(name = "source")
+    List<DTOSourceField> getSources();
+
+    @XmlAttribute
+    boolean isCascade();
     
 }

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl.xml;
 
+import com.juancavallotti.jdto.dtos.SimpleImmutableDTO;
 import com.juancavallotti.jdto.dtos.MultiSourceDTO;
 import com.juancavallotti.jdto.dtos.FormatDTO;
 import com.juancavallotti.jdto.dtos.ComplexDTO;
@@ -122,5 +122,17 @@ public class TestXMLMapping {
         assertEquals("hello", dto.getSource1());
         assertEquals("cruel", dto.getSource2());
         assertEquals("world", dto.getSource3());
+    }
+
+    @Test
+    public void testImmutable() {
+        SimpleEntity simpleBusinessObject = new SimpleEntity("simple", 123, 345.35, true);
+        SimpleAssociation entity = new SimpleAssociation(simpleBusinessObject, "related");
+
+        SimpleImmutableDTO dto = binder.bindFromBusinessObject(SimpleImmutableDTO.class, entity);
+
+        //the other fields shouldnt be null
+        assertEquals("second string is mapped with related", entity.getRelated().getaString(), dto.getSecondString());
+        assertEquals("first string is mapped with myString", entity.getMyString(), dto.getFirstString());
     }
 }

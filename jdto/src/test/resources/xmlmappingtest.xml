@@ -68,4 +68,16 @@
             <source name="aString" bean="bean3" />
         </field>
     </dto>
+    
+    <!-- test immutable simple case -->
+    <dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+        <immutableConstructor>
+            <arg type="java.lang.String">
+                <source name="myString" />
+            </arg>
+            <arg type="java.lang.String">
+                <source name="related.aString" />
+            </arg>
+        </immutableConstructor>
+    </dto>
 </dto-mapping>

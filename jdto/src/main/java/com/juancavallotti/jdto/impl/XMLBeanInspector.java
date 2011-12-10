@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl;
 
+import com.juancavallotti.jdto.impl.xml.DTOConstructorArg;
 import com.juancavallotti.jdto.impl.xml.DTOElement;
 import com.juancavallotti.jdto.impl.xml.DTOMappings;
 import com.juancavallotti.jdto.impl.xml.DTOTargetField;
@@ -39,7 +39,7 @@ import org.apache.commons.lang.StringUtils;
 public class XMLBeanInspector extends AbstractBeanInspector implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Build the metadata for fields.
      * @param propertyName
@@ -72,11 +72,11 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
         }
 
         //read the source propertyies.
-        XMLBeanMetadataReader.readSourceFields(propertyName, config, metadata);
-        
+        XMLBeanMetadataReader.readSourceFields(propertyName, config.getSources(), metadata);
+
         //read the target configuration.
         XMLBeanMetadataReader.readTargetFieldConfig(propertyName, config, metadata);
-        
+
         //try to apply the cascade logic.
         if (config.isCascade()) {
             //then we'll need to apply the cascade logic.
@@ -140,6 +140,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     //convenience map to access easily class and fields config.
     private final HashMap<String, DTOElement> configuredDtos;
     private final HashMap<String, HashMap<String, DTOTargetField>> targetFieldMappings;
+    private final HashMap<String, DTOConstructorArg[]> constrcutrorArgMappings;
 
     /**
      * Read the XML file which can be read by accessing the input stream taken 
@@ -155,18 +156,43 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
         mappings = parseXML(xmlStream);
         configuredDtos = new HashMap<String, DTOElement>();
         targetFieldMappings = new HashMap<String, HashMap<String, DTOTargetField>>();
+        constrcutrorArgMappings = new HashMap<String, DTOConstructorArg[]>();
+
 
         //populate the target field mappings.
         for (DTOElement dto : mappings.getElements()) {
 
             HashMap<String, DTOTargetField> fieldsMapping = new HashMap<String, DTOTargetField>();
 
-            for (DTOTargetField targetField : dto.getTargetFields()) {
-                fieldsMapping.put(targetField.getFieldName(), targetField);
+            //if the constructor is immutable this may cause problems.
+            if (dto.getTargetFields() != null) {
+                for (DTOTargetField targetField : dto.getTargetFields()) {
+                    fieldsMapping.put(targetField.getFieldName(), targetField);
+                }
             }
 
             configuredDtos.put(dto.getType(), dto);
             targetFieldMappings.put(dto.getType(), fieldsMapping);
+
+            if (dto.getConstructorArgs() == null) {
+                continue;
+            }
+
+            DTOConstructorArg[] args = new DTOConstructorArg[dto.getConstructorArgs().size()];
+
+            //read the constructor args
+            for (int i = 0; i < dto.getConstructorArgs().size(); i++) {
+                DTOConstructorArg arg = dto.getConstructorArgs().get(i);
+                if (arg.getOrder() != null) {
+                    //if the argument has a specific order, then place it.
+                    args[arg.getOrder()] = arg;
+                } else {
+                    //otherwise use the declaration order.
+                    args[i] = arg;
+                }
+            }
+            
+            constrcutrorArgMappings.put(dto.getType(), args);
         }
     }
 
@@ -224,12 +250,58 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     }
 
     @Override
-    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    FieldMetadata buildFieldMetadata(int parameterIndex, Class parameterType, Annotation[] parameterAnnotations, Class beanClass) {
+        String propertyName = "arg" + parameterIndex;
+
+        FieldMetadata metadata = buildDefaultFieldMetadata(propertyName);
+
+        if (!constrcutrorArgMappings.containsKey(beanClass.getName())) {
+            logger.info("No settings for arg: " + parameterIndex + " of bean: " + beanClass.getName() + " using default values...");
+            return metadata;
+        }
+
+        //build metadata from an xml file.
+        DTOConstructorArg arg = constrcutrorArgMappings.get(beanClass.getName())[parameterIndex];
+
+        //if no config, then apply default.
+        if (arg == null) {
+            throw new RuntimeException("No settings for constructor arg " + parameterIndex + " of bean " + beanClass.getName());
+        }
+
+        //read the source propertyies.
+        XMLBeanMetadataReader.readSourceFields(propertyName, arg.getSources(), metadata);
+
+        //read the target configuration.
+        XMLBeanMetadataReader.readTargetFieldConfig(propertyName, arg, metadata);
+
+        //try to apply the cascade logic.
+        if (arg.isCascade()) {
+            //then we'll need to apply the cascade logic.
+            Class targetClass = StringUtils.isEmpty(arg.getFieldType())
+                    ? defaultCascadeTargetClass()
+                    : BeanClassUtils.safeGetClass(arg.getFieldType());
+
+            applyCascadeLogic(targetClass, parameterType, null, metadata);
+        }
+
+        return metadata;
     }
 
+    /**
+     * Find a constructor with the appropiate types.
+     * @param beanClass
+     * @return 
+     */
     @Override
     Constructor findAppropiateConstructor(Class beanClass) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        DTOConstructorArg[] args = constrcutrorArgMappings.get(beanClass.getName());
+
+        Class[] types = new Class[args.length];
+
+        for (int i = 0; i < types.length; i++) {
+            types[i] = BeanClassUtils.safeGetClass(args[i].getType());
+        }
+
+        return BeanClassUtils.safeGetConstructor(beanClass, types);
     }
 }

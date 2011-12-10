@@ -37,6 +37,7 @@ public class DTOElement implements Serializable {
     private String type;
     private List<String> beanNames;
     private List<DTOTargetField> targetFields;
+    private List<DTOConstructorArg> constructorArgs;
     
     public DTOElement() {
     }
@@ -67,6 +68,16 @@ public class DTOElement implements Serializable {
 
     public void setTargetFields(List<DTOTargetField> targetFields) {
         this.targetFields = targetFields;
+    }
+    
+    @XmlElementWrapper(name = "immutableConstructor")
+    @XmlElement(name = "arg")
+    public List<DTOConstructorArg> getConstructorArgs() {
+        return constructorArgs;
+    }
+
+    public void setConstructorArgs(List<DTOConstructorArg> constructorArgs) {
+        this.constructorArgs = constructorArgs;
     }
     
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl.xml;
 
 import java.io.Serializable;
@@ -25,25 +24,25 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * the DTO target field XML element
+ * Represents a constructor arg readed from a XML configuration file.
  * @author juancavallotti
  */
-@XmlRootElement(name = "field")
+@XmlRootElement(name = "arg")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class DTOTargetField implements Serializable, DTOTargetConfig{
+public class DTOConstructorArg implements Serializable, DTOTargetConfig {
+
     private static final long serialVersionUID = 1L;
-    
-    private String fieldName;
+    private Integer order;
+    private String type;
     private String merger;
     private String mergerParam;
     private String fieldType;
     private boolean cascade;
-    private boolean dtoTransient;
     private List<DTOSourceField> sources;
-    
-    public DTOTargetField() {
+
+    public DTOConstructorArg() {
     }
-    
+
     @XmlAttribute
     @Override
     public boolean isCascade() {
@@ -53,26 +52,8 @@ public class DTOTargetField implements Serializable, DTOTargetConfig{
     public void setCascade(boolean cascade) {
         this.cascade = cascade;
     }
-    
-    @XmlAttribute(name="transient")
-    public boolean isDtoTransient() {
-        return dtoTransient;
-    }
 
-    public void setDtoTransient(boolean dtoTransient) {
-        this.dtoTransient = dtoTransient;
-    }
-    
-    @XmlAttribute(name="name")
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-    
-    @XmlAttribute(name="cascadeType")
+    @XmlAttribute(name = "cascadeType")
     @Override
     public String getFieldType() {
         return fieldType;
@@ -81,7 +62,7 @@ public class DTOTargetField implements Serializable, DTOTargetConfig{
     public void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
-    
+
     @XmlAttribute
     @Override
     public String getMerger() {
@@ -101,8 +82,8 @@ public class DTOTargetField implements Serializable, DTOTargetConfig{
     public void setMergerParam(String mergerParam) {
         this.mergerParam = mergerParam;
     }
-    
-    @XmlElement(name="source")
+
+    @XmlElement(name = "source")
     @Override
     public List<DTOSourceField> getSources() {
         return sources;
@@ -111,6 +92,22 @@ public class DTOTargetField implements Serializable, DTOTargetConfig{
     public void setSources(List<DTOSourceField> sources) {
         this.sources = sources;
     }
-    
-    
+
+    @XmlAttribute(name = "order")
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    @XmlAttribute(name = "type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
