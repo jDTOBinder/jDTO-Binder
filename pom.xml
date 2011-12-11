@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.juancavallotti</groupId>
     <artifactId>jdto-all</artifactId>
-    <version>0.6</version>
+    <version>0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>jDTO Binder</name>
     <build>
@@ -44,7 +44,7 @@
     
     <!-- version management of dependencies -->
     <properties>
-        <current.version>0.6</current.version>
+        <current.version>0.7-SNAPSHOT</current.version>
         <cdi.version>1</cdi.version>
         <commonslang.version>2.6</commonslang.version>
         <junit.version>4.9</junit.version>
