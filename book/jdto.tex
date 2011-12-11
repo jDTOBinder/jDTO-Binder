@@ -9,15 +9,13 @@
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 
-
-% See the ``Article customize'' template for come common customizations
-
-\title{jDTO Binder 0.5 User's Guide}
-\author{Juan Alberto López Cavallotti}
 %\date{} % delete this line to display the current date
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
+\newcommand{\JDV}{0.6\xspace}
+
+%for java syntax highlighting
 \lstnewenvironment{java}
 {\lstset{
 		language=Java, 
@@ -35,6 +33,7 @@
 }
 {}
 
+%for xml syntax highlighting
 \lstnewenvironment{xml}
 {\lstset{
 		language=Xml, 
@@ -55,6 +54,13 @@
 			pdftitle= {jDTO Binder User's Guide},
 			pdfsubject= {jDTO Binder User's Guide}
 			}
+
+
+% See the ``Article customize'' template for come common customizations
+
+\title{\JDTO \JDV User's Guide}
+\author{Juan Alberto López Cavallotti}
+
 
 %%% BEGIN DOCUMENT
 \begin{document}
@@ -81,6 +87,9 @@ The discussion of wether the DTOs are useful or not is left out of the picture. 
 the architect and the size of the application. As a personal opinion I like mixed architectures, there are
 moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
+\subsection{What's new in \JDV}
+
+\JDTO \JDV introduces the ability to populate immutable DTO's both for annotation and XML configs.
 
 \subsection{Getting the Source}
 
@@ -454,6 +463,47 @@ public class MultiSourceDTO2 {
 }
 \end{java}
 
+\section{Immutable DTOs}
+
+\JDTO is capable of building instances of the DTOs using non default constructors, this brings you the possibility of creating immutable instances which
+ are objects whose state doesn't change.
+ 
+In order to use this feature, your class must not have a default constructor and may have more than one constructors. In order to choose which constructor you want the framework to use, you must annotate it with the \texttt{@DTOConstructor} annotation\footnote{Not required when there's just one constructor.} or define it into the XML settings.
+
+The following is an example of a typical immutable DTO:
+
+\begin{java}
+public final class SimpleImmutableDTO {
+    private final String firstString;
+    private final String secondString;
+    
+    //make this the DTO constructor.
+    @DTOConstructor
+    public SimpleImmutableDTO(@Source("myString") String firstString, @Source("related.aString") String secondString) {
+        this.firstString = firstString;
+        this.secondString = secondString;
+    }
+    
+    public SimpleImmutableDTO(String firstString, String secondString, String thirdString) {
+        this.firstString = firstString;
+        this.secondString = secondString;
+    }
+    
+    public String getFirstString() {
+        return firstString;
+    }
+
+    public String getSecondString() {
+        return secondString;
+    }    
+}
+\end{java}
+
+Since there is no reliable way of getting the parameter names using the Java Reflection API (and therefore no safe way of creating a default configuration), the user must specify settings for each constructor argument. Failing to provide configuration for these arguments will cause a \texttt{RuntimeException} to be thrown.
+
+You can't configure a constructor argument to be transient since the class is immutable there won't be a chance to change it later.
+
+Some of these behaviors may change on the future.
 
 \section{Reverse Binding: DTO To Business Object}
 
@@ -616,7 +666,25 @@ The following snippet demonstrates how you can configure mappings with multiple 
 \end{xml}
 
 
+\subsection{Immutable DTOs}
 
+The following snipped demonstrates how you can configure a constructor to be used by the \JDTO framework:
 
+\begin{xml}
+<dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+    <immutableConstructor>
+        <arg order="0" type="java.lang.String">
+            <source name="test" bean="bean1" />
+        </arg>
+        <arg order="1" type="java.lang.Number">
+            <source name="pepe" />
+        </arg>
+    </immutableConstructor>
+</dto>
+\end{xml}
+
+The order attribute is optional, if not present, the declaration order will be taken into account. The "arg" XML element is very similar to the "field" element, but is different in the way that it doesn't have a name but defined by an order and a type and it can't be transient. 
+
+All of the constructor arguments must be declared and also they must have at least one source property configured. This is mainly because there's no reliable way to read the argument names of one method in the java reflection API so it is impossible to assume a default configuration.
 
 \end{document}
