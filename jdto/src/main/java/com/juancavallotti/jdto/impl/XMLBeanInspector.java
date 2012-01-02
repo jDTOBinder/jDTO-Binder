@@ -39,6 +39,13 @@ import org.apache.commons.lang.StringUtils;
 public class XMLBeanInspector extends AbstractBeanInspector implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * This is the default package resource for the xml config file to be named. <br />
+     * By convention, a bean inspector instance may look for this package resource
+     * if no other location is provided. This serves the purpose of encouraging
+     * convention-over-configuration.
+     */
+    public static final String DEFAULT_PACKAGE_RESOURCE = "/jdto-mappings.xml";
 
     /**
      * Build the metadata for fields.
@@ -110,6 +117,34 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     }
 
     /**
+     * Build an instance of XML bean inspector by reading the configuration file
+     * in the default location, see {@link XMLBeanInspector#DEFAULT_PACKAGE_RESOURCE}
+     * @return an instance of the bean inspector or null if no default configuration found.
+     */
+    public static XMLBeanInspector getInstance() {
+        InputStream is = XMLBeanInspector.class.getResourceAsStream(DEFAULT_PACKAGE_RESOURCE);
+        try {
+            if (is == null) {
+                logger.info("Package resource " + DEFAULT_PACKAGE_RESOURCE + " is not present.");
+                return null;
+            }
+            return new XMLBeanInspector(is);
+        } catch (Exception ex) {
+            logger.error("Got exception while trying to read the default xml configuration file", ex);
+            return null;
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ex) {
+                    logger.error("Got exception while parsing xml file", ex);
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+    }
+
+    /**
      * Get an instance of XMLBeanInspector which reads configuration over a 
      * package resource.
      * @param packageResource
@@ -157,8 +192,13 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
         configuredDtos = new HashMap<String, DTOElement>();
         targetFieldMappings = new HashMap<String, HashMap<String, DTOTargetField>>();
         constrcutrorArgMappings = new HashMap<String, DTOConstructorArg[]>();
-
-
+        
+        //mappings can be null for pefectly valid xml files so we check that
+        if (mappings.getElements() == null) {
+            //nothing happens.
+            return;
+        }
+        
         //populate the target field mappings.
         for (DTOElement dto : mappings.getElements()) {
 
@@ -191,7 +231,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
                     args[i] = arg;
                 }
             }
-            
+
             constrcutrorArgMappings.put(dto.getType(), args);
         }
     }

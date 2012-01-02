@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.juancavallotti.jdto.impl;
 
 import com.juancavallotti.jdto.BeanModifier;
@@ -22,6 +21,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of the DTO binding lifecycle. Subclasses can extend this
@@ -30,26 +31,36 @@ import java.util.List;
  * @author juancavallotti
  */
 public class DTOBinderBean implements DTOBinder {
+
     private static final long serialVersionUID = 1L;
-    
     private HashMap<Class, BeanMetadata> metadata;
-    
+    static final Logger logger = LoggerFactory.getLogger(DTOBinderBean.class);
     /**
      * This delegate will hold the real implementation of the binding lifecycle
      * for simple instances, hiding the complexity of other types of bindings
      * provided only for user convencience.
      */
     private final SimpleBinderDelegate implementationDelegate;
-    
+
     /**
      * Please do not use this constructor directly unless you REALLY know what
      * you're doing.
      */
     public DTOBinderBean() {
         implementationDelegate = new SimpleBinderDelegate(this);
-        implementationDelegate.setInspector(new AnnotationBeanInspector());
+
+        //try to read xml configuration at default location.
+        logger.debug("Trying to use default xml config file...");
+        XMLBeanInspector xmlInspector = XMLBeanInspector.getInstance();
+
+        if (xmlInspector != null) {
+            logger.info("Using discovered configuration file: " + XMLBeanInspector.DEFAULT_PACKAGE_RESOURCE);
+            implementationDelegate.setInspector(xmlInspector);
+        } else {
+            implementationDelegate.setInspector(new AnnotationBeanInspector());
+        }
     }
-    
+
     /**
      * Build a binder instance which will read its configuration from an
      * XML File received as the constructo parameter
@@ -59,13 +70,13 @@ public class DTOBinderBean implements DTOBinder {
         implementationDelegate = new SimpleBinderDelegate(this);
         XMLBeanInspector xmlInspector = new XMLBeanInspector(xmlFile);
         implementationDelegate.setInspector(xmlInspector);
-        
+
         if (eagerLoad) {
             setMetadata(xmlInspector.buildMetadata());
         }
-        
+
     }
-    
+
     @Override
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
         return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
@@ -75,23 +86,23 @@ public class DTOBinderBean implements DTOBinder {
     public <T> List<T> bindFromBusinessObjectList(Class<T> dtoClass, List... businessObjectsLists) {
         //this will apply repeatedly the conversion results to a list.
         Object[] paramsBuffer = new Object[businessObjectsLists.length];
-        
+
         List<T> ret = new ArrayList<T>();
-        
+
         //the reference size will be the first list size
         int refSize = businessObjectsLists[0].size();
-        
+
         //repeatedly run the simple binding.
         for (int i = 0; i < refSize; i++) {
             for (int j = 0; j < businessObjectsLists.length; j++) {
                 List param = businessObjectsLists[j];
                 paramsBuffer[j] = param.get(i);
             }
-            
+
             T result = bindFromBusinessObject(dtoClass, paramsBuffer);
             ret.add(result);
         }
-        
+
         return ret;
     }
 
@@ -99,9 +110,8 @@ public class DTOBinderBean implements DTOBinder {
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return implementationDelegate.extractFromDto(metadata, businessObjectClass, dto);
     }
-    
-    //GETTER + SETTER IMPLEMENTATION
 
+    //GETTER + SETTER IMPLEMENTATION
     public HashMap<Class, BeanMetadata> getMetadata() {
         return metadata;
     }
@@ -109,7 +119,7 @@ public class DTOBinderBean implements DTOBinder {
     public final void setMetadata(HashMap<Class, BeanMetadata> metadata) {
         this.metadata = metadata;
     }
-    
+
     public BeanModifier getBeanModifier() {
         return implementationDelegate.getModifier();
     }

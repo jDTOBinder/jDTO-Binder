@@ -51,6 +51,8 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
     public void afterPropertiesSet() {
 
         logger.debug("Begin building SpringDTOBinder bean.");
+        
+        
         if (xmlConfig != null) {
             try {
                 logger.debug("Configured with XML settings");
