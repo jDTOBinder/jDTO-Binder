@@ -13,7 +13,8 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{0.6\xspace}
+\newcommand{\JDV}{0.7\xspace}
+\newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
 \lstnewenvironment{java}
@@ -67,6 +68,7 @@
 
 \maketitle
 \includegraphics[scale=1]{logo.png}
+\newpage
 \tableofcontents
 
 \newpage
@@ -89,7 +91,15 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \subsection{What's new in \JDV}
 
-\JDTO \JDV introduces the ability to populate immutable DTO's both for annotation and XML configs.
+\JDTO \JDV introduces new features:
+\begin{itemize}
+\item Default location for configuration file: now, by default, the framework looks for a package resource file located at \DEFAULTCONFIG.
+\end{itemize}
+
+Issues solved:
+\begin{itemize}
+\item Fixed \texttt{NullPointerException} when no DTO entries are specified on a XML file (which is valid).
+\end{itemize}
 
 \subsection{Getting the Source}
 
@@ -165,6 +175,8 @@ DTOBinder binder = DTOBinderFactory.buildBinder(
     DTOBinder.class.getResourceAsStream("/xmlmappingtest.xml"));
 \end{java}
 
+By default, the framework looks for a file named \DEFAULTCONFIG on the classpath, if this file is present and no other XML file has been specified, then it will use XML configuration instead of annotations with the configuration specified in \DEFAULTCONFIG file.
+
 The bean analysis over XML file is kind of expensive (not much but kind of) so to get the best performance you should keep that bean as a singleton.
 
 \subsubsection{Integration with the Spring Framework}
@@ -229,7 +241,6 @@ The jdto-cdi dependency has as implicit dependency the jdto framework so you sho
 Once we have our binder instance bootstrapped, we can start binding objects. \JDTO uses the "convention over configuration"
 methodology, therefore if you don't add any kind of mapping it will assume default values as a convention. 
 
-At the moment the only way to configure DTO's is by using some of the framework annotations. Alternative ways such as XML configuration may be added on the future to support frameworks which don't take kindly server-side annotations such as GWT.
 
 In the following example there's one property bound by convention and the other one bound by configuration.
 
@@ -544,8 +555,7 @@ assertEquals("Changed!", entity.getaString());
 
 \JDTO by default binds the DTOs using annotations but this is not the only option, there are some cases in which annotations are not convenient or even not available. For this cases, \JDTO provides a way to configure the DTO binding on a convenient XML file.
 
-As this framework is built with the convention over configuration philosophy, you can start working with practically no configuration and customize just some things. All the properties of a DTO are taken in account unless you explicitly declare them as transient. All DTOs declared on the XML file are loaded and analyzed eagerly, and non-configured DTOs are analyzed lazily the first time they're used.
-
+As this framework is built with the convention over configuration philosophy, you can start working with practically no configuration and customize just some things. By default, if there is a file on the default package called \DEFAULTCONFIG, then the framework will use it and disable the annotations config (which is actually the default when the file is not present). All the properties of a DTO are taken in account unless you explicitly declare them as transient. All DTOs declared on the XML file are loaded and analyzed eagerly, and non-configured DTOs are analyzed lazily the first time they're used.
 
 Finally, the XML configuration file currently supports all the features the Annotation configuration support. There may be some additions on the future to make simpler the configuration.
 
@@ -555,7 +565,7 @@ Rather than explaining again the whole feature set, some examples will be shown 
 
 \subsection{Basic XML Setup}
 
-It is recommended to create an xml file on the default package called dtos.xml, and in its empty form should look like this:
+It is recommended to create an xml file on the default package called \DEFAULTCONFIG, and in its empty form should look like this:
 
 \begin{xml}
 <?xml version="1.0" encoding="UTF-8"?>
