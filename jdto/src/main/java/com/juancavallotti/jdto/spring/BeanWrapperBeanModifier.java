@@ -16,7 +16,7 @@
 
 package com.juancavallotti.jdto.spring;
 
-import com.juancavallotti.jdto.BeanModifier;
+import com.juancavallotti.jdto.impl.BaseBeanModifier;
 import com.juancavallotti.jdto.impl.BeanClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ import org.springframework.beans.PropertyAccessorFactory;
  * instances on the association path.
  * @author juancavallotti
  */
-public class BeanWrapperBeanModifier implements BeanModifier{
+public class BeanWrapperBeanModifier extends BaseBeanModifier{
     private static final long serialVersionUID = 1L;
     
     private static Logger logger = LoggerFactory.getLogger(BeanWrapperBeanModifier.class);
@@ -42,7 +42,7 @@ public class BeanWrapperBeanModifier implements BeanModifier{
      * @return 
      */
     @Override
-    public Object readPropertyValue(String propertyPath, Object instance) {
+    public Object doReadPropertyValue(String propertyPath, Object instance) {
         BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(instance);
         
         //check if it's safe to write the property.
@@ -60,7 +60,7 @@ public class BeanWrapperBeanModifier implements BeanModifier{
      * @param instance 
      */
     @Override
-    public void writePropertyValue(String propertyPath, Object value, Object instance) {
+    public void doWritePropertyValue(String propertyPath, Object value, Object instance) {
         BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(instance);
         
         

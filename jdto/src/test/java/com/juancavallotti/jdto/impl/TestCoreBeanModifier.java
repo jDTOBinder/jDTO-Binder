@@ -16,12 +16,14 @@
 
 package com.juancavallotti.jdto.impl;
 
+import java.util.Map;
 import java.util.ArrayList;
 import com.juancavallotti.jdto.entities.ComplexList;
 import com.juancavallotti.jdto.entities.ComplexEntity;
 import com.juancavallotti.jdto.entities.SimpleAssociation;
 import com.juancavallotti.jdto.entities.SimpleEntity;
 import java.util.Arrays;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -99,5 +101,39 @@ public class TestCoreBeanModifier {
         ArrayList readValue = (ArrayList) modifier.readPropertyValue("sourceList", complexList);
         
         assertSame(complexList.getSourceList(), readValue);
+    }
+    
+    @Test
+    public void testWriteToMap() {
+        CoreBeanModifier modifier = new CoreBeanModifier();
+        
+        Map<String, String> instance = new HashMap();
+        
+        modifier.writePropertyValue("name", "myName", instance);
+        
+        //try to write simple property
+        assertEquals("myName", instance.get("name"));
+        
+        //try to write nested property.
+        modifier.writePropertyValue("name.last", "lastName", instance);
+        
+        assertEquals("lastName", instance.get("name.last"));
+    }
+    
+    @Test
+    public void testReadFromMap() {
+        
+        CoreBeanModifier modifier = new CoreBeanModifier();
+        
+        Map<String, String> instance = new HashMap<String, String>();
+        
+        instance.put("name", "myName");
+        instance.put("name.last", "lastName");
+        
+        String simple = (String) modifier.readPropertyValue("name", instance);
+        String compound = (String) modifier.readPropertyValue("name.last", instance);
+        
+        assertEquals("myName", simple);
+        assertEquals("lastName", compound);
     }
 }

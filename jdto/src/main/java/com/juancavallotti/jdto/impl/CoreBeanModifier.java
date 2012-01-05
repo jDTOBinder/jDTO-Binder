@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * on what third party libraries are really required to make this framework work.
  * @author juancavallotti
  */
-public class CoreBeanModifier implements BeanModifier {
+public class CoreBeanModifier extends BaseBeanModifier {
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(CoreBeanModifier.class);
@@ -64,7 +64,7 @@ public class CoreBeanModifier implements BeanModifier {
      * {@inheritDoc } 
      */
     @Override
-    public Object readPropertyValue(String propertyPath, Object instance) {
+    public Object doReadPropertyValue(String propertyPath, Object instance) {
 
         try {
 
@@ -115,7 +115,7 @@ public class CoreBeanModifier implements BeanModifier {
      * @param instance 
      */
     @Override
-    public void writePropertyValue(String propertyPath, Object finalValue, Object instance) {
+    public void doWritePropertyValue(String propertyPath, Object finalValue, Object instance) {
         try {
 
             if (propertyPath == null) {
