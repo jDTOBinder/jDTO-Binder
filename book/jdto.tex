@@ -94,6 +94,7 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 \JDTO \JDV introduces new features:
 \begin{itemize}
 \item Default location for configuration file: now, by default, the framework looks for a package resource file located at \DEFAULTCONFIG.
+\item Map Binding: Users can populate \texttt{Map} implementations from objects and populate objects from maps.
 \end{itemize}
 
 Issues solved:
@@ -284,6 +285,8 @@ to demonstrate features of \JDTO.
 
 The first attribute \texttt{someString} is bound by convention, and the second one is bound
 by configuration using the \texttt{@Source} annotation.
+
+If the object passed as entity is an implementation of \texttt{java.util.Map}, then the values will be read as keys of the map instead of calling the object's getters, this means you can populate an object from a map, this also applies if a cascaded property is a map.  
 
 \section{Simple Field Binding}
 
@@ -525,7 +528,6 @@ By design, \JDTO sacrificed this capability of going back and forth 100\% for th
 The following snippet demonstrates how to apply reverse binding to extract a business object out of a DTO.
 
 
-
 \begin{java}
 //create a basic entity
 SimpleEntity entity = new SimpleEntity("test", 123, 345.35, true);
@@ -549,6 +551,8 @@ assertEquals(20.20, entity.getaDouble(), 0.0001);
 assertEquals("Changed!", entity.getaString());
 \end{java}
 
+
+If the entity class argument is an implementation of \texttt{java.util.Map}, then the value returned will be a map, and the keys of the map will match the DTO mapping for the object passed as an argument. This means you can populate a map out of an object.
 
 
 \section{XML Configuration}
