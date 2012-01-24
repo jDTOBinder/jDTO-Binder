@@ -36,6 +36,14 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+      <!-- Enabling the use of FTP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
     </build>
     <modules>
         <module>jdto</module>
@@ -44,7 +52,6 @@
     
     <!-- version management of dependencies -->
     <properties>
-        <current.version>0.8-SNAPSHOT</current.version>
         <cdi.version>1</cdi.version>
         <commonslang.version>2.6</commonslang.version>
         <junit.version>4.9</junit.version>
@@ -88,7 +95,7 @@
             <dependency>
                 <groupId>com.juancavallotti</groupId>
                 <artifactId>jdto</artifactId>
-                <version>${current.version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
