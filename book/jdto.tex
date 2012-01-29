@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{0.7\xspace}
+\newcommand{\JDV}{0.8\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -67,7 +67,17 @@
 \begin{document}
 
 \maketitle
+
+\begin{center}
+
 \includegraphics[scale=1]{logo.png}
+
+\begin{huge}
+ http://jdto.juancavallotti.com
+\end{huge}
+\end{center}
+
+
 \newpage
 \tableofcontents
 
@@ -93,18 +103,22 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \JDTO \JDV introduces new features:
 \begin{itemize}
-\item Default location for configuration file: now, by default, the framework looks for a package resource file located at \DEFAULTCONFIG.
-\item Map Binding: Users can populate \texttt{Map} implementations from objects and populate objects from maps.
+\item Mergers API modified so now mergers can take multiple parameters instead of one, this provides a clearer and more extensible API.
+\item Improved existing mergers to take basic advantage of this new feature (more will come in the future).
+\item New PropertyCollection merger, this helps converting a collection of a complex object into a collection of one of its attributes.
 \end{itemize}
 
 Issues solved:
 \begin{itemize}
-\item Fixed \texttt{NullPointerException} when no DTO entries are specified on a XML file (which is valid).
+\item Migrated current mergers to accept multiple parameters.
+\item Added basic validation to existing mergers.
+\item Improved project pom configuration.
+\item Improved javadoc.
 \end{itemize}
 
 \subsection{Getting the Source}
 
-Currently, \JDTO is hosted as an open source github project and licensed with the Apache 2 open source license. You can find the source code deployed on \JDTO maven repository or in github. The github project url is: 
+Currently, \JDTO is hosted as an open source GitHub project and licensed with the Apache 2 open source license. You can find the source code deployed on \JDTO maven repository or in GitHub. The GitHub project url is: 
 
 https://github.com/juancavallotti/jDTO-Binder
 
@@ -145,7 +159,7 @@ You also want to add the \JDTO repository to your pom.xml file:
         <repository>
             <id>com.juancavallotti</id>
             <name>jdto</name>
-            <url>http://juancavallotti.com/maven2</url>
+            <url>http://maven2.juancavallotti.com/</url>
             <layout>default</layout>
         </repository>
     </repositories>
@@ -179,62 +193,6 @@ DTOBinder binder = DTOBinderFactory.buildBinder(
 By default, the framework looks for a file named \DEFAULTCONFIG on the classpath, if this file is present and no other XML file has been specified, then it will use XML configuration instead of annotations with the configuration specified in \DEFAULTCONFIG file.
 
 The bean analysis over XML file is kind of expensive (not much but kind of) so to get the best performance you should keep that bean as a singleton.
-
-\subsubsection{Integration with the Spring Framework}
-
-\JDTO provides out-of-the-box integration with the spring framework. By default \JDTO uses annotation-based configuration for the binder, here is how to bootstrap it to used within the spring framework xml configuration file:
-
-
-\begin{xml}
-<!-- THE DTO BINDER BEAN --> 
-<bean id="dtobinder" 
-    class="com.juancavallotti.jdto.spring.SpringDTOBinder" />
-\end{xml}
-
-
-You may want to use an XML configuration file instead of regular annotations. The spring framework integration
-provides a way to configure the DTO Binder instance to read the xml configuration file.
-
-
-\begin{xml}
-<!-- THE DTO BINDER BEAN --> 
-<bean class="com.juancavallotti.jdto.spring.SpringDTOBinder">
-    <property name="xmlConfig" value="classpath:/dtos.xml" />
-</bean>
-\end{xml}
-
-
-Note: The binder instance is of the kind of instances you want to keep as singleton. This is because even though it can analyze a bean on the fly, it caches it's metadata to have a quicker access on the future.
-
-Once configured, you can inject the binder bean as usual, for example:
-
-
-\begin{java}
-@Autowired
-private DTOBinder binder;
-\end{java}
-
-\subsubsection{Integration with CDI}
-
-\JDTO library provides a CDI jar and also a way to inject the DTO binder instance into your own beans. Due to some restrictions on the design of CDI, it was a decision to make this integration as a separate library, so you must change your pom dependencies to:
-
-\begin{xml}
-    <dependency>
-        <groupId>com.juancavallotti</groupId>
-        <artifactId>jdto-cdi</artifactId>
-        <version>${jdto.version}</version>
-    </dependency>
-\end{xml}
-
-In the following example is shown the typical case of injection via CDI:
-
-
-\begin{java}
-@Inject
-private DTOBinder binder;
-\end{java}
-
-The jdto-cdi dependency has as implicit dependency the jdto framework so you should not have to add it explicitly, nevertheless you may add it if that is your taste.
 
 \subsection{Basic DTO Binding}
 
@@ -286,7 +244,66 @@ to demonstrate features of \JDTO.
 The first attribute \texttt{someString} is bound by convention, and the second one is bound
 by configuration using the \texttt{@Source} annotation.
 
-If the object passed as entity is an implementation of \texttt{java.util.Map}, then the values will be read as keys of the map instead of calling the object's getters, this means you can populate an object from a map, this also applies if a cascaded property is a map.  
+If the object passed as entity is an implementation of \texttt{java.util.Map}, then the values will be read as keys of the map instead of calling the object's getters, this means you can populate an object from a map, this also applies if a cascaded property is a map. 
+
+\section{Integration}
+
+\subsection{Integration with the Spring Framework}
+
+\JDTO provides out-of-the-box integration with the spring framework. By default \JDTO uses annotation-based configuration for the binder, here is how to bootstrap it to be used within the spring framework xml configuration file:
+
+
+\begin{xml}
+<!-- THE DTO BINDER BEAN --> 
+<bean id="dtobinder" 
+    class="com.juancavallotti.jdto.spring.SpringDTOBinder" />
+\end{xml}
+
+
+You may want to use an XML configuration file instead of regular annotations. The spring framework integration
+provides a way to configure the DTO Binder instance to read the xml configuration file. By default, it will try to look for the \DEFAULTCONFIG file on the class path, this can be changed by implicitly specifying a configuration file:
+
+
+\begin{xml}
+<!-- THE DTO BINDER BEAN --> 
+<bean class="com.juancavallotti.jdto.spring.SpringDTOBinder">
+    <property name="xmlConfig" value="classpath:/dtos.xml" />
+</bean>
+\end{xml}
+
+
+Note: The binder instance is of the kind of instances you want to keep as singleton. This is because even though it can analyze a bean on the fly, it caches it's metadata to have a quicker access on the future.
+
+Once configured, you can inject the binder bean as usual, for example:
+
+
+\begin{java}
+@Autowired
+private DTOBinder binder;
+\end{java}
+
+\subsection{Integration with CDI}
+
+\JDTO library provides a CDI jar and also a way to inject the DTO binder instance into your own beans. Due to some restrictions on the design of CDI, it was a decision to make this integration as a separate library, so you must change your pom dependencies to:
+
+\begin{xml}
+    <dependency>
+        <groupId>com.juancavallotti</groupId>
+        <artifactId>jdto-cdi</artifactId>
+        <version>${jdto.version}</version>
+    </dependency>
+\end{xml}
+
+In the following example is shown the typical case of injection via CDI:
+
+
+\begin{java}
+@Inject
+private DTOBinder binder;
+\end{java}
+
+The jdto-cdi dependency has as implicit dependency the jdto framework so you should not have to add it explicitly, nevertheless you may add it if that is your taste.
+ 
 
 \section{Simple Field Binding}
 
@@ -316,6 +333,7 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
+ \item \texttt{PropertyCollectionMerger}: Converts a collection of objects into a collection of one property of those objects.
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
  \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
  \item \texttt{SumProductMerger}: Add all the results of a multiplication between properties for each value of a bean collection or array, for example an SQL equivalent would be: \texttt{SELECT sum(itemPrice * amount * taxRate) FROM billItems }. This is a convenience implementation which should be picked instead of \texttt{SumExpressionMerger} because is more efficient.
@@ -655,6 +673,10 @@ The following snippet demonstrates how various property mergers can be configure
 </dto>
 \end{xml}
 
+In order to support multiple merger parameters without adding an excessive load of XML configuration, it's a design decision to separate those parameters in the same XML "mergerParam" attribute with semicolons ";", so for example if the value merger takes two parameters "first" and "second", the XML snippet would look like:
+
+\texttt{mergerParam="first;second"}.
+
 \subsection{Multiple Source Beans}
 
 The following snippet demonstrates how you can configure mappings with multiple bean sources:
@@ -700,5 +722,109 @@ The following snipped demonstrates how you can configure a constructor to be use
 The order attribute is optional, if not present, the declaration order will be taken into account. The "arg" XML element is very similar to the "field" element, but is different in the way that it doesn't have a name but defined by an order and a type and it can't be transient. 
 
 All of the constructor arguments must be declared and also they must have at least one source property configured. This is mainly because there's no reliable way to read the argument names of one method in the java reflection API so it is impossible to assume a default configuration.
+
+
+\section{Extending the Framework}
+
+There are some ways to extend or customize the framework, the main way is to write custom property value mergers which will let you customize how the values are copied from the original object to the DTO. Another way of customizing the framework is by implementing a custom bean modifier (which will not be covered). 
+
+
+\subsection{Implementing Custom Property Value Mergers}
+
+\JDTO has two main types of property value mergers: Those who merge values from a single source and those who merge values from multiple sources. Both kinds of mergers are applied on the binding process but in different stages, for those fields annotated with \texttt{@Source} (or its XML equivalent), just the single property value merger is applied; for those fields annotated with \texttt{@Sources} (or its XML equivalent), one single property value merger is applied for each source, and then a multiple property value merger is applied to the results of the previous.
+
+\subsection{Single Property Value Mergers}
+
+In order to implement a single property value merger, you need to create a class that implements the interface \texttt{SinglePropertyValueMerger}.
+
+The interface \texttt{SinglePropertyValueMerger} looks like the following, the generic type variables are added for developer convenience:
+
+\begin{java}
+
+/**
+ * Merge a property into another type / form by applying a transformation. <br />
+ * Transformations can be hinted by the extra param attribute.
+ * @param R the type of the resulting property.
+ * @param S the type of the source property, for developer convenience.
+ * @author juancavallotti
+ */
+public interface SinglePropertyValueMerger<R, S> {
+
+    /**
+     * Merge the value of type S into another object of type R.
+     * @param values the value to be merged.
+     * @param extraParam metadata that may help the merger to build the result.
+     * @return the merged object.
+     */
+    public R mergeObjects(S value, String[] extraParam);
+}
+
+\end{java}
+
+Each implementation of a property merger is kept as a singleton, therefore is not safe to use instance variables for user functionally.
+
+\subsubsection{Utility Merger Templates}
+
+The framework provides some utility template classes to implement property value mergers, some of these are:
+
+\begin{itemize}
+\item \texttt{AbstractCalulationCollectionMerger}: provides functionality to perform calculations on a given property of a collection or array.
+\end{itemize}
+
+
+\subsection{Multiple Property Value Mergers}
+
+In order to implement a multiple property value merger, you need to create a class that implements the interface \texttt{MultiPropertyValueMerger}.
+
+The interface \texttt{MultiPropertyValueMerger} looks like the following, the generic type variables are added for developer convenience:
+
+\begin{java}
+/**
+ * Implementations should know how to merge a list of objects into a single object. <br />
+ * This interface is meant to be used to create a single value out of a multi-source
+ * property configuration, see {@link com.juancavallotti.jdto.annotation.Sources}.
+ * @param <R> The result type of the merged parameters.
+ * @author juancavallotti
+ */
+public interface MultiPropertyValueMerger<R> {
+    
+    /**
+     * Merge the list of objects into a single object.
+     * @param values the values to be merged.
+     * @param extraParam metadata that may help the merger to build the result.
+     * @return the merge resulting object.
+     */
+    public R mergeObjects(List<Object> values, String[] extraParam);
+}
+\end{java}
+
+Same considerations for single property value mergers should be taken.
+
+\subsection{Accessing the Bean Modifier}
+
+In some cases, the developer must read safely properties from the source objects (the same as the framework does to create the DTOs), for this purpose, you need to instruct the framework that you wish to work with a \texttt{BeanModifier} instance, to do this just implement the \texttt{BeanModifierAware} interface so the framework injects (by setter injection) the bean modifier to your property value merger before it calls the \texttt{mergeObjects} method, the interface looks like the following:
+
+\begin{java}
+/**
+ * Makes this object aware of the current bean modifier used by the DTO binder
+ * instance. Injection is performed by setter dependency injection.
+ * @author juan
+ */
+public interface BeanModifierAware {
+    
+    /**
+     * Expose the BeanModifer to the implementing class.
+     * @param modifier the bean modifier instance.
+     */
+    void setBeanModifier(BeanModifier modifier);
+}
+\end{java}
+
+In this case it is safe to save the modifier instance in an instance variable of the property value merger.
+
+\subsection{Math Expressions API}
+
+\JDTO ships with a simple-to-use mathematic expression API you can take advantage, the variable resolution process can be either event-driven (lazy loaded) or the developer can provide a map matching each variable with its value. Please see javadoc for more information.
+
 
 \end{document}

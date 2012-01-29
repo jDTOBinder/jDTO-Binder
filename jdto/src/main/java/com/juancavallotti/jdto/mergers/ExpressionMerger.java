@@ -37,7 +37,7 @@ import org.apache.commons.lang.ArrayUtils;
  * <li>if value = 10 and extraParam ("variable * 1.5") then the result is 15.</li>
  * </ul>
  * 
- * In the previous example the value could be named with any name, incresing
+ * In the previous example the value could be named with any name, increasing
  * code readability. <br />
  * 
  * Resulting expressions are chached locally to the merger instance to avoid
