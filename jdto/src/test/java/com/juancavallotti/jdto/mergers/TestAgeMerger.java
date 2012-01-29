@@ -58,7 +58,7 @@ public class TestAgeMerger {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -1* expected.intValue());
         
-        Number result = merger.mergeObjects(cal, AgeMerger.YEARS);
+        Number result = merger.mergeObjects(cal, new String[] { AgeMerger.YEARS });
         
         assertEquals("should be the same age", expected.intValue(), result.intValue());
     }
@@ -73,7 +73,7 @@ public class TestAgeMerger {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.WEEK_OF_YEAR, -1* expected.intValue());
         
-        Number result = merger.mergeObjects(cal, AgeMerger.WEEKS);
+        Number result = merger.mergeObjects(cal, new String[] { AgeMerger.WEEKS });
         
         assertEquals("should be the same age in weeks", expected.intValue(), result.intValue());
         
@@ -89,7 +89,7 @@ public class TestAgeMerger {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -1* expected.intValue());
         
-        Number result = merger.mergeObjects(cal, AgeMerger.DAYS);
+        Number result = merger.mergeObjects(cal, new String[] { AgeMerger.DAYS });
         
         assertEquals("should be the same age in weeks", expected.intValue(), result.intValue());
         

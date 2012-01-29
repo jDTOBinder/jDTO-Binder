@@ -34,7 +34,7 @@ public class TestDecimalFormatMerger {
         
         double value = 0.101;
         
-        String result = merger.mergeObjects(value, "% #,###.00");
+        String result = merger.mergeObjects(value, new String[] {"% #,###.00"});
         
         assertEquals(new DecimalFormat("% #,###.00").format(value), result);
     }

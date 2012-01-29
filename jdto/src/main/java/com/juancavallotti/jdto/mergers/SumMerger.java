@@ -15,6 +15,8 @@
  */
 package com.juancavallotti.jdto.mergers;
 
+import org.apache.commons.lang.ArrayUtils;
+
 /**
  * Merge all the parameters on a collection or array by adding them one to
  * each other. All of the numbers on the collections will be treated as a double.
@@ -27,9 +29,16 @@ package com.juancavallotti.jdto.mergers;
 public class SumMerger extends AbstractCalulationCollectionMerger {
 
     @Override
-    protected Double processCalculation(Iterable collection, String extraParam) {
+    protected Double processCalculation(Iterable collection, String[] extraParams) {
+        
         double sum = 0.0;
-
+        
+        if (ArrayUtils.isEmpty(extraParams)) {
+            throw new IllegalArgumentException("Property name is required");
+        }
+        
+        String extraParam = extraParams[0];
+        
         for (Object value : collection) {
 
             //get the double.

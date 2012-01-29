@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * <pre>
  * 
- * &#64;Source(value="collection", merger=SumProductMerger.class, mergerParam="a,b,c"
+ * &#64;Source(value="collection", merger=SumProductMerger.class, mergerParams={"a","b","c"}
  * private double resultHolder;
  * 
  * </pre>
@@ -49,9 +49,9 @@ import org.apache.commons.lang.StringUtils;
 public class SumProductMerger extends AbstractCalulationCollectionMerger {
 
     @Override
-    protected Double processCalculation(Iterable collection, String extraParam) {
+    protected Double processCalculation(Iterable collection, String[] extraParams) {
 
-        String[] factorNames = StringUtils.split(extraParam, ",");
+        String[] factorNames = extraParams;
 
         double sum = 0.0;
 

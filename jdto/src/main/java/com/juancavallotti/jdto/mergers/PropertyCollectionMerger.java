@@ -20,8 +20,8 @@ import com.juancavallotti.jdto.BeanModifierAware;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import com.juancavallotti.jdto.impl.BeanClassUtils;
 import java.util.Collection;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,16 +43,18 @@ public class PropertyCollectionMerger implements SinglePropertyValueMerger<Colle
     private static final Logger logger = LoggerFactory.getLogger(PropertyCollectionMerger.class);
 
     @Override
-    public Collection mergeObjects(Collection values, String extraParam) {
+    public Collection mergeObjects(Collection values, String[] extraParams) {
 
         //this should be null safe
         if (values == null) {
             return null;
         }
         
-        if (StringUtils.isEmpty(extraParam)) {
+        if (ArrayUtils.isEmpty(extraParams)) {
             throw new IllegalArgumentException("You need to provide the extra param should be a property name.");
         }
+        
+        String extraParam = extraParams[0];
         
         Collection retValue = getCollectionToReturn(values);
         

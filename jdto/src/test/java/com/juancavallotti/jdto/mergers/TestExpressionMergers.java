@@ -47,7 +47,7 @@ public class TestExpressionMergers {
     @Test
     public void testExpressionMergerValue() {
         
-        String expression = "value * 20";
+        String[] expression = { "value * 20" };
         
         double result = merger.mergeObjects(10, expression);
         
@@ -61,7 +61,7 @@ public class TestExpressionMergers {
         billItem.setAmount(5);
         billItem.setPrice(10);
         
-        String expression = "amount * price + (amount * price * 0.2)";
+        String[] expression = { "amount * price + (amount * price * 0.2)" };
         
         double result = merger.mergeObjects(billItem, expression);
         
@@ -82,7 +82,7 @@ public class TestExpressionMergers {
         
         HashSet<BillItem> items  = new HashSet<BillItem>(Arrays.asList(item1, item2));
         
-        String expression = "price * amount";
+        String[] expression = {"price * amount"};
         
         double result = sumMerger.mergeObjects(items, expression);
         

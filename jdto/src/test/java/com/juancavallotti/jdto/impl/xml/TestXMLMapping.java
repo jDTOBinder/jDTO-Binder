@@ -105,8 +105,8 @@ public class TestXMLMapping {
         assertNotNull("double format attribute should not be null", dto.getPrice());
         assertNotNull("compound format attribute should not be null", dto.getCompound());
 
-        assertEquals(expectedPrice, dto.getPrice());
-        assertEquals(expectedCompound, dto.getCompound());
+        assertEquals("failed to get expected simple price", expectedPrice, dto.getPrice());
+        assertEquals("failed to get expected compound price", expectedCompound, dto.getCompound());
     }
 
     @Test

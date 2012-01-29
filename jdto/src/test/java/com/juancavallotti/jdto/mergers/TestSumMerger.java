@@ -48,9 +48,9 @@ public class TestSumMerger {
         
         SumMerger merger = new SumMerger();
         
-        double result = merger.mergeObjects(myInts, "");
+        double result = merger.mergeObjects(myInts, new String[] {""});
         
-         assertEquals(20.0, result, 0.0001);
+        assertEquals(20.0, result, 0.0001);
     }
     
     

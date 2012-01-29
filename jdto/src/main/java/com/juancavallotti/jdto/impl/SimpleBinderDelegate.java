@@ -264,7 +264,7 @@ class SimpleBinderDelegate implements Serializable {
 
     private Object applyMergeToSingleField(HashMap<String, Object> sourceBeans, String sourceProperty, FieldMetadata fieldMetadata) {
         SinglePropertyValueMerger merger = fieldMetadata.getSourceMergers().get(sourceProperty);
-        String mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
+        String[] mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
         String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
 
         Object bo = sourceBeans.get(sourceBean);

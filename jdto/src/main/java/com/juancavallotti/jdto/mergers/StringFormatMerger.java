@@ -20,6 +20,7 @@ import com.juancavallotti.jdto.MultiPropertyValueMerger;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * This merger takes the formatting string (see {@link String#format(java.lang.String, java.lang.Object[]) })
@@ -33,11 +34,17 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
     /**
      * Merges the objects using the extraParam as a formatting String.
      * @param values
-     * @param extraParam
+     * @param extraParams
      * @return 
      */
     @Override
-    public String mergeObjects(List<Object> values, String extraParam) {
+    public String mergeObjects(List<Object> values, String[] extraParams) {
+        
+        if (ArrayUtils.isEmpty(extraParams)) {
+            throw new IllegalArgumentException("Format String is required");
+        }
+        
+        String extraParam = extraParams[0];
         Object[] params = values.toArray();
         return String.format(extraParam, params);
     }
@@ -49,7 +56,7 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
      * @return 
      */
     @Override
-    public String mergeObjects(Object value, String extraParam) {
+    public String mergeObjects(Object value, String[] extraParam) {
         return mergeObjects(Arrays.asList(value), extraParam);
     }
     

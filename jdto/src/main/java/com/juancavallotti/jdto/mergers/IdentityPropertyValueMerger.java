@@ -37,7 +37,7 @@ public final class IdentityPropertyValueMerger implements SinglePropertyValueMer
      * @return the same value received.
      */
     @Override
-    public Object mergeObjects(Object value, String extraParam) {
+    public Object mergeObjects(Object value, String[] extraParam) {
         return value;
     }
     

@@ -18,6 +18,7 @@ package com.juancavallotti.jdto.mergers;
 
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import java.text.DecimalFormat;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Format a given number using a {@link DecimalFormat} instance with the format
@@ -34,9 +35,14 @@ public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Nu
      * @return the merged object formatted with JDK decimal format.
      */
     @Override
-    public String mergeObjects(Number value, String extraParam) {
+    public String mergeObjects(Number value, String[] extraParam) {
         
-        DecimalFormat format = new DecimalFormat(extraParam);
+        if (ArrayUtils.isEmpty(extraParam)) {
+            throw new IllegalArgumentException("Number format param is required");
+        }
+        
+        
+        DecimalFormat format = new DecimalFormat(extraParam[0]);
         
         return format.format(value);
     }

@@ -17,6 +17,7 @@ package com.juancavallotti.jdto.mergers;
 
 import com.juancavallotti.jdto.impl.InstancePool;
 import com.juancavallotti.jdto.util.expression.Expression;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Expression merger which will sum the result of a calculation given by an 
@@ -31,9 +32,15 @@ public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
     private static final String MERGER_PREFIX = SumExpressionMerger.class.getName();
 
     @Override
-    protected Double processCalculation(Iterable collection, String extraParam) {
+    protected Double processCalculation(Iterable collection, String[] extraParams) {
         double sum = 0;
-
+        
+        if (ArrayUtils.isEmpty(extraParams)) {
+            throw new IllegalArgumentException("Expression is required");
+        }
+        
+        String extraParam = extraParams[0];
+        
         Expression exp = InstancePool.getNamedInstance(MERGER_PREFIX + extraParam);
         if (exp == null) {
             exp = new Expression(extraParam);

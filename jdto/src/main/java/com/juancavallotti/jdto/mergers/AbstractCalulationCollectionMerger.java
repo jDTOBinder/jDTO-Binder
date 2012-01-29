@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
 public abstract class AbstractCalulationCollectionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
 
     @Override
-    public Double mergeObjects(Object input, String extraParam) {
+    public Double mergeObjects(Object input, String[] extraParam) {
         //the value could be null so check that.
         if (input == null) {
             return 0.0;
@@ -52,7 +52,7 @@ public abstract class AbstractCalulationCollectionMerger implements SingleProper
      * @param extraParam the merge extra-param.
      * @return the result of the calculation.
      */
-    protected abstract Double processCalculation(Iterable collection, String extraParam);
+    protected abstract Double processCalculation(Iterable collection, String[] extraParam);
     
     
     /**

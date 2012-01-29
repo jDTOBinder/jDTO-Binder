@@ -3,6 +3,7 @@ package com.juancavallotti.jdto.mergers;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -53,7 +54,7 @@ public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
      * @return 
      */
     @Override
-    public Double mergeObjects(Object value, String extraParam) {
+    public Double mergeObjects(Object value, String[] extraParam) {
         
         if (value == null) {
             return 0.0;
@@ -88,22 +89,22 @@ public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
         return 0;
     }
 
-    private long resolveConstant(String extraParam) {
-        if (StringUtils.isEmpty(extraParam)) {
+    private long resolveConstant(String[] extraParams) {
+        if (ArrayUtils.isEmpty(extraParams)) {
             return YEARS_L;
         }
-        if (StringUtils.equals(extraParam, YEARS)) {
+        if (StringUtils.equals(extraParams[0], YEARS)) {
             return YEARS_L;
         }
         
-        if (StringUtils.equals(extraParam, WEEKS)) {
+        if (StringUtils.equals(extraParams[0], WEEKS)) {
             return WEEKS_L;
         }
         
-        if (StringUtils.equals(extraParam, DAYS)) {
+        if (StringUtils.equals(extraParams[0], DAYS)) {
             return DAYS_L;
         }
         
-        return Long.parseLong(extraParam);
+        return Long.parseLong(extraParams[0]);
     }
 }

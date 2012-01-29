@@ -210,8 +210,8 @@ abstract class AbstractBeanInspector {
      * An empty string is the default merger parameter.
      * @return 
      */
-    static String defaultMergerParameter() {
-        return "";
+    static String[] defaultMergerParameter() {
+        return new String[] { "" };
     }
 
     /**

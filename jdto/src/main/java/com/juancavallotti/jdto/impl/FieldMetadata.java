@@ -31,9 +31,9 @@ public class FieldMetadata implements Serializable {
     
     private List<String> sourceFields;
     private HashMap<String, SinglePropertyValueMerger> sourceMergers;
-    private HashMap<String, String> sourceMergersParams;
+    private HashMap<String, String[]> sourceMergersParams;
     private HashMap<String, String> sourceBeans;
-    private String mergerParameter;
+    private String[] mergerParameters;
     private MultiPropertyValueMerger propertyValueMerger;
     private String[] sourceBeanNames;
     
@@ -50,16 +50,16 @@ public class FieldMetadata implements Serializable {
     
     public FieldMetadata() {
         sourceMergers = new HashMap<String, SinglePropertyValueMerger>();
-        sourceMergersParams = new HashMap<String, String>();
+        sourceMergersParams = new HashMap<String, String[]>();
         sourceBeans = new HashMap<String, String>();
     }
 
-    public String getMergerParameter() {
-        return mergerParameter;
+    public String[] getMergerParameter() {
+        return mergerParameters;
     }
 
-    public void setMergerParameter(String mergerParameter) {
-        this.mergerParameter = mergerParameter;
+    public void setMergerParameter(String[] mergerParameter) {
+        this.mergerParameters = mergerParameter;
     }
 
     public MultiPropertyValueMerger getPropertyValueMerger() {
@@ -118,11 +118,11 @@ public class FieldMetadata implements Serializable {
         this.sourceMergers = sourceMergers;
     }
 
-    public HashMap<String, String> getSourceMergersParams() {
+    public HashMap<String, String[]> getSourceMergersParams() {
         return sourceMergersParams;
     }
 
-    public void setSourceMergersParams(HashMap<String, String> sourceMergersParams) {
+    public void setSourceMergersParams(HashMap<String, String[]> sourceMergersParams) {
         this.sourceMergersParams = sourceMergersParams;
     }
 
@@ -142,9 +142,9 @@ public class FieldMetadata implements Serializable {
         this.sourceBeans = sourceBeans;
     }
     
-    public void setSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String extraParam, String sourceBean) {
+    public void setSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String[] extraParams, String sourceBean) {
         sourceMergers.put(propertyName, merger);
-        sourceMergersParams.put(propertyName, extraParam);
+        sourceMergersParams.put(propertyName, extraParams);
         sourceBeans.put(propertyName, sourceBean);
     }
 }

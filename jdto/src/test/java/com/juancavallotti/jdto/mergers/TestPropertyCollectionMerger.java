@@ -46,7 +46,7 @@ public class TestPropertyCollectionMerger {
         originalCollection.add(new SimpleEntity("test", 10, 11.1, true));
         originalCollection.add(new SimpleEntity("test2", 10, 11.1, true));
 
-        List<String> result = (List<String>) merger.mergeObjects(originalCollection, "aString");
+        List<String> result = (List<String>) merger.mergeObjects(originalCollection, new String[] {"aString"});
         
         assertEquals(originalCollection.get(0).getaString(), result.get(0));
         assertEquals(originalCollection.get(0).getaString(), result.get(0));

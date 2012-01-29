@@ -20,6 +20,7 @@ import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Merge a {@link Date} or {@link Calendar} using a {@link SimpleDateFormat} 
@@ -36,10 +37,14 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
      * @return the formatted value or null if the value argument is null.
      */
     @Override
-    public String mergeObjects(Object value, String extraParam) {
+    public String mergeObjects(Object value, String[] extraParam) {
         
         if (value == null) {
             return null;
+        }
+        
+        if (ArrayUtils.isEmpty(extraParam)) {
+            throw new IllegalArgumentException("Date format String parameter is required");
         }
         
         if (!(value instanceof Calendar) && !(value instanceof Date)) {
@@ -47,7 +52,7 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
         }
         
         //create a dateformat with the format String
-        SimpleDateFormat format = new SimpleDateFormat(extraParam);
+        SimpleDateFormat format = new SimpleDateFormat(extraParam[0]);
         
         Date target = null;
         

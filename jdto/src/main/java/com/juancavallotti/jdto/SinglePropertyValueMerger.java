@@ -31,5 +31,5 @@ public interface SinglePropertyValueMerger<T, S> {
      * @param extraParam metadata that may help the merger to build the result.
      * @return 
      */
-    public T mergeObjects(S value, String extraParam);
+    public T mergeObjects(S value, String[] extraParam);
 }

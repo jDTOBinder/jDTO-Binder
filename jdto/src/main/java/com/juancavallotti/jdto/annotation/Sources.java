@@ -53,5 +53,5 @@ public @interface Sources {
      * Extra parameters to send to the value Merger instance.
      * @return 
      */
-    String mergerParam() default "";
+    String[] mergerParam() default "";
 }

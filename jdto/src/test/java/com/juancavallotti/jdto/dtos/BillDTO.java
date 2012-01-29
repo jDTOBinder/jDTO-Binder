@@ -31,7 +31,7 @@ public class BillDTO {
     @Source(value = "items", merger = SumMerger.class, mergerParam = "price")
     private double total2;
     
-    @Source(value = "items", merger = SumProductMerger.class, mergerParam = "price,amount")
+    @Source(value = "items", merger = SumProductMerger.class, mergerParam = {"price","amount"})
     private double totalTotal;
 
     public double getTotal() {

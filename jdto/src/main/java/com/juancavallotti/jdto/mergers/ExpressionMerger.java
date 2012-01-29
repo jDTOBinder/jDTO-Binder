@@ -20,6 +20,7 @@ import com.juancavallotti.jdto.BeanModifierAware;
 import com.juancavallotti.jdto.SinglePropertyValueMerger;
 import com.juancavallotti.jdto.impl.InstancePool;
 import com.juancavallotti.jdto.util.expression.Expression;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Single property value merger which takes a math expression by param and
@@ -48,8 +49,14 @@ public class ExpressionMerger implements SinglePropertyValueMerger<Double, Objec
     private static final String MERGER_PREFIX = ExpressionMerger.class.getName();
 
     @Override
-    public Double mergeObjects(final Object value, String extraParam) {
-
+    public Double mergeObjects(final Object value, String[] extraParams) {
+        
+        if (ArrayUtils.isEmpty(extraParams)) {
+            throw new IllegalArgumentException("Expression parameter is required");
+        }
+        
+        String extraParam = extraParams[0];
+        
         Expression exp = InstancePool.getNamedInstance(MERGER_PREFIX + extraParam);
 
         if (exp == null) {

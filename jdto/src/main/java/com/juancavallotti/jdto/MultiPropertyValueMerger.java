@@ -33,5 +33,5 @@ public interface MultiPropertyValueMerger<T> {
      * @param extraParam metadata that may help the merger to build the result.
      * @return 
      */
-    public T mergeObjects(List<Object> values, String extraParam);
+    public T mergeObjects(List<Object> values, String[] extraParam);
 }

@@ -33,7 +33,7 @@ public class FirstObjectPropertyValueMerger implements MultiPropertyValueMerger<
      * @return 
      */
     @Override
-    public Object mergeObjects(List<Object> values, String extraParam) {
+    public Object mergeObjects(List<Object> values, String[] extraParam) {
         for (Object object : values) {
             if (object != null) {
                 return object;
