@@ -57,8 +57,8 @@ public abstract class AbstractCalulationCollectionMerger implements SingleProper
     
     /**
      * Convert the input into an iterable instance.
-     * @param input
-     * @return 
+     * @param input the input object to iterate over.
+     * @return an UniversalIterable instance.
      */
     private Iterable convertInput(Object input) {
         return new UniversalIterable(input);
@@ -68,9 +68,9 @@ public abstract class AbstractCalulationCollectionMerger implements SingleProper
      * Get the actual number from a property. An empty or null extra param means
      * return the same object.
      * 
-     * @param value
-     * @param extraParam
-     * @return 
+     * @param value the source object to read from.
+     * @param extraParam the name of the property to be read.
+     * @return the expected double or 0 if value == null.
      */
     protected Double getActualValue(Object value, String extraParam) {
 

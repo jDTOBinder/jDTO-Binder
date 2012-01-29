@@ -17,15 +17,15 @@
 package com.juancavallotti.jdto;
 
 /**
- * Makes this object aware of the current bean modifier used by the DTO binding
- * instance.
+ * Makes this object aware of the current bean modifier used by the DTO binder
+ * instance. Injection is performed by setter dependency injection.
  * @author juan
  */
 public interface BeanModifierAware {
     
     /**
      * Expose the BeanModifer to the implementing class.
-     * @param modifier 
+     * @param modifier the bean modifier instance.
      */
     void setBeanModifier(BeanModifier modifier);
 }
