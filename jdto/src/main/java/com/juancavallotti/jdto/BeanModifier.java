@@ -28,7 +28,8 @@ public interface BeanModifier extends Serializable {
      * Read a value from a property path from an instance of a bean.
      * @param propertyPath
      * @param instance
-     * @return 
+     * @return the value of the property read from the instance or null if 
+     * something goes wrong. 
      */
     public Object readPropertyValue(String propertyPath, Object instance);
 

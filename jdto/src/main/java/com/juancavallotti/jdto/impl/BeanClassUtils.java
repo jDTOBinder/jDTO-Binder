@@ -39,7 +39,7 @@ public class BeanClassUtils {
      * {@link RuntimeException}.
      * @param <T>
      * @param cls
-     * @return 
+     * @return a new instance of the type given in the argument.
      */
     public static <T> T createInstance(Class<T> cls) {
         try {
@@ -58,7 +58,7 @@ public class BeanClassUtils {
      * @param cls
      * @param constructor
      * @param argValues
-     * @return 
+     * @return a new instance of the type given on the argument by using the specified constructor.
      */
     public static <T> T createInstance(Class<T> cls, Constructor constructor, ArrayList argValues) {
         try {
@@ -73,7 +73,7 @@ public class BeanClassUtils {
     /**
      * Check if the class has a default constructor.
      * @param cls
-     * @return 
+     * @return true if the type has default constructor, false if not.
      */
     public static boolean hasDefaultConstructor(Class cls) {
         
@@ -92,7 +92,7 @@ public class BeanClassUtils {
     /**
      * Try to find a class out of a string or return null;
      * @param type
-     * @return 
+     * @return the Class object represented on the given parameter.
      */
     static Class safeGetClass(String type) {
         //if no type then no class :D
@@ -113,7 +113,7 @@ public class BeanClassUtils {
      * any checked exception in unchecked exception.
      * @param cls
      * @param types
-     * @return 
+     * @return the constructor of the given class which has the given parameter types.
      */
     static Constructor safeGetConstructor(Class cls, Class[] types) {
         try {

@@ -47,24 +47,24 @@ public @interface Source {
 
     /**
      * The name of the source bean for bean matching. <br />
-     * See the {@link SourceBeans} annotation for further reference on how 
-     * multiple beans will be handled.
+     * See the {@link com.juancavallotti.jdto.annotation.SourceNames} annotation 
+     * for further reference on how multiple beans will be handled.
      * @return the default source bean is an empty string, the first bean specified
-     * on the {@link SourceBeans} annotation will be considered as default in
-     * addition to the name given by the user.
+     * on the {@link com.juancavallotti.jdto.annotation.SourceNames} annotation 
+     * will be considered as default in addition to the name given by the user.
      */
     String sourceBean() default "";
 
     /**
      * The property merger used to merge this property. The default behavior
      * is the {@link IdentityPropertyValueMerger} which basically does not change the object.
-     * @return 
+     * @return the type that implements a single property value merger.
      */
     Class<? extends SinglePropertyValueMerger> merger() default IdentityPropertyValueMerger.class;
 
     /**
      * Extra parameters to send to the value Merger instance.
-     * @return 
+     * @return an array of parameters that will be passed to a merger object.
      */
     String[] mergerParam() default "";
 }

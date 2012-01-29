@@ -51,7 +51,7 @@ public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
      * @param extraParam a constant to resolve the time unit. If null, then it
      * resolves to years. This constant is expressed in milliseconds and it will
      * be used to calculate the result as (today - value) / constant.
-     * @return 
+     * @return the age of the param until today.
      */
     @Override
     public Double mergeObjects(Object value, String[] extraParam) {

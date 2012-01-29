@@ -33,7 +33,8 @@ public class DTOBinderFactory {
      * Create a new instance of a DTO binder with default settings. <br />
      * The resulting bean will read its configurations out of annotations on the
      * target DTOs
-     * @return 
+     * @return a new binder instance configured with the default bean modifier 
+     * and empty bean metadata.
      */
     public static DTOBinder buildBinder() {
         DTOBinderBean bean = new DTOBinderBean();
@@ -48,7 +49,8 @@ public class DTOBinderFactory {
      * Create a new instance of a DTO binder which will read the binding configuration
      * out of the given XML file passed as a parameter.
      * @param xmlFile
-     * @return 
+     * @return a new binder instance configured with the default bean modifier 
+     * and metadata read from an XML configruation file.
      */
     public static DTOBinder buildBinder(InputStream xmlFile) {
         DTOBinderBean bean = new DTOBinderBean(xmlFile, true);
@@ -65,7 +67,8 @@ public class DTOBinderFactory {
      * 
      * The returned DTO binder is annotation-style configured, which is also
      * recommended.
-     * @return 
+     * @return a singleton instance of the DTO binder which can be quicky 
+     * forgotten by the user.
      */
     public static DTOBinder getBinder() {
         DTOBinderBean bean = InstancePool.getOrCreate(DTOBinderBean.class);

@@ -52,7 +52,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      * @param propertyName
      * @param readAccessor
      * @param beanClass
-     * @return 
+     * @return the field metadata for the given property.
      */
     @Override
     FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass) {
@@ -100,7 +100,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     /**
      * Read the source bean names for a given class.
      * @param beanClass
-     * @return 
+     * @return an array with the list of source bean names for the given class.
      */
     @Override
     String[] readSourceBeanNames(Class beanClass) {
@@ -148,7 +148,8 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      * Get an instance of XMLBeanInspector which reads configuration over a 
      * package resource.
      * @param packageResource
-     * @return 
+     * @return an instance of this XML inspector configured with the file located
+     * in the packageResource path.
      */
     public static XMLBeanInspector getInstance(String packageResource) {
         InputStream is = XMLBeanInspector.class.getResourceAsStream(packageResource);
@@ -258,7 +259,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     /**
      * This method is not really part of the JDTO public API
      * DO NOT CALL IT
-     * @return 
+     * @return the mappings object parsed from the configuration file.
      */
     public DTOMappings getMappings() {
         return mappings;
@@ -268,7 +269,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      * Build the bean metadata based on the information recovered on the xml on
      * an eager way!
      * parsing process
-     * @return 
+     * @return the binding metadata generated out of the XML configuration file.
      */
     public synchronized HashMap<Class, BeanMetadata> buildMetadata() {
         HashMap<Class, BeanMetadata> ret = new HashMap<Class, BeanMetadata>();
@@ -330,7 +331,7 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
     /**
      * Find a constructor with the appropiate types.
      * @param beanClass
-     * @return 
+     * @return the constructor needed to build an instance of this class.
      */
     @Override
     Constructor findAppropiateConstructor(Class beanClass) {

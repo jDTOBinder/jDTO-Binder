@@ -27,7 +27,7 @@ public interface SinglePropertyValueMerger<R, S> {
 
     /**
      * Merge the value of type S into another object of type R.
-     * @param values the value to be merged.
+     * @param value the value to be merged.
      * @param extraParam metadata that may help the merger to build the result.
      * @return the merge resulting object.
      */

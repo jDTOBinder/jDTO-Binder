@@ -30,7 +30,7 @@ public class FirstObjectPropertyValueMerger implements MultiPropertyValueMerger<
     /**
      * Return the first non-null value of the list or null if none found.
      * @param values
-     * @return 
+     * @return the first object on the list.
      */
     @Override
     public Object mergeObjects(List<Object> values, String[] extraParam) {

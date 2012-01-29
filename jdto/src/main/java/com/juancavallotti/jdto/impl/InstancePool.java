@@ -30,9 +30,9 @@ public class InstancePool implements Serializable {
     
     /**
      * Get a named instace from this instance pool.
-     * @param <T>
-     * @param name
-     * @return 
+     * @param <T> the type of the return vale.
+     * @param name the name of the instance to retrieve from the instance pool.
+     * @return a named instance or null if not found.
      */
     public synchronized static <T> T getNamedInstance(String name) {
         return (T) instance.namedInstances.get(name);
@@ -40,9 +40,9 @@ public class InstancePool implements Serializable {
     
     /**
      * Put a named instance on this instance pool.
-     * @param <T>
-     * @param name
-     * @param value 
+     * @param <T> the type of the object to add to the pool.
+     * @param name the name of the instance to add to the pool.
+     * @param value the actual instance to be added to the pool.
      */
     public synchronized static <T> void putNamedInstance(String name, T value) {
         instance.namedInstances.put(name, value);
@@ -58,7 +58,7 @@ public class InstancePool implements Serializable {
     
     /**
      * Get the current instance of this instance pool.
-     * @return 
+     * @return the singleton instance of this instance pool.
      */
     public static InstancePool getInstance() {
         return instance;

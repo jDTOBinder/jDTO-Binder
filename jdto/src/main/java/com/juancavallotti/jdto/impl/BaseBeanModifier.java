@@ -35,7 +35,8 @@ public abstract class BaseBeanModifier implements BeanModifier, Serializable {
      * using the propertyPath as the key.
      * @param propertyPath
      * @param instance
-     * @return 
+     * @return the value read from the property path on the instance or null
+     * if something goes wrong.
      */
     @Override
     public final Object readPropertyValue(String propertyPath, Object instance) {
@@ -70,7 +71,7 @@ public abstract class BaseBeanModifier implements BeanModifier, Serializable {
      * Read a property value.
      * @param propertyPath
      * @param instace
-     * @return 
+     * @return the value from the property path or null.
      */
     protected abstract Object doReadPropertyValue(String propertyPath, Object instace);
     

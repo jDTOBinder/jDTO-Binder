@@ -45,7 +45,7 @@ public @interface DTOCascade {
      * 
      * If the value is null or {@link  Object}.class then the type will be inferred
      * from the type of the field.
-     * @return 
+     * @return the type of the cascaded DTO that should be generated.
      */
     Class targetType() default Object.class;
 }

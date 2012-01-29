@@ -39,7 +39,8 @@ public @interface SourceNames {
     
     /**
      * The names in order of the source beans. <br />
-     * @return 
+     * @return a list of bean names to be matched in order of appearance with 
+     * source objects.
      */
     String[] value();
 }

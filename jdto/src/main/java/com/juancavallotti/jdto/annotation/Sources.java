@@ -38,20 +38,20 @@ public @interface Sources {
 
     /**
      * A group of {@link Source} annotations.
-     * @return 
+     * @return the source value settings to be merged.
      */
     Source[] value();
 
     /**
      * The property merger used to merge this property. For now, the default behavior
      * is to find the first not null value and set it to the target.
-     * @return 
+     * @return the merger type to merge the source values.
      */
     Class<? extends MultiPropertyValueMerger> merger() default FirstObjectPropertyValueMerger.class;
     
     /**
      * Extra parameters to send to the value Merger instance.
-     * @return 
+     * @return a list of parameters that will be passed to the property merger.
      */
     String[] mergerParam() default "";
 }

@@ -39,7 +39,7 @@ public class BeanWrapperBeanModifier extends BaseBeanModifier{
      * Read a property value using the property path by invoking a spring {@link BeanWrapper}
      * @param propertyPath
      * @param instance
-     * @return 
+     * @return the property value found on the property path applied to the provided instance.
      */
     @Override
     public Object doReadPropertyValue(String propertyPath, Object instance) {

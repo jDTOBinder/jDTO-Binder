@@ -35,7 +35,7 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
      * Merges the objects using the extraParam as a formatting String.
      * @param values
      * @param extraParams
-     * @return 
+     * @return a string for the provided format.
      */
     @Override
     public String mergeObjects(List<Object> values, String[] extraParams) {
@@ -53,7 +53,7 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
      * Delegate to the mergeObjects method.
      * @param value
      * @param extraParam
-     * @return 
+     * @return a string for the provided format.
      */
     @Override
     public String mergeObjects(Object value, String[] extraParam) {

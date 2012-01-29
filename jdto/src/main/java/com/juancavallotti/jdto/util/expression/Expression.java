@@ -275,8 +275,8 @@ public final class Expression implements Serializable {
 
     /**
      * Set the value of a variable by name.
-     * @param string
-     * @param i 
+     * @param var the name of the variable.
+     * @param value the value of the variable.
      */
     public void setVariable(String var, Number value) {
         varValues.put(var, value);
@@ -284,7 +284,7 @@ public final class Expression implements Serializable {
     
     /**
      * Get all of the variable names for this expresion.
-     * @return 
+     * @return the list of variable names found on the expression.
      */
     public Set<String> getVariableNames() {
         return varValues.keySet();
@@ -297,7 +297,7 @@ public final class Expression implements Serializable {
         /**
          * Resolve a variable out of a variable name.
          * @param variable
-         * @return 
+         * @return the value resolved using the variable name.
          */
         Number resolveVariable(String variable);
     }
