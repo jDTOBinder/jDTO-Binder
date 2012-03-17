@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{0.8\xspace}
+\newcommand{\JDV}{1.0-BETA1\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -103,17 +103,14 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \JDTO \JDV introduces new features:
 \begin{itemize}
-\item Mergers API modified so now mergers can take multiple parameters instead of one, this provides a clearer and more extensible API.
-\item Improved existing mergers to take basic advantage of this new feature (more will come in the future).
-\item New PropertyCollection merger, this helps converting a collection of a complex object into a collection of one of its attributes.
+\item Added new ToStringMerger.
+\item Added new EnumMerger.
+\item Added new CloneMerger.
 \end{itemize}
 
 Issues solved:
 \begin{itemize}
-\item Migrated current mergers to accept multiple parameters.
-\item Added basic validation to existing mergers.
-\item Improved project pom configuration.
-\item Improved javadoc.
+\item Fixed little mistakes on documentation.
 \end{itemize}
 
 \subsection{Getting the Source}
@@ -328,8 +325,10 @@ The following is a complete list of the built-in single field mergers and a brie
 
 \begin{itemize}
  \item \texttt{AgeMerger}: Evaluates the age in days, weeks or years of a date or calendar instance.
+ \item \texttt{CloneMerger}: Call clone in cloneable objects.
  \item \texttt{DateFormatMerger}: Formats a Date or Calendar instance by applying a format String.
  \item \texttt{DecimalFormatMerger}: Format any number by applying a format String.
+ \item \texttt{EnumMerger}: Convert an enum literal to it's String representation.
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
@@ -337,6 +336,7 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
  \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
  \item \texttt{SumProductMerger}: Add all the results of a multiplication between properties for each value of a bean collection or array, for example an SQL equivalent would be: \texttt{SELECT sum(itemPrice * amount * taxRate) FROM billItems }. This is a convenience implementation which should be picked instead of \texttt{SumExpressionMerger} because is more efficient.
+ \item \texttt{ToStringMerger}: Convert any object into it's string representation by calling toString.
 \end{itemize}
 
 \underline{Note about expression evaluation}: Currently the expression evaluation API supports only five operators: addition (+), subtraction (-), multiplication (*), division(/), and pow (\symbol{94}). Also it supports negative numbers and any amount of balanced parenthesis. If the expression is not well formed, the framework will throw an \texttt{IllegalArgumentException}.
@@ -704,7 +704,7 @@ The following snippet demonstrates how you can configure mappings with multiple 
 
 \subsection{Immutable DTOs}
 
-The following snipped demonstrates how you can configure a constructor to be used by the \JDTO framework:
+The following snippet demonstrates how you can configure a constructor to be used by the \JDTO framework:
 
 \begin{xml}
 <dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
