@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,13 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 /**
+ * Factory class for getting a DTOBinder instance. Please do not use this approach
+ * on dependency injection enabled environments, the framework already provides
+ * integration with the Spring Framework and CDI. <br />
+ * 
  * Use this class to obtain instances of the DTO Binder bean.
  * @author Juan Alberto Lopez Cavallotti
+ * @since 1.0
  */
 public class DTOBinderFactory {
 

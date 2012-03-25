@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * A DTO binder takes care of the deep copy operation between business objects, 
- * which normally may be decorated with different types of proxies (for example)
+ * A DTO binder takes care of the shallow copy operation between business objects, 
+ * which normally are decorated with different types of proxies (for example)
  * lazy loading proxies. <br />
  * 
- * By design a binder should take care of all the boilerplate required to populate
+ * By design a binder will take care of all the boilerplate required to populate
  * DTOs from business objects and the other way around (whenever is possible). <br /><br />
  * 
  * In order to get an instance of a DTOBinder you should call
  * {@link DTOBinderFactory#buildBinder() } or any of its overloads.
  * 
  * @author Juan Alberto Lopez Cavallotti
+ * @since 1.0
  */
 public interface DTOBinder extends Serializable{
     
@@ -44,7 +45,12 @@ public interface DTOBinder extends Serializable{
      * 
      * <br />
      * 
-     * TODO - IMPROVE DOCUMENTATION ON HOW OBJECTS WILL BE BOUND.
+     * You may configure the DTO objects to declaratively indicate where the values
+     * for the fields should be read.
+     * 
+     * Normally DTOs can be configured via a XML file or Annotations, to know
+     * more about the framewokr functionality and the types of configuration
+     * please refer tho the manual. <br />
      * 
      * @param <T> Indicates the type of the DTO returned to avoid downcasts.
      * @param dtoClass The class of the resulting DTO.
@@ -54,6 +60,7 @@ public interface DTOBinder extends Serializable{
      * 
      * @return an instance of the DTO populated with the data specified on the metadata. 
      * @throws some subclass of {@link RuntimeException} on various error conditions.
+     * @since 1.0
      */
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects);
     
@@ -62,7 +69,8 @@ public interface DTOBinder extends Serializable{
      * Create a list of DTOs by performing multiple calls to 
      * {@link DTOBinder#bindFromBusinessObject(java.lang.Class, java.lang.Object[]) } 
      * you can supply more than one {@link List } but they should have the same size
-     * and same indexes should contain related data.
+     * and same indexes should contain related data. <br />
+     * 
      * @param <T> The type of the DTOs list which will be returned.
      * @param dtoClass the class of the resulting DTOs
      * @param businessObjectsLists lists of business objects.
@@ -79,7 +87,10 @@ public interface DTOBinder extends Serializable{
      * In order to perform this operation, the user can provide reverse metadata
      * but also the extraction metadata can be used for non-composite attributes. <br /> 
      * 
-     * TODO - IMPROVE DOCUMENTATION ON HOW OBJECTS WILL BE BOUND.
+     * jDTO Binder takes seriously the approach of flexibility on populating DTO
+     * objects against perfect inverse binding so many data conversion operations
+     * may not be reversible and therefore extracting data from a DTO can be kind
+     * of limited unless you provide reverse annotations and custom data deconversion. <br />
      * 
      * @param <T> Indicates the type of the business object to avoid downcasts.
      * @param businessObjectClass the class of the resulting business object.
