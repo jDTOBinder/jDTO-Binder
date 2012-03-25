@@ -18,7 +18,7 @@ package org.jdto.util.expression;
 
 /**
  * Generic type for treating terms on an expression.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 interface ExpressionTerm {
     /**

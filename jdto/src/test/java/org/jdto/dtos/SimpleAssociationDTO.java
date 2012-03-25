@@ -20,7 +20,7 @@ import org.jdto.annotation.Source;
 
 /**
  *
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SimpleAssociationDTO {
     

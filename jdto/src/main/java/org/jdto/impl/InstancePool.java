@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 /**
  * Pool of instances. This will contain instances of all beans created as singletons.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class InstancePool implements Serializable {
     private static final long serialVersionUID = 1L;

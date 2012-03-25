@@ -21,7 +21,7 @@ import java.util.Set;
 
 /**
  *
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class Bill {
     private List<Double> itemPrices;

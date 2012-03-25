@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
  * Utility class for extracting properties by matching fields and getter methods. <br /> 
  * THIS IS NOT PART OF JDTO PUBLIC API AND REGULAR USERS SHOULD NOT RELY ON THIS CLASS. <br />
  * IT IS MADE PUBLIC JUST FOR PACKAGE ORGANISATION REASONS
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 class BeanPropertyUtils {
 

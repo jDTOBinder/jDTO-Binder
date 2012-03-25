@@ -24,7 +24,7 @@ import org.jdto.mergers.StringFormatMerger;
 
 /**
  * A second multi source dto
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @SourceNames({"bean1", "bean2"})
 public class MultiSourceDTO2 {

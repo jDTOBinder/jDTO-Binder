@@ -37,7 +37,7 @@ import org.jdto.SinglePropertyValueMerger;
  * 
  * </ul>
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class EnumMerger implements SinglePropertyValueMerger<String, Enum> {
 

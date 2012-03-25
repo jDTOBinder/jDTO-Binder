@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class XMLTesterDTO implements Serializable {
     private static final long serialVersionUID = 1L;

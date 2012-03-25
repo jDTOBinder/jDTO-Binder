@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
  * Class for annotation configuration. This will serve as the default bean 
  * inspector. <br />
  * No annotations means default behavior.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 class AnnotationBeanInspector extends AbstractBeanInspector {
 

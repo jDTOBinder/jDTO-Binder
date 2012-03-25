@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * Basic implementation of the DTO binding lifecycle. Subclasses can extend this
  * in the way they find convenient by adding integration with frameworks or any 
  * additional feature.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class DTOBinderBean implements DTOBinder {
 

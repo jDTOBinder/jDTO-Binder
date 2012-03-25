@@ -746,7 +746,7 @@ The interface \texttt{SinglePropertyValueMerger} looks like the following, the g
  * Transformations can be hinted by the extra param attribute.
  * @param R the type of the resulting property.
  * @param S the type of the source property, for developer convenience.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface SinglePropertyValueMerger<R, S> {
 
@@ -784,7 +784,7 @@ The interface \texttt{MultiPropertyValueMerger} looks like the following, the ge
  * This interface is meant to be used to create a single value out of a multi-source
  * property configuration, see {@link com.juancavallotti.jdto.annotation.Sources}.
  * @param <R> The result type of the merged parameters.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface MultiPropertyValueMerger<R> {
     
@@ -808,7 +808,7 @@ In some cases, the developer must read safely properties from the source objects
 /**
  * Makes this object aware of the current bean modifier used by the DTO binder
  * instance. Injection is performed by setter dependency injection.
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface BeanModifierAware {
     

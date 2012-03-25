@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * {@link MultiPropertyValueMerger} implementation to decide how to merge all into 
  * one result. This annotation is meant to be combined with the {@link Source}
  * annotation. 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

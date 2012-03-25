@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestSpringBeanModifier {
 

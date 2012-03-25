@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 /**
  * Use this class to obtain instances of the DTO Binder bean.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class DTOBinderFactory {
 

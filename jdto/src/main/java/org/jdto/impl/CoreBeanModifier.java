@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * Basic implementation of bean modifier, basicly to let the user to not depend
  * on unwanted third party libraries. Please see documentation for information
  * on what third party libraries are really required to make this framework work.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class CoreBeanModifier extends BaseBeanModifier {
 

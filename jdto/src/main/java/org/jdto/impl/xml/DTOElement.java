@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Represents a DTOElement of an XML file.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @XmlRootElement(name = "dto")
 @XmlAccessorType(XmlAccessType.PROPERTY)

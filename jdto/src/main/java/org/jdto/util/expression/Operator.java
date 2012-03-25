@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 /**
  * The supported operators by the evaluation system.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 enum Operator {
     

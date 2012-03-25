@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
  * <li>If the object does not implement {@link java.lang.Cloneable Cloneable} 
  * then the merger will return null.</li>
  * </ul>
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class CloneMerger implements SinglePropertyValueMerger<Object, Object> {
 

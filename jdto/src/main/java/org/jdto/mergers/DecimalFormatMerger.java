@@ -24,7 +24,7 @@ import org.apache.commons.lang.ArrayUtils;
  * Format a given number using a {@link DecimalFormat} instance with the format
  * string as the extra param. Please refer to the {@link DecimalFormat} documentation
  * to check how to write format Strings.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Number> {
     

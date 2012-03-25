@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * Represents a literal term of an expression. This can be built upon a number
  * and it is immutable.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 final class LiteralTerm implements ExpressionTerm, Serializable {
     private static final long serialVersionUID = 1L;

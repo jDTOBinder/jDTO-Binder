@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * If this annotation is used at type level, it will serve as the default mapping.
  * This mapping will be overriden by any method annotated with this type.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})

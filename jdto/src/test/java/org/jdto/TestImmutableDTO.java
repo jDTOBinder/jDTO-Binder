@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 /**
  * Checks immutable dto binding health
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestImmutableDTO {
     

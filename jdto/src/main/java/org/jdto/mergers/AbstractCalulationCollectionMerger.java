@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * This class will loop over the collection and let the imlementation decide
  * what to do with the resulting value which must be a Double.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public abstract class AbstractCalulationCollectionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
 

@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
  * </li></ul>
  * But it can be applied on other situations as well.
  * 
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SumProductMerger extends AbstractCalulationCollectionMerger {
 

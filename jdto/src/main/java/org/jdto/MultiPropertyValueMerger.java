@@ -23,7 +23,7 @@ import java.util.List;
  * This interface is meant to be used to create a single value out of a multi-source
  * property configuration, see {@link com.juancavallotti.jdto.annotation.Sources}.
  * @param <R> The result type of the merged parameters.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface MultiPropertyValueMerger<R> {
     

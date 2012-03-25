@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * 
  * Utility class for creating instances of classes by reflection. The methods
  * on this class handle reflective creation exceptions and log them properly.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class BeanClassUtils {
 

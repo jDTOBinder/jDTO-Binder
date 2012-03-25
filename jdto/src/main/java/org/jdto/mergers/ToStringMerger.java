@@ -27,7 +27,7 @@ import org.jdto.SinglePropertyValueMerger;
  * string representation of its autoboxed counterpart.</li>
  * 
  * </ul>
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class ToStringMerger implements SinglePropertyValueMerger<String, Object> {
 

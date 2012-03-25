@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
  * This class contains copy/pasted tests from some of the features on the framework
  * just with the intention to know if the xml configuration builder is working fine
  * or not.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestXMLMapping {
 

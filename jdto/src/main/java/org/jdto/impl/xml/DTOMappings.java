@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * The DTO Mappgins root element.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @XmlRootElement(name = "dto-mapping")
 @XmlAccessorType(XmlAccessType.PROPERTY)

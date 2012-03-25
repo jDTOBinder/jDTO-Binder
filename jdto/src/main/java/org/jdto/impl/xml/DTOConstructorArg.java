@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Represents a constructor arg readed from a XML configuration file.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @XmlRootElement(name = "arg")
 @XmlAccessorType(XmlAccessType.PROPERTY)

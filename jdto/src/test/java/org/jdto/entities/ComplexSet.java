@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  *
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class ComplexSet {
     

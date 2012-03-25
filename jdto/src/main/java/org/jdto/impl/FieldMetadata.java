@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Represents the metadata for a given field.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class FieldMetadata implements Serializable {
     private static final long serialVersionUID = 1L;

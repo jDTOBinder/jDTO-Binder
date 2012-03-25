@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Common configuration for DTO targets over XML
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface DTOTargetConfig {
 

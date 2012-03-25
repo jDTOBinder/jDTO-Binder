@@ -26,7 +26,7 @@ import java.util.Iterator;
  * This is a utility class specially meant for merger developers so it will not
  * suffer big changes without previous notification.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public final class UniversalIterable<T> implements Iterable<T> {
     

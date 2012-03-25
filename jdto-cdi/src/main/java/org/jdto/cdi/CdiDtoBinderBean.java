@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * 
  * </pre>
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Singleton
 public final class CdiDtoBinderBean extends DTOBinderBean {

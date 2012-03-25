@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * reading all of the fields on a given bean class and delegating to the concrete
  * implementation what to do for each field but providing the funcionality to
  * get default values as needed.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 abstract class AbstractBeanInspector {
 

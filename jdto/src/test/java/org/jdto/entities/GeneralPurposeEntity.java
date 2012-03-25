@@ -22,7 +22,7 @@ import java.util.Date;
 
 /**
  * General purpose entity which has values of different types.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class GeneralPurposeEntity {
     

@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * The value for this annotation may be a nested property and the default behavior
  * will be delegated to the underlying {@link com.juancavallotti.jdto.BeanModifier} implementation.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

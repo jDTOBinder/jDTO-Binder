@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * the DTO target field XML element
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @XmlRootElement(name = "field")
 @XmlAccessorType(XmlAccessType.PROPERTY)

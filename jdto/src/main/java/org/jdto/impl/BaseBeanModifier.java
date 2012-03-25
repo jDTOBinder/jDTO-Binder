@@ -24,7 +24,7 @@ import java.util.Map;
  * Base class for bean modifiers, this adds basic features common to all 
  * bean modifiers. This class adds features for reading / writing from or to
  * a map transparently.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public abstract class BaseBeanModifier implements BeanModifier, Serializable {
     private static final long serialVersionUID = 1L;

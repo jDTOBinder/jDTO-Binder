@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * WARNING: THIS CLASS IS NOT PART OF JDTO PUBLIC API
  * 
  * XML Configuration reader.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class XMLBeanInspector extends AbstractBeanInspector implements Serializable {
 

@@ -21,7 +21,7 @@ package org.jdto;
  * Transformations can be hinted by the extra param attribute.
  * @param R the type of the resulting property.
  * @param S the type of the source property, for developer convenience.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface SinglePropertyValueMerger<R, S> {
 

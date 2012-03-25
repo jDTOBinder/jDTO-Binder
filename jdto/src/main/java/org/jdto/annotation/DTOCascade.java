@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * or a {@link Sources} annotation, then the {@link Source#merger() } attribute
  * will be ignored.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

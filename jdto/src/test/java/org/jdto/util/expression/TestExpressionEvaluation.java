@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the utility class for evaluating math expressions.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestExpressionEvaluation {
 

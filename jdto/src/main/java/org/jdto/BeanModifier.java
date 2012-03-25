@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Implementations should know how to read or write into beans using 
  * a property path.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface BeanModifier extends Serializable {
 

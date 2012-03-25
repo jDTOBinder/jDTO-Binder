@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
  * Iterator to iterate reflectively over an instance of an array.
  * Use this Iterator only if you are not able to iterate over an array any other
  * way.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public final class ArrayIterator<T> implements Iterator<T> {
     

@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * with &#64;{@link Source} or &#64;{@link Sources} because there's no nice
  * way of reading this information by reflection.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.CONSTRUCTOR)

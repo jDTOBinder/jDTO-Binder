@@ -18,7 +18,7 @@ package org.jdto.entities;
 
 /**
  *
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class BillItem {
     private double price;

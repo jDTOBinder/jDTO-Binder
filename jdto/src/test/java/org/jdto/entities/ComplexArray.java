@@ -18,7 +18,7 @@ package org.jdto.entities;
 
 /**
  *
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class ComplexArray {
     

@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  * Tests the regex used to distinguish variables from numbers. This does not test
  * real code but is useful during development, and stored for future usage.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestRegex {
     private static final String variableRegex = "[A-Za-z]{1}+[.[A-Za-z]]*";

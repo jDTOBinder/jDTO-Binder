@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test cases for some basic object operations.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestSimpleObjectMergers {
     

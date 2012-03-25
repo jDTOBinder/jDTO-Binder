@@ -21,7 +21,7 @@ import org.jdto.annotation.Source;
 
 /**
  * Immutable class for testing Immutable DTOs
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public final class SimpleImmutableDTO {
     private final String firstString;

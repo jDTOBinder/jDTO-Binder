@@ -30,7 +30,7 @@ import java.util.List;
  * In order to get an instance of a DTOBinder you should call
  * {@link DTOBinderFactory#buildBinder() } or any of its overloads.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public interface DTOBinder extends Serializable{
     

@@ -18,7 +18,7 @@ package org.jdto.entities;
 
 /**
  * Simple entity for basic DTO binding testing.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SimpleEntity {
     private String aString;

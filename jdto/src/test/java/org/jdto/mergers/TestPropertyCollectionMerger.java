@@ -27,7 +27,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 /**
  * Acceptance tests for the property collection merger.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestPropertyCollectionMerger {
 

@@ -31,7 +31,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 /**
  * Test if the base bean inspector is working or not.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestAbstractBeanInspector extends AbstractBeanInspector{
     

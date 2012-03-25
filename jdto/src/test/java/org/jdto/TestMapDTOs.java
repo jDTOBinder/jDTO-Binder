@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test classes for DTO map feature.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestMapDTOs {
     

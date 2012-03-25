@@ -28,7 +28,7 @@ import org.springframework.beans.PropertyAccessorFactory;
  * Reads and write property values using the Spring framework {@link BeanWrapper}. <br />
  * When trying to write, this bean will try if possible to make up for missing
  * instances on the association path.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class BeanWrapperBeanModifier extends BaseBeanModifier{
     private static final long serialVersionUID = 1L;

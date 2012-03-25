@@ -31,7 +31,7 @@ import org.springframework.core.io.Resource;
  * to scan packages for DTOs in order to build and cache the metadata when this
  * bean is instanciated for the first time.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SpringDTOBinder implements InitializingBean, DTOBinder {
 

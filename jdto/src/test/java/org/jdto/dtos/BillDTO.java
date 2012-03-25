@@ -22,7 +22,7 @@ import org.jdto.mergers.SumProductMerger;
 
 /**
  *
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class BillDTO {
 

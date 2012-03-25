@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  * Acceptance test for the age merger.
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestAgeMerger {
     

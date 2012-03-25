@@ -18,7 +18,7 @@ package org.jdto.impl;
 
 /**
  * Describe the cascade types that can be applied to DTOs
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public enum CascadeType {
     /**

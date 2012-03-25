@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class responsible for binding the DTOs for real.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 class SimpleBinderDelegate implements Serializable {
 

@@ -42,7 +42,7 @@ import org.apache.commons.lang.ArrayUtils;
  * 
  * Resulting expressions are chached locally to the merger instance to avoid
  * trouble with other mergers.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class ExpressionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
 

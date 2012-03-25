@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 
 /**
  * Checks the basic databinding.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestBasicBinding {
     

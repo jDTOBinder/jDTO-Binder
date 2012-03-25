@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *  <li>If the collection is not cloneable, then try to create a new instance of its same class.</li>
  * </ol>
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class PropertyCollectionMerger implements SinglePropertyValueMerger<Collection, Collection>, BeanModifierAware {
 

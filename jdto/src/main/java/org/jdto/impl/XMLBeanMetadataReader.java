@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Contains static methods to help reading the metadata of xml configuration objects.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 class XMLBeanMetadataReader {
 

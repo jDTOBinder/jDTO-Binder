@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Represents useful metadata needed to bind a bean.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class BeanMetadata implements Serializable {
     private static final long serialVersionUID = 1L;

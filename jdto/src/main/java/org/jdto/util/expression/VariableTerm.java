@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 /**
  * Represents a term that is resolved via a table.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 class VariableTerm implements ExpressionTerm, Serializable {
     private static final long serialVersionUID = 1L;

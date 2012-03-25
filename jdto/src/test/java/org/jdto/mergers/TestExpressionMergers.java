@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test if the sum merger and the sum product merger are working fine.
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class TestExpressionMergers {
     

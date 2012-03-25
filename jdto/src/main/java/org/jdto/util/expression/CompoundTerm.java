@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * Represents a compound term of an expression. A compound term is of the type
  * of terms that take two terms and an operator to produce some result.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 final class CompoundTerm implements ExpressionTerm, Serializable {
     private static final long serialVersionUID = 1L;

@@ -25,7 +25,7 @@ import org.apache.commons.lang.ArrayUtils;
  * {@link ExpressionMerger} but applying the formula for each element of the
  * collection.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
 

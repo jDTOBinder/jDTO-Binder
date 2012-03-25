@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * 
  * A constructor argument cannot be transient since it doesnt make sense for 
  * immutable objects.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

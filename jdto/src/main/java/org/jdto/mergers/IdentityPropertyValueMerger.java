@@ -26,7 +26,7 @@ import org.jdto.SinglePropertyValueMerger;
  * This behavior is helpful when the developer wants the value to remain the same
  * across the copy process. <br />
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public final class IdentityPropertyValueMerger implements SinglePropertyValueMerger<Object, Object> {
     

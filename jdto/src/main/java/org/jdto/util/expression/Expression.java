@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
  * The expression evaluation algorithm will go through some stages to convert
  * the formula in something easily evaluable. <br />
  * You may cache this formula to obtain performance gains in your application.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public final class Expression implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * The DTO source field mappings.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 @XmlRootElement(name = "source")
 @XmlAccessorType(XmlAccessType.PROPERTY)

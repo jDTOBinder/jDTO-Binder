@@ -23,7 +23,7 @@ import java.util.List;
  * This is the default property value merger. <br />
  * It returns the first non null value of the list.
  * 
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class FirstObjectPropertyValueMerger implements MultiPropertyValueMerger<Object> {
 

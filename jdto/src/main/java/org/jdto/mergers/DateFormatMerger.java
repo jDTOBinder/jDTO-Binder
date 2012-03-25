@@ -25,7 +25,7 @@ import org.apache.commons.lang.ArrayUtils;
 /**
  * Merge a {@link Date} or {@link Calendar} using a {@link SimpleDateFormat} 
  * format String. <br />
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class DateFormatMerger implements SinglePropertyValueMerger<String, Object> {
     

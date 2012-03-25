@@ -24,7 +24,7 @@ import org.apache.commons.lang.ArrayUtils;
  * type, then the extra parameter will decide which property will be read. <br />
  * 
  * This method resolves its results as a Double.
- * @author juan
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class SumMerger extends AbstractCalulationCollectionMerger {
 

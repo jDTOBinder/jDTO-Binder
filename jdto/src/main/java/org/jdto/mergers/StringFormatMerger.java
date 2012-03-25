@@ -27,7 +27,7 @@ import org.apache.commons.lang.ArrayUtils;
  * as the merger extra parameter and returns a String. <br />
  * For more information see {@link com.juancavallotti.jdto.annotation.Source#merger() } and
  * {@link com.juancavallotti.jdto.annotation.Sources#merger() } documentation.
- * @author juancavallotti
+ * @author Juan Alberto Lopez Cavallotti
  */
 public class StringFormatMerger implements MultiPropertyValueMerger<String>, SinglePropertyValueMerger<String, Object> {
     
