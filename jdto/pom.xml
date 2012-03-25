@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
 
     <name>jDTO Binder :: Core</name>
-    <url>http://jdto.googlecode.com</url>
+    <url>http://www.jdto.org</url>
 
     <!-- to control the versions of the dependencies. -->
     <build>
