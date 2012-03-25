@@ -16,9 +16,9 @@
  * limitations under the License.
  */
  -->
-<xsd:schema xmlns="http://juancavallotti.com/jdto/1.0"
+<xsd:schema xmlns="http://jdto.org/jdto/1.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://juancavallotti.com/jdto/1.0">
+            targetNamespace="http://jdto.org/jdto/1.0">
     
     <!-- the root element -->
     <xsd:element name="dto-mapping">

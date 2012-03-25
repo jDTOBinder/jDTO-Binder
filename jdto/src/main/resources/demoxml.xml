@@ -17,11 +17,11 @@
  */
 -->
 <dto-mapping 
-    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns="http://jdto.org/jdto/1.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 jdto-1.0.xsd">
+    xsi:schemaLocation="http://jdto.org/jdto/1.0 jdto-1.0.xsd">
         
-        <dto type="com.juancavallotti.PersonDTO">
+        <dto type="org.jdto.PersonDTO">
             <sourceNames>
                 <beanName>bean1</beanName>
                 <beanName>bean2</beanName>
@@ -32,7 +32,7 @@
             </field>
         </dto>
         
-        <dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+        <dto type="org.jdto.dtos.SimpleImmutableDTO">
             <immutableConstructor>
                 <arg order="0" type="java.lang.String">
                     <source name="test" bean="bean1" />

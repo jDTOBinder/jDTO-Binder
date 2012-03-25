@@ -21,12 +21,12 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>com.juancavallotti</groupId>
+        <groupId>org.jdto</groupId>
         <artifactId>jdto-all</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <groupId>com.juancavallotti</groupId>
+    <groupId>org.jdto</groupId>
     <artifactId>jdto-cdi</artifactId>
     <packaging>jar</packaging>
 
@@ -56,7 +56,7 @@
     <dependencies>
         <!-- explicit dependency with jdto -->
         <dependency>
-            <groupId>com.juancavallotti</groupId>
+            <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
         </dependency>
         <!-- for the integration with cdi -->

@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  *    Copyright 2011 Juan Alberto López Cavallotti
  *
@@ -15,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
-<dto-mapping 
-    xmlns="http://jdto.org/jdto/1.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://jdto.org/jdto/1.0 jdto-1.0.xsd">
-</dto-mapping>
+
+/**
+ * Utility classes for formula and expression evaluation.
+ */
+package org.jdto.util.expression;

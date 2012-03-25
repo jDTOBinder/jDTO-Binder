@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dto-mapping 
-    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns="http://jdto.org/jdto/1.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 
-        http://juancavallotti.com/jdto-1.0.xsd">
+    xsi:schemaLocation="http://jdto.org/jdto/1.0 
+        http://jdto.org/jdto-1.0.xsd">
     
     <!-- to test simple binding -->
-    <dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
+    <dto type="org.jdto.dtos.XMLTesterDTO">
             
         <field name="aString" transient="true" />
         
@@ -16,7 +16,7 @@
         </field>
     </dto>
     <!-- to test cascade logic -->
-    <dto type="com.juancavallotti.jdto.dtos.ComplexDTO">
+    <dto type="org.jdto.dtos.ComplexDTO">
         <field name="cascadedField" cascade="true">
             <source name="association" />
         </field>
@@ -26,7 +26,7 @@
     </dto>
     
     <!-- test the association feature -->
-    <dto type="com.juancavallotti.jdto.dtos.SimpleAssociationDTO">
+    <dto type="org.jdto.dtos.SimpleAssociationDTO">
         <field name="firstString">
             <source name="myString" />
         </field>
@@ -36,23 +36,23 @@
     </dto>
         
     <!-- test the compound merger feature -->
-    <dto type="com.juancavallotti.jdto.dtos.FormatDTO">
+    <dto type="org.jdto.dtos.FormatDTO">
         <!-- single field merger test -->
         <field  name="price">
             <source name="aDouble" 
-            merger="com.juancavallotti.jdto.mergers.StringFormatMerger"
+            merger="org.jdto.mergers.StringFormatMerger"
             mergerParam="$ %.2f" />
         </field>
         <!-- multiple field merger test -->
         <field name="compound" mergerParam="%.2f %08d" 
-        merger="com.juancavallotti.jdto.mergers.StringFormatMerger">
+        merger="org.jdto.mergers.StringFormatMerger">
             <source name="aDouble" />
             <source name="anInt" /> 
         </field>
     </dto>
     
     <!-- test the multi source feature -->
-    <dto type="com.juancavallotti.jdto.dtos.MultiSourceDTO">
+    <dto type="org.jdto.dtos.MultiSourceDTO">
         <sourceNames>
             <beanName>bean1</beanName>
             <beanName>bean2</beanName>
@@ -70,7 +70,7 @@
     </dto>
     
     <!-- test immutable simple case -->
-    <dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+    <dto type="org.jdto.dtos.SimpleImmutableDTO">
         <immutableConstructor>
             <arg type="java.lang.String">
                 <source name="myString" />

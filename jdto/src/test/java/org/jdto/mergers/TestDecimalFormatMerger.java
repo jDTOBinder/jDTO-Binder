@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  *    Copyright 2011 Juan Alberto López Cavallotti
  *
@@ -15,9 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
-<dto-mapping 
-    xmlns="http://jdto.org/jdto/1.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://jdto.org/jdto/1.0 jdto-1.0.xsd">
-</dto-mapping>
+
+package org.jdto.mergers;
+
+import org.jdto.mergers.DecimalFormatMerger;
+import java.text.DecimalFormat;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+/**
+ *
+ * @author juancavallotti
+ */
+public class TestDecimalFormatMerger {
+    
+    @Test
+    public void testDecimalFormatMerger() {
+        
+        
+        DecimalFormatMerger merger = new DecimalFormatMerger();
+        
+        double value = 0.101;
+        
+        String result = merger.mergeObjects(value, new String[] {"% #,###.00"});
+        
+        assertEquals(new DecimalFormat("% #,###.00").format(value), result);
+    }
+}

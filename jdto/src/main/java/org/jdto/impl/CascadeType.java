@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  *    Copyright 2011 Juan Alberto López Cavallotti
  *
@@ -15,9 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
-<dto-mapping 
-    xmlns="http://jdto.org/jdto/1.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://jdto.org/jdto/1.0 jdto-1.0.xsd">
-</dto-mapping>
+
+package org.jdto.impl;
+
+/**
+ * Describe the cascade types that can be applied to DTOs
+ * @author juancavallotti
+ */
+public enum CascadeType {
+    /**
+     * Single field conversion
+     */
+    SINGLE,
+    /**
+     * Arrays should be treated as lists and then converted to arrays again.
+     */
+    ARRAY,
+    /**
+     * The only collection supported at the moment will be the list but for
+     * futures sake.
+     */
+    COLLECTION
+}
