@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.0-BETA1\xspace}
+\newcommand{\JDV}{1.0-RC\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -73,7 +73,7 @@
 \includegraphics[scale=1]{logo.png}
 
 \begin{huge}
- http://jdto.juancavallotti.com
+ http://www.jdto.org
 \end{huge}
 \end{center}
 
@@ -82,11 +82,20 @@
 \tableofcontents
 
 \newpage
+
+%%%%% Begining of real content.
+
 \section{Introduction}
 
 
-Welcome to \JDTO framework, the main goal of \JDTO is to leverage the boilerplate it takes to use
-the DTO pattern for robust software architectures. Mainly the incorrect use of DTOs have some strong
+Welcome to \JDTO framework, the main goal of \JDTO is to leverage the repetitive work it takes to use
+the DTO pattern for robust software architectures. 
+
+\JDTO transforms manual shallow and deep copy processes into a declarative process. By default, the framework
+takes the shallow copy approach, but with mechanisms such as cascading and cloning the user may achieve deep
+copying.
+
+Mainly the incorrect use of DTOs have some strong
 disadvantages: 
 
 \begin{itemize}
@@ -103,14 +112,15 @@ moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \JDTO \JDV introduces new features:
 \begin{itemize}
-\item Added new ToStringMerger.
-\item Added new EnumMerger.
-\item Added new CloneMerger.
+\item New namespace in packaging to match the framework website.
+\item New maven artifact namespace to match the framework website.
+\item Updated documentation heading towards the final release.
+\item Updated the location of the maven repository.
 \end{itemize}
 
 Issues solved:
 \begin{itemize}
-\item Fixed little mistakes on documentation.
+\item With the new maven repository, the server answers with a 404 error when looking for missing resources so maven won't blacklist it.
 \end{itemize}
 
 \subsection{Getting the Source}
@@ -119,7 +129,7 @@ Currently, \JDTO is hosted as an open source GitHub project and licensed with th
 
 https://github.com/juancavallotti/jDTO-Binder
 
-You may contribute by submitting a bug or extending the framework in different ways.
+You may contribute by submitting a bug or extending the framework in different ways, if you want to contribute please take a look at http://www.jdto.org/\#contribute.
 
 \section{Quick Start}
 
@@ -127,13 +137,14 @@ You may contribute by submitting a bug or extending the framework in different w
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
 by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
 
+%%%%%%%%%% TODO - MANUAL VERSION CHANGE
 \begin{xml}
      <dependencies>
      ...
         <dependency>
-            <groupId>com.juancavallotti</groupId>
+            <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>${jdto.version}</version>
+            <version>1.0-RC</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -154,9 +165,9 @@ You also want to add the \JDTO repository to your pom.xml file:
 \begin{xml}
      <repositories>
         <repository>
-            <id>com.juancavallotti</id>
+            <id>org.jdto</id>
             <name>jdto</name>
-            <url>http://maven2.juancavallotti.com/</url>
+            <url>http://maven2.jdto.org/</url>
             <layout>default</layout>
         </repository>
     </repositories>
@@ -253,7 +264,7 @@ If the object passed as entity is an implementation of \texttt{java.util.Map}, t
 \begin{xml}
 <!-- THE DTO BINDER BEAN --> 
 <bean id="dtobinder" 
-    class="com.juancavallotti.jdto.spring.SpringDTOBinder" />
+    class="org.jdto.spring.SpringDTOBinder" />
 \end{xml}
 
 
@@ -263,7 +274,7 @@ provides a way to configure the DTO Binder instance to read the xml configuratio
 
 \begin{xml}
 <!-- THE DTO BINDER BEAN --> 
-<bean class="com.juancavallotti.jdto.spring.SpringDTOBinder">
+<bean class="org.jdto.spring.SpringDTOBinder">
     <property name="xmlConfig" value="classpath:/dtos.xml" />
 </bean>
 \end{xml}
@@ -283,11 +294,13 @@ private DTOBinder binder;
 
 \JDTO library provides a CDI jar and also a way to inject the DTO binder instance into your own beans. Due to some restrictions on the design of CDI, it was a decision to make this integration as a separate library, so you must change your pom dependencies to:
 
+%%%%%%%%%% TODO - MANUAL VERSION CHANGE
+
 \begin{xml}
     <dependency>
-        <groupId>com.juancavallotti</groupId>
+        <groupId>org.jdto</groupId>
         <artifactId>jdto-cdi</artifactId>
-        <version>${jdto.version}</version>
+        <version>1.0-RC</version>
     </dependency>
 \end{xml}
 
@@ -592,10 +605,10 @@ It is recommended to create an xml file on the default package called \DEFAULTCO
 \begin{xml}
 <?xml version="1.0" encoding="UTF-8"?>
 <dto-mapping 
-    xmlns="http://juancavallotti.com/jdto/1.0" 
+    xmlns="http://jdto.org/jdto/1.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://juancavallotti.com/jdto/1.0 
-                        http://juancavallotti.com/jdto-1.0.xsd">
+    xsi:schemaLocation="http://jdto.org/jdto/1.0 
+                        http://jdto.org/jdto-1.0.xsd">
         
 </dto-mapping>
 \end{xml}
@@ -607,7 +620,7 @@ The following snippet demonstrates a DTO mapped in a really simple fashion:
 
 \begin{xml}
 <!-- to test simple binding -->
-<dto type="com.juancavallotti.jdto.dtos.XMLTesterDTO">
+<dto type="org.jdto.dtos.XMLTesterDTO">
 
     <field name="aString" transient="true" />
 
@@ -624,7 +637,7 @@ The following snippet demonstrates a mapping which goes through property paths:
 
 \begin{xml}
 <!-- test the association feature -->
-<dto type="com.juancavallotti.jdto.dtos.SimpleAssociationDTO">
+<dto type="org.jdto.dtos.SimpleAssociationDTO">
     <field name="firstString">
         <source name="myString" />
     </field>
@@ -640,7 +653,7 @@ The following snippet demonstrates how the cascade logic can be mapped:
 
 \begin{xml}
 <!-- to test cascade logic -->
-<dto type="com.juancavallotti.jdto.dtos.ComplexDTO">
+<dto type="org.jdto.dtos.ComplexDTO">
     <field name="cascadedField" cascade="true">
         <source name="association" />
     </field>
@@ -657,16 +670,16 @@ The following snippet demonstrates how various property mergers can be configure
 
 \begin{xml}
 <!-- test the compound merger feature -->
-<dto type="com.juancavallotti.jdto.dtos.FormatDTO">
+<dto type="org.jdto.dtos.FormatDTO">
     <!-- single field merger test -->
     <field  name="price">
         <source name="aDouble" 
-        merger="com.juancavallotti.jdto.mergers.StringFormatMerger"
+        merger="org.jdto.mergers.StringFormatMerger"
         mergerParam="$ %.2f" />
     </field>
     <!-- multiple field merger test -->
     <field name="compound" mergerParam="%.2f %08d" 
-    merger="com.juancavallotti.jdto.mergers.StringFormatMerger">
+    merger="org.jdto.mergers.StringFormatMerger">
         <source name="aDouble" />
         <source name="anInt" /> 
     </field>
@@ -683,7 +696,7 @@ The following snippet demonstrates how you can configure mappings with multiple 
 
 \begin{xml}
 <!-- test the multi source feature -->
-<dto type="com.juancavallotti.jdto.dtos.MultiSourceDTO">
+<dto type="org.jdto.dtos.MultiSourceDTO">
     <sourceNames>
         <beanName>bean1</beanName>
         <beanName>bean2</beanName>
@@ -707,7 +720,7 @@ The following snippet demonstrates how you can configure mappings with multiple 
 The following snippet demonstrates how you can configure a constructor to be used by the \JDTO framework:
 
 \begin{xml}
-<dto type="com.juancavallotti.jdto.dtos.SimpleImmutableDTO">
+<dto type="org.jdto.dtos.SimpleImmutableDTO">
     <immutableConstructor>
         <arg order="0" type="java.lang.String">
             <source name="test" bean="bean1" />
