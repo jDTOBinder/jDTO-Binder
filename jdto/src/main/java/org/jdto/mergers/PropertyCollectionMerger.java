@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 public class PropertyCollectionMerger implements SinglePropertyValueMerger<Collection, Collection>, BeanModifierAware {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyCollectionMerger.class);
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Collection mergeObjects(Collection values, String[] extraParams) {

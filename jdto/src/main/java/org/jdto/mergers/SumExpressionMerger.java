@@ -29,6 +29,8 @@ import org.apache.commons.lang.ArrayUtils;
  */
 public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
 
+    private static final long serialVersionUID = 1L;
+
     private static final String MERGER_PREFIX = SumExpressionMerger.class.getName();
 
     @Override

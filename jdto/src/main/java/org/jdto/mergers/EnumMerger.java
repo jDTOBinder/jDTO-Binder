@@ -40,6 +40,7 @@ import org.jdto.SinglePropertyValueMerger;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class EnumMerger implements SinglePropertyValueMerger<String, Enum> {
+    private static final long serialVersionUID = 1L;
 
     @Override
     public String mergeObjects(Enum value, String[] extraParam) {

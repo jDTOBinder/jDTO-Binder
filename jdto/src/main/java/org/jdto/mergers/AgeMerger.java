@@ -17,6 +17,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
     
+    private static final long serialVersionUID = 1L;
+    
     /**
      * 365.25 Days to compensate for leap years.
      */

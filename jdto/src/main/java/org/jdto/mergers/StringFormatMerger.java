@@ -30,6 +30,7 @@ import org.apache.commons.lang.ArrayUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class StringFormatMerger implements MultiPropertyValueMerger<String>, SinglePropertyValueMerger<String, Object> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Merges the objects using the extraParam as a formatting String.

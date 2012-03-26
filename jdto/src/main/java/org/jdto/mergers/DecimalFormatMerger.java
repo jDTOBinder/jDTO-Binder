@@ -27,6 +27,7 @@ import org.apache.commons.lang.ArrayUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Number> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Merge a number by using a {@link DecimalFormat} instance.

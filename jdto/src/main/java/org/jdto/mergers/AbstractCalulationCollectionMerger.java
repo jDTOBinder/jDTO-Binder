@@ -32,6 +32,8 @@ import org.apache.commons.lang.StringUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public abstract class AbstractCalulationCollectionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
+    
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Double mergeObjects(Object input, String[] extraParam) {

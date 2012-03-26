@@ -16,6 +16,7 @@
 
 package org.jdto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Juan Alberto Lopez Cavallotti
  * @since 1.0
  */
-public interface MultiPropertyValueMerger<R> {
+public interface MultiPropertyValueMerger<R> extends Serializable {
     
     /**
      * Merge the list of objects into a single object.

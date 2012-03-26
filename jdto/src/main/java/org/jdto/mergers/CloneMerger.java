@@ -32,6 +32,8 @@ import java.lang.reflect.Method;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class CloneMerger implements SinglePropertyValueMerger<Object, Object> {
+    
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Object mergeObjects(Object value, String[] extraParam) {

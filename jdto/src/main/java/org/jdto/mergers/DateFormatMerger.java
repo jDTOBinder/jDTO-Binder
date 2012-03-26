@@ -28,6 +28,7 @@ import org.apache.commons.lang.ArrayUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DateFormatMerger implements SinglePropertyValueMerger<String, Object> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Format a date using a pattern (provided by the user as extraParam) 

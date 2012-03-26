@@ -16,6 +16,8 @@
 
 package org.jdto;
 
+import java.io.Serializable;
+
 /**
  * Interface definig the operations needed to convert an object from type S to
  * T enabling the possibility of custom formatting and probably conditioned by 
@@ -29,7 +31,7 @@ package org.jdto;
  * @author Juan Alberto Lopez Cavallotti
  * @serial 1.0
  */
-public interface SinglePropertyValueMerger<R, S> {
+public interface SinglePropertyValueMerger<R, S> extends Serializable {
 
     /**
      * Merge the value of type S into another object of type R.

@@ -16,8 +16,6 @@
 
 package org.jdto.mergers;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Covers some typical case when you wish to make a sum of the result of a product. <br />
  * 
@@ -47,6 +45,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class SumProductMerger extends AbstractCalulationCollectionMerger {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected Double processCalculation(Iterable collection, String[] extraParams) {

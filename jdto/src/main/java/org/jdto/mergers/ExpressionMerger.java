@@ -47,6 +47,7 @@ import org.apache.commons.lang.ArrayUtils;
 public class ExpressionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
 
     private static final String MERGER_PREFIX = ExpressionMerger.class.getName();
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Double mergeObjects(final Object value, String[] extraParams) {

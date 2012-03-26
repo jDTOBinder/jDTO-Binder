@@ -27,6 +27,7 @@ import org.apache.commons.lang.ArrayUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class SumMerger extends AbstractCalulationCollectionMerger {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected Double processCalculation(Iterable collection, String[] extraParams) {

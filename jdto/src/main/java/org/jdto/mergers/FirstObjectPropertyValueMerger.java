@@ -26,6 +26,7 @@ import java.util.List;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class FirstObjectPropertyValueMerger implements MultiPropertyValueMerger<Object> {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Return the first non-null value of the list or null if none found.

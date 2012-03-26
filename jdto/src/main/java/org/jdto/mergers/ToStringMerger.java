@@ -30,6 +30,7 @@ import org.jdto.SinglePropertyValueMerger;
  * @author Juan Alberto Lopez Cavallotti
  */
 public class ToStringMerger implements SinglePropertyValueMerger<String, Object> {
+    private static final long serialVersionUID = 1L;
 
     @Override
     public String mergeObjects(Object value, String[] extraParam) {

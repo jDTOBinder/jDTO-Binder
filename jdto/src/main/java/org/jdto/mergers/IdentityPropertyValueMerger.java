@@ -30,6 +30,8 @@ import org.jdto.SinglePropertyValueMerger;
  */
 public final class IdentityPropertyValueMerger implements SinglePropertyValueMerger<Object, Object> {
     
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Return the same value it gets as parameter.
      * @param value the value to be retuned.
