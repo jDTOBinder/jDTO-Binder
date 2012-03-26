@@ -15,6 +15,7 @@
  */
 package org.jdto.impl;
 
+import java.io.Serializable;
 import org.jdto.MultiPropertyValueMerger;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.mergers.FirstObjectPropertyValueMerger;
@@ -37,7 +38,9 @@ import org.slf4j.LoggerFactory;
  * get default values as needed.
  * @author Juan Alberto Lopez Cavallotti
  */
-abstract class AbstractBeanInspector {
+abstract class AbstractBeanInspector implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     static final Logger logger = LoggerFactory.getLogger(AbstractBeanInspector.class);
 
