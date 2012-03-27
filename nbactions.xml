@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-deploy to RCS repository</actionName>
+            <displayName>deploy to RCS repository</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>deploy</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-deploy to RCS repository with javadocs</actionName>
+            <displayName>deploy to RCS repository</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>javadoc:jar</goal>
+                <goal>source:jar</goal>
+                <goal>deploy</goal>
+            </goals>
+        </action>
+    </actions>

@@ -101,10 +101,11 @@
     </dependencyManagement>
     
     <!-- deployment -->
-    <distributionManagement>
+     <distributionManagement>
         <repository>
-            <id>jdto-deployment</id>
-            <url>ftp://ftp.jdto.org/</url>
+            <id>Rotterdam-CS</id>
+            <name>Rotterdam CS Internal</name>
+            <url>scp://jupiter/home/maven</url>
         </repository>
     </distributionManagement>
 </project>
