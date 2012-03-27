@@ -103,9 +103,8 @@
     <!-- deployment -->
      <distributionManagement>
         <repository>
-            <id>Rotterdam-CS</id>
-            <name>Rotterdam CS Internal</name>
-            <url>scp://jupiter/home/maven</url>
+            <id>jdto-deployment</id>
+            <url>ftp://ftp.jdto.org/</url>
         </repository>
     </distributionManagement>
 </project>
