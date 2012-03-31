@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * Implementations should know how to merge a list of objects into a single object. <br />
  * This interface is meant to be used to create a single value out of a multi-source
- * property configuration, see {@link com.juancavallotti.jdto.annotation.Sources}.
+ * property configuration, see {@link org.jdto.annotation.Sources}.
  * 
  * @param <R> The result type of the merged parameters.
  * @author Juan Alberto Lopez Cavallotti

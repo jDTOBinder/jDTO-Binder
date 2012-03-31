@@ -25,8 +25,8 @@ import org.apache.commons.lang.ArrayUtils;
 /**
  * This merger takes the formatting string (see {@link String#format(java.lang.String, java.lang.Object[]) })
  * as the merger extra parameter and returns a String. <br />
- * For more information see {@link com.juancavallotti.jdto.annotation.Source#merger() } and
- * {@link com.juancavallotti.jdto.annotation.Sources#merger() } documentation.
+ * For more information see {@link org.jdto.annotation.Source#merger() } and
+ * {@link org.jdto.annotation.Sources#merger() } documentation.
  * @author Juan Alberto Lopez Cavallotti
  */
 public class StringFormatMerger implements MultiPropertyValueMerger<String>, SinglePropertyValueMerger<String, Object> {

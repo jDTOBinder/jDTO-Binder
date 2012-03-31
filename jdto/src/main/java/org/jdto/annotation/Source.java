@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation type to bind the target attribute of a DTO with a source attrbiute. <br />
  * The value for this annotation may be a nested property and the default behavior
- * will be delegated to the underlying {@link com.juancavallotti.jdto.BeanModifier} implementation.
+ * will be delegated to the underlying {@link org.jdto.BeanModifier} implementation.
  * 
  * @author Juan Alberto Lopez Cavallotti
  */
@@ -39,7 +39,7 @@ public @interface Source {
     /**
      * The name of a property (or nested property) which will act as the source value. <br />
      * Please note that if there is a type mismatch over the property types then
-     * it's up to the {@link com.juancavallotti.jdto.SinglePropertyValueMerger} implementation
+     * it's up to the {@link org.jdto.SinglePropertyValueMerger} implementation
      * to decide how it will be converted. Normally on a type mismatch a {@link ClassCastException}
      * is the most probable result.
      */
@@ -47,10 +47,10 @@ public @interface Source {
 
     /**
      * The name of the source bean for bean matching. <br />
-     * See the {@link com.juancavallotti.jdto.annotation.SourceNames} annotation 
+     * See the {@link org.jdto.annotation.SourceNames} annotation 
      * for further reference on how multiple beans will be handled.
      * @return the default source bean is an empty string, the first bean specified
-     * on the {@link com.juancavallotti.jdto.annotation.SourceNames} annotation 
+     * on the {@link org.jdto.annotation.SourceNames} annotation 
      * will be considered as default in addition to the name given by the user.
      */
     String sourceBean() default "";
