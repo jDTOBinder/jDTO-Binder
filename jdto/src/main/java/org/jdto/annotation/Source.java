@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,14 @@ import java.lang.annotation.Target;
 /**
  * Annotation type to bind the target attribute of a DTO with a source attrbiute. <br />
  * The value for this annotation may be a nested property and the default behavior
- * will be delegated to the underlying {@link org.jdto.BeanModifier} implementation.
+ * will be delegated to the underlying {@link org.jdto.BeanModifier} implementation. <br />
+ * 
+ * Here you can see an example of how to format a date:
+ * 
+ * <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span>value <span style="color: #303030">=</span> <span style="background-color: #fff0f0">&quot;someDate&quot;</span><span style="color: #303030">,</span>  merger<span style="color: #303030">=</span>DateFormatMerger<span style="color: #303030">.</span><span style="color: #0000C0">class</span><span style="color: #303030">,</span> mergerParam<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;yyyy/MM/dd&quot;</span><span style="color: #303030">)</span>
+ * <span style="color: #008000; font-weight: bold">private</span> String formattedDate<span style="color: #303030">;</span></pre></div>
+ * 
+ * In this case, the source field must be of date or calendar type.
  * 
  * @author Juan Alberto Lopez Cavallotti
  */

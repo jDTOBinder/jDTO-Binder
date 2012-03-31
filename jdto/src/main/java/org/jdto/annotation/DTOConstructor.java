@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,24 @@ import java.lang.annotation.Target;
  * 
  * When using this feature you must annotate all of the constructor arguments
  * with &#64;{@link Source} or &#64;{@link Sources} because there's no nice
- * way of reading this information by reflection.
+ * way of reading this information by reflection. <br />
+ * 
+ * The following example demonstrates the use of immutable DTOs:<br />
+ * 
+ * <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">final</span> <span style="color: #008000; font-weight: bold">class</span> <span style="color: #B00060; font-weight: bold">SimpleImmutableDTO</span> <span style="color: #303030">{</span>
+ *    <span style="color: #008000; font-weight: bold">private</span> <span style="color: #008000; font-weight: bold">final</span> String firstString<span style="color: #303030">;</span>
+ *    <span style="color: #008000; font-weight: bold">private</span> <span style="color: #008000; font-weight: bold">final</span> String secondString<span style="color: #303030">;</span>
+ *    
+ *    <span style="color: #808080">//make this the DTO constructor.</span>
+ *    <span style="color: #505050; font-weight: bold">@DTOConstructor</span>
+ *    <span style="color: #008000; font-weight: bold">public</span> <span style="color: #0060B0; font-weight: bold">SimpleImmutableDTO</span><span style="color: #303030">(</span><span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span><span style="background-color: #fff0f0">&quot;myString&quot;</span><span style="color: #303030">)</span> String firstString<span style="color: #303030">,</span> <span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span><span style="background-color: #fff0f0">&quot;related.aString&quot;</span><span style="color: #303030">)</span> String secondString<span style="color: #303030">)</span> <span style="color: #303030">{</span>
+ *        <span style="color: #008000; font-weight: bold">this</span><span style="color: #303030">.</span><span style="color: #0000C0">firstString</span> <span style="color: #303030">=</span> firstString<span style="color: #303030">;</span>
+ *        <span style="color: #008000; font-weight: bold">this</span><span style="color: #303030">.</span><span style="color: #0000C0">secondString</span> <span style="color: #303030">=</span> secondString<span style="color: #303030">;</span>
+ *    <span style="color: #303030">}</span>
+ *    <span style="color: #303030">...</span> <span style="color: #808080">//GETTERS AND SETTERS</span>
+ * <span style="color: #303030">}</span>
+ * </pre></div>
+ *
  * 
  * @author Juan Alberto Lopez Cavallotti
  */

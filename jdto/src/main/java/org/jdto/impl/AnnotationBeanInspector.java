@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Juan Alberto Lopez Cavallotti
  */
 class AnnotationBeanInspector extends AbstractBeanInspector {
+    private static final long serialVersionUID = 1L;
 
     @Override
     FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass) {

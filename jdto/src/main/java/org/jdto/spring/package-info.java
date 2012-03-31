@@ -15,9 +15,9 @@
  */
 
 /**
- * Utility classes for formula and expression evaluation. <br />
+ * Out of the box integration with the spring framework. <br />
  * 
- * These formula evaluation API is suitable for simple math expressions that
- * would be otherwise calculated by hand on a value merger.
+ * This package contains the DTO Binder bean that should be configured as a
+ * spring bean.
  */
-package org.jdto.util.expression;
+package org.jdto.spring;

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,23 @@ import java.lang.annotation.Target;
  * beans are called on varargs methods. <br />
  * 
  * If this annotation is used at type level, it will serve as the default mapping.
- * This mapping will be overriden by any method annotated with this type.
+ * This mapping will be overriden by any method annotated with this type. <br />
+ * 
+ * The following example demonstrates the use of multiple beans as sources.
+ * 
+ * <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #505050; font-weight: bold">@SourceNames</span><span style="color: #303030">({</span><span style="background-color: #fff0f0">&quot;bean1&quot;</span><span style="color: #303030">,</span> <span style="background-color: #fff0f0">&quot;bean2&quot;</span><span style="color: #303030">,</span> <span style="background-color: #fff0f0">&quot;bean3&quot;</span><span style="color: #303030">})</span>
+ * <span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">class</span> <span style="color: #B00060; font-weight: bold">MultiSourceDTO</span> <span style="color: #303030">{</span>
+ *   
+ *   <span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span>value<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;aString&quot;</span><span style="color: #303030">)</span> <span style="color: #808080">// default bean1</span>
+ *   <span style="color: #008000; font-weight: bold">private</span> String source1<span style="color: #303030">;</span>
+ *   <span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span>value<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;aString&quot;</span><span style="color: #303030">,</span> sourceBean<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;bean2&quot;</span><span style="color: #303030">)</span>
+ *   <span style="color: #008000; font-weight: bold">private</span> String source2<span style="color: #303030">;</span>
+ *   <span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span>value<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;aString&quot;</span><span style="color: #303030">,</span> sourceBean<span style="color: #303030">=</span><span style="background-color: #fff0f0">&quot;bean3&quot;</span><span style="color: #303030">)</span>
+ *   <span style="color: #008000; font-weight: bold">private</span> String source3<span style="color: #303030">;</span>
+ *   
+ *   <span style="color: #303030">...</span> <span style="color: #808080">// GETTERS AND SETTERS</span>
+ * <span style="color: #303030">}</span>
+ *</pre></div>
  * 
  * @author Juan Alberto Lopez Cavallotti
  */

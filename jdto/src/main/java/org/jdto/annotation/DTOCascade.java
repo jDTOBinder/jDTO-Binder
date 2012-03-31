@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,19 @@ import java.lang.annotation.Target;
  * <br />
  * If this annotation is present in combination with a {@link Source} annotation
  * or a {@link Sources} annotation, then the {@link Source#merger() } attribute
- * will be ignored.
+ * will be ignored.<br />
+ * 
+ * 
+ * The following example demonstrates the use of cascading:
+ * 
+ * <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"> <span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">class</span> <span style="color: #B00060; font-weight: bold">ComplexArrayDTO</span> <span style="color: #303030">{</span>
+ *   
+ *   <span style="color: #505050; font-weight: bold">@DTOCascade</span>
+ *   <span style="color: #505050; font-weight: bold">@Source</span><span style="color: #303030">(</span><span style="background-color: #fff0f0">&quot;sourceList&quot;</span><span style="color: #303030">)</span>
+ *   <span style="color: #008000; font-weight: bold">private</span> FormatDTO<span style="color: #303030">[]</span> formatDtos<span style="color: #303030">;</span>
+ *   <span style="color: #303030">...</span> <span style="color: #808080">// GETTERS AND SETTERS</span>
+ * <span style="color: #303030">}</span>
+ * </pre></div>
  * 
  * @author Juan Alberto Lopez Cavallotti
  */

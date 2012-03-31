@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,13 @@ import org.springframework.core.io.Resource;
 /**
  * DTO Binder to use as a Spring bean. In the future this bean will have the ability
  * to scan packages for DTOs in order to build and cache the metadata when this
- * bean is instanciated for the first time.
+ * bean is instanciated for the first time. <br />
+ * 
+ * The following snippet shows the typical configuration of this spring bean.
+ * <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #808080">&lt;!-- THE DTO BINDER BEAN --&gt;</span> 
+ *<span style="color: #007000">&lt;bean</span> <span style="color: #0000C0">id=</span><span style="background-color: #fff0f0">&quot;dtobinder&quot;</span> 
+ *   <span style="color: #0000C0">class=</span><span style="background-color: #fff0f0">&quot;org.jdto.spring.SpringDTOBinder&quot;</span> <span style="color: #007000">/&gt;</span>
+ *</pre></div>
  * 
  * @author Juan Alberto Lopez Cavallotti
  */

@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * Utility classes for formula and expression evaluation. <br />
- * 
- * These formula evaluation API is suitable for simple math expressions that
- * would be otherwise calculated by hand on a value merger.
+ * jDTO Binder Is a tool designed to make easy the use of the DTO pattern. <br />
+ * The interfaces and classes in this package are the main entry point for the
+ * basic usage of the framework, please refer to the manual to lean how to start
+ * using this framework.
  */
-package org.jdto.util.expression;
+package org.jdto;

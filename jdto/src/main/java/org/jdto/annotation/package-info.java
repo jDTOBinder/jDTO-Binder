@@ -15,9 +15,10 @@
  */
 
 /**
- * Utility classes for formula and expression evaluation. <br />
+ * In this package you will find the annotation types needed to configure your
+ * DTO objects with an annotation-style approach. <br />
  * 
- * These formula evaluation API is suitable for simple math expressions that
- * would be otherwise calculated by hand on a value merger.
+ * Please refer to the documentation for detailed discuession of each annotation
+ * type.
  */
-package org.jdto.util.expression;
+package org.jdto.annotation;

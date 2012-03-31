@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /**
+ * jDTO BINDER INTERNAL API - DO NOT USE!! <br />
  * Basic functionality for xml configuration.
  */
 @XmlSchema(namespace = "http://jdto.org/jdto/1.0", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)

@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+
 /**
- * Utility classes for formula and expression evaluation. <br />
+ * Value mergers have the important task to adapt source values which can be
+ * on an internal and convenient representation to a representation that
+ * makes more sense for DTOs. <br />
  * 
- * These formula evaluation API is suitable for simple math expressions that
- * would be otherwise calculated by hand on a value merger.
+ * This package contains the built-in value mergers, but you may add your own 
+ * to achieve whatever functionality that makes sense. <br />
+ * 
  */
-package org.jdto.util.expression;
+package org.jdto.mergers;

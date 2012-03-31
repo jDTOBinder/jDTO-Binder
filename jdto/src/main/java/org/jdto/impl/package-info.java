@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 /**
+ * jDTO Binder INTERNAL API - DO NOT USE!!
+ * 
  * Contains implementation files for the framework. No user should rely on
  * the stability of the classes found on this package and is strongly adviced
  * not to use them at all.
