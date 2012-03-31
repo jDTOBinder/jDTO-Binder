@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,13 @@ public class PropertyCollectionMerger implements SinglePropertyValueMerger<Colle
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyCollectionMerger.class);
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Collect a given property of the source collection.
+     * @param values the source collection.
+     * @param extraParams the name of the property to be merged.
+     * @return a new collection populated with the value of the given property.
+     */
     @Override
     public Collection mergeObjects(Collection values, String[] extraParams) {
 

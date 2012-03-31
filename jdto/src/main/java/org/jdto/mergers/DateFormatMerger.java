@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,12 @@ import org.apache.commons.lang.ArrayUtils;
 /**
  * Merge a {@link Date} or {@link Calendar} using a {@link SimpleDateFormat} 
  * format String. <br />
+ * 
+ * You must provide a format string (as you were using SimpleDateFormat), otherwise
+ * an IllegalArgumentException will be thrown. <br />
+ * 
+ * The input value can be either a {@link Date} or {@link Calendar} instance.
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DateFormatMerger implements SinglePropertyValueMerger<String, Object> {
@@ -33,8 +39,8 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
     /**
      * Format a date using a pattern (provided by the user as extraParam) 
      * applied to a {@link Date} or {@link Calendar} instance.
-     * @param value
-     * @param extraParam
+     * @param value the date or calendar to format.
+     * @param extraParam the format string.
      * @return the formatted value or null if the value argument is null.
      */
     @Override

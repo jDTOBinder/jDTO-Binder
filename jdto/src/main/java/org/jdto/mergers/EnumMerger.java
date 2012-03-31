@@ -41,7 +41,13 @@ import org.jdto.SinglePropertyValueMerger;
  */
 public class EnumMerger implements SinglePropertyValueMerger<String, Enum> {
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Return the name of the enum constant.
+     * @param value the enum constant to get the name.
+     * @param extraParam not used.
+     * @return the result of invoking name() on the enum constant.
+     */
     @Override
     public String mergeObjects(Enum value, String[] extraParam) {
         

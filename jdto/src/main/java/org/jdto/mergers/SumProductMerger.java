@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,13 @@ package org.jdto.mergers;
  */
 public class SumProductMerger extends AbstractCalulationCollectionMerger {
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Apply the sum product operation on a collection.
+     * @param collection the collection from which the values will be read.
+     * @param extraParams the names of the properties that will be multiplied.
+     * @return the sum product result as a Double.
+     */
     @Override
     protected Double processCalculation(Iterable collection, String[] extraParams) {
 

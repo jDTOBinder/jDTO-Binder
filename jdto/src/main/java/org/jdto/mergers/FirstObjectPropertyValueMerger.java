@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import java.util.List;
 
 /**
  * This is the default property value merger. <br />
- * It returns the first non null value of the list.
+ * It returns the first non null value of the list for the multiple version. <br />
+ * 
+ * Discussion: even though this merger may look useless to the end user, it
+ * simplifes the underlying implementation of the framework. <br />
  * 
  * @author Juan Alberto Lopez Cavallotti
  */
@@ -30,7 +33,7 @@ public class FirstObjectPropertyValueMerger implements MultiPropertyValueMerger<
 
     /**
      * Return the first non-null value of the list or null if none found.
-     * @param values
+     * @param values the values to merge.
      * @return the first object on the list.
      */
     @Override

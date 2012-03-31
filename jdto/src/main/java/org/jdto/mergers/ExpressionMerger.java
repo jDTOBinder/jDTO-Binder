@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.apache.commons.lang.ArrayUtils;
  * If the value to be merged is a number, then every variable on the expression
  * will be replaced with the value. Even though this behavior may look awkward
  * it is only enabled for the pupose to apply some formula to a single number
- * without making the user to put the number on other instance.
+ * without making the user to move the number to other instance.
  * 
  * <br />
  * Example:
@@ -42,13 +42,21 @@ import org.apache.commons.lang.ArrayUtils;
  * 
  * Resulting expressions are chached locally to the merger instance to avoid
  * trouble with other mergers.
+ * 
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class ExpressionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {
 
     private static final String MERGER_PREFIX = ExpressionMerger.class.getName();
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Merge an object by using a math expression by reading its properties.
+     * @param value the object to be replaced with the variables.
+     * @param extraParams the formula to calculate.
+     * @return the result of evaluating the formula with the value.
+     */
     @Override
     public Double mergeObjects(final Object value, String[] extraParams) {
         

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import org.jdto.impl.util.UniversalIterable;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Base class to implement a merger based on looping over a collection or array.
- * Which will produce a result based on a calculation.
+ * Base class to implement a merger based on looping over a collection or array 
+ * which will produce a result based on a calculation.
  * <br />
  * 
  * This class will loop over the collection and let the imlementation decide
- * what to do with the resulting value which must be a Double.
+ * what to do with the resulting value which must be a Double. <br />
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public abstract class AbstractCalulationCollectionMerger implements SinglePropertyValueMerger<Double, Object>, BeanModifierAware {

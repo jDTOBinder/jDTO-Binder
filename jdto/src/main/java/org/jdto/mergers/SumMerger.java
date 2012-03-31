@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,19 @@ import org.apache.commons.lang.ArrayUtils;
  * If the collection passed in as a parameter is not a number but rather a complex
  * type, then the extra parameter will decide which property will be read. <br />
  * 
- * This method resolves its results as a Double.
+ * This method resolves its results as a Double. <br />
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class SumMerger extends AbstractCalulationCollectionMerger {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Calculate the sum of the items of the collection.
+     * @param collection The collection of objects which a property needs to be sum.
+     * @param extraParams the name of the property from where read the numeric value.
+     * @return the result of the addition.
+     */
     @Override
     protected Double processCalculation(Iterable collection, String[] extraParams) {
         

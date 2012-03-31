@@ -31,7 +31,13 @@ import org.jdto.SinglePropertyValueMerger;
  */
 public class ToStringMerger implements SinglePropertyValueMerger<String, Object> {
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Call the toString method on the argument.
+     * @param value the object whos string representation is needed.
+     * @param extraParam not used.
+     * @return the result of calling toString() on the argument.
+     */
     @Override
     public String mergeObjects(Object value, String[] extraParam) {
         //do not support toString on nulls

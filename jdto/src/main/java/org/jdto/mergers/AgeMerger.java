@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
  * If the input value is not a {@link Date} or {@link Calendar} instance, then
  * throw {@link IllegalArgumentException}. If the input value is null, then
  * return 0.
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {

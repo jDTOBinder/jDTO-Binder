@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ import org.apache.commons.lang.ArrayUtils;
  * {@link ExpressionMerger} but applying the formula for each element of the
  * collection.
  * 
+ * You must provide the expression as the extra parameter or an 
+ * IllegalArgumentException will be thrown.
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
@@ -32,7 +35,13 @@ public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
     private static final long serialVersionUID = 1L;
 
     private static final String MERGER_PREFIX = SumExpressionMerger.class.getName();
-
+    
+    /**
+     * Iterate and sum the results of a expression.
+     * @param collection the collection to be iterated.
+     * @param extraParams the expression to be evaluated
+     * @return The result of applying the sum of the expression results.
+     */
     @Override
     protected Double processCalculation(Iterable collection, String[] extraParams) {
         double sum = 0;

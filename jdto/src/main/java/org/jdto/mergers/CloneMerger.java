@@ -34,7 +34,13 @@ import java.lang.reflect.Method;
 public class CloneMerger implements SinglePropertyValueMerger<Object, Object> {
     
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Merge the object by trying to clone it.
+     * @param value the value to be cloned.
+     * @param extraParam no parameter is supported.
+     * @return A clone of the object or null if clone is not supported.
+     */
     @Override
     public Object mergeObjects(Object value, String[] extraParam) {
         if (value == null) {

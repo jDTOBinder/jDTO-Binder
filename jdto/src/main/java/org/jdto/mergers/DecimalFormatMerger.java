@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,10 @@ import org.apache.commons.lang.ArrayUtils;
  * Format a given number using a {@link DecimalFormat} instance with the format
  * string as the extra param. Please refer to the {@link DecimalFormat} documentation
  * to check how to write format Strings.
+ * 
+ * You must provide a format string as the extraParam, otherwise the an IllegalArgumentException
+ * will be thrown. <br />
+ * 
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Number> {
@@ -31,8 +35,8 @@ public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Nu
     
     /**
      * Merge a number by using a {@link DecimalFormat} instance.
-     * @param value
-     * @param extraParam
+     * @param value the number to be formatted.
+     * @param extraParam the format string.
      * @return the merged object formatted with JDK decimal format.
      */
     @Override
