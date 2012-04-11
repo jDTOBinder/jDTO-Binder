@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jdto.impl;
 
 import java.lang.reflect.Field;
@@ -39,20 +38,20 @@ class BeanPropertyUtils {
      */
     static Class getGenericTypeParameter(Type genericType) {
         ParameterizedType fieldParamType = null;
-        
+
         if (genericType instanceof ParameterizedType) {
             fieldParamType = (ParameterizedType) genericType;
         }
-        
+
         if (fieldParamType == null) {
             return Object.class;
         }
-        
+
         Class typeParameter = (Class) fieldParamType.getActualTypeArguments()[0];
-        
+
         return typeParameter;
     }
-    
+
     /**
      * Try to find a getter method for the given property on the target class
      * or any of it's parents excluding the object class. This method will
@@ -74,11 +73,11 @@ class BeanPropertyUtils {
         Method[] methods = targetClass.getDeclaredMethods();
 
         for (Method method : methods) {
-            
+
             if (!isGetterMethod(method)) {
                 continue;
             }
-            
+
             //get the method name.
             String methodName = convertToPropertyName(method);
 
@@ -233,7 +232,7 @@ class BeanPropertyUtils {
         //remove the first capital
         return StringUtils.uncapitalize(methodName);
     }
-    
+
     /**
      * Read safely a field from a class. This Method tries to find a field by
      * it's name and silently return null if it is not present. <br />
@@ -245,10 +244,18 @@ class BeanPropertyUtils {
      * @return 
      */
     static Field readSafeField(Class sourceClass, String fieldName) {
-        try {
-            return sourceClass.getDeclaredField(fieldName);
-        } catch (Exception ex) {
-            return null;
+
+        Class classToInspect = sourceClass;
+        
+        //go through the inheritance hierarchy
+        while (classToInspect != Object.class) {
+            try {
+                return classToInspect.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException ex) {
+                classToInspect = classToInspect.getSuperclass();
+                continue;
+            }
         }
+        return null;
     }
 }
