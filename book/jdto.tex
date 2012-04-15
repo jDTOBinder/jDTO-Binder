@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.0-RC\xspace}
+\newcommand{\JDV}{1.0\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -108,20 +108,20 @@ The discussion of wether the DTOs are useful or not is left out of the picture. 
 the architect and the size of the application. As a personal opinion I like mixed architectures, there are
 moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
-\subsection{What's new in \JDV}
+%\subsection{What's new in \JDV}
 
-\JDTO \JDV introduces new features:
-\begin{itemize}
-\item New namespace in packaging to match the framework website.
-\item New maven artifact namespace to match the framework website.
-\item Updated documentation heading towards the final release.
-\item Updated the location of the maven repository.
-\end{itemize}
+%\JDTO \JDV introduces new features:
+%\begin{itemize}
+%\item New namespace in packaging to match the framework website.
+%\item New maven artifact namespace to match the framework website.
+%\item Updated documentation heading towards the final release.
+%\item Updated the location of the maven repository.
+%\end{itemize}
 
-Issues solved:
-\begin{itemize}
-\item With the new maven repository, the server answers with a 404 error when looking for missing resources so maven won't blacklist it.
-\end{itemize}
+%Issues solved:
+%\begin{itemize}
+%\item With the new maven repository, the server answers with a 404 error when looking for missing resources so maven won't blacklist it.
+%\end{itemize}
 
 \subsection{Getting the Source}
 
@@ -144,7 +144,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>1.0-RC</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -300,7 +300,7 @@ private DTOBinder binder;
     <dependency>
         <groupId>org.jdto</groupId>
         <artifactId>jdto-cdi</artifactId>
-        <version>1.0-RC</version>
+        <version>1.0</version>
     </dependency>
 \end{xml}
 
