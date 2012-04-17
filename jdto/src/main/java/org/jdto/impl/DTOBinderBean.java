@@ -79,6 +79,9 @@ public class DTOBinderBean implements DTOBinder {
 
     @Override
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
+        if (businessObjects[0] == null){
+            return null;
+        }
         return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
     }
 
