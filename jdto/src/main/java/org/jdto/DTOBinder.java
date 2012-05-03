@@ -17,6 +17,7 @@
 package org.jdto;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -80,6 +81,29 @@ public interface DTOBinder extends Serializable{
      */
     public <T> List<T> bindFromBusinessObjectList(Class<T> dtoClass, List... businessObjectsLists);
     
+    
+    /**
+     * Create a collection of DTOs by performing multiple calls to 
+     * {@link DTOBinder#bindFromBusinessObject(java.lang.Class, java.lang.Object[]) }.<br />
+     * 
+     * The returned iterable will be of the <u>same type</u> of the collection
+     * passed as a parameter. In the cases of instantiating the given collection is not 
+     * possible, then the following rules apply: <br />
+     * 
+     * <ul>
+     *      <li>If the collection is a Set, then the returned object will be {@link java.util.HashSet}</li>
+     *      <li>If the collection is a List, then the returned object will be {@link java.util.LinkedList}</li>
+     * </ul>
+     * 
+     * @param <T> The type of the DTOs to be bound.
+     * @param dtoClass the class of the
+     * @param businessObjects the list of source business objects.
+     * @since 1.1
+     * @return the collection of the same type of the original collection but filled with DTOs
+     * 
+     * @throws some subclass of {@link RuntimeException} on various error conditions.
+     */
+    public <T,R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjects);
     
     /**
      * Makes the best effort to extract data from a dto to a business object. <br />

@@ -16,6 +16,7 @@
 
 package org.jdto.spring;
 
+import java.util.Collection;
 import org.jdto.DTOBinder;
 import org.jdto.impl.BeanMetadata;
 import org.jdto.impl.DTOBinderBean;
@@ -46,6 +47,9 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
     private DTOBinderBean delegate;
     private Resource xmlConfig;
 
+    /**
+     * Build a new instance of the SpringDTOBinder bean.
+     */
     public SpringDTOBinder() {
         //do nothing on the constructor.
     }
@@ -77,26 +81,52 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
 
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
         return delegate.bindFromBusinessObject(dtoClass, businessObjects);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public <T> List<T> bindFromBusinessObjectList(Class<T> dtoClass, List... businessObjectsLists) {
         return delegate.bindFromBusinessObjectList(dtoClass, businessObjectsLists);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return delegate.extractFromDto(businessObjectClass, dto);
     }
 
+    /**
+     * Get the resource where to find the XML configuration file.
+     * @return the resource or null.
+     */
     public Resource getXmlConfig() {
         return xmlConfig;
     }
-
+    
+    /**
+     * Set the resource where to find the XML Configuration file.
+     * @param xmlConfig the resource where the XML configuration file can be loaded.
+     */
     public void setXmlConfig(Resource xmlConfig) {
         this.xmlConfig = xmlConfig;
+    }
+    
+    /**
+     * {@inheritDoc }
+     * @since 1.1
+     */
+    @Override
+    public <T,R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjects) {
+        return delegate.bindFromBusinessObjectCollection(dtoClass, businessObjects);
     }
 }

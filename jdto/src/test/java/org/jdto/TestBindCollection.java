@@ -16,8 +16,10 @@
 
 package org.jdto;
 
-import org.jdto.DTOBinder;
-import org.jdto.DTOBinderFactory;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.jdto.dtos.FormatDTO;
 import org.jdto.entities.SimpleEntity;
@@ -49,4 +51,42 @@ public class TestBindCollection {
         
         assertEquals("both lists should have the same size", simpleEntities.size(), dtos.size());
     }
+
+    @Test
+    public void testBindCollection() {
+        LinkedList<SimpleEntity> simpleEntities = new LinkedList<SimpleEntity>();
+        simpleEntities.add(new SimpleEntity("simple 1", 12, 45.56, true));
+        simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
+        
+        List<FormatDTO> dtos = binder.bindFromBusinessObjectCollection(FormatDTO.class, (LinkedList) simpleEntities);
+        
+        assertEquals("both lists should have the same size", simpleEntities.size(), dtos.size());
+        assertEquals("the class of both lists should be the same", simpleEntities.getClass(), dtos.getClass());
+    }
+    
+    @Test
+    public void testBindNonInstanceableList() {
+        List<SimpleEntity> simpleEntities = new LinkedList<SimpleEntity>();
+        simpleEntities.add(new SimpleEntity("simple 1", 12, 45.56, true));
+        simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
+        simpleEntities = Collections.unmodifiableList(simpleEntities);
+        
+        List<FormatDTO> dtos = binder.bindFromBusinessObjectCollection(FormatDTO.class, (List) simpleEntities);
+        
+        assertEquals("both lists should have the same size", simpleEntities.size(), dtos.size());
+        assertEquals("The result should be an array list.", ArrayList.class, dtos.getClass());
+    }
+    
+    @Test
+    public void testBindNonInstanceableSet() {
+        Set<SimpleEntity> simpleEntities = new HashSet<SimpleEntity>();
+        simpleEntities.add(new SimpleEntity("simple 1", 12, 45.56, true));
+        simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
+        simpleEntities = Collections.unmodifiableSet(simpleEntities);
+        
+        Set<FormatDTO> dtos = binder.bindFromBusinessObjectCollection(FormatDTO.class, (Set) simpleEntities);
+        
+        assertEquals("both lists should have the same size", simpleEntities.size(), dtos.size());
+        assertEquals("The result should be a hash set.", HashSet.class, dtos.getClass());
+    }    
 }

@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jdto.impl;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +52,7 @@ public class BeanClassUtils {
             throw new RuntimeException(t);
         }
     }
-    
+
     /**
      * Create a new instance of a class using a specific constructor or log the
      * exception if the class is not instanceable. This method will rethrow any
@@ -69,16 +72,45 @@ public class BeanClassUtils {
             throw new RuntimeException(t);
         }
     }
-    
+
+    /**
+     * Create a new collection of the given type. <br />
+     * If the given type cannot be instantiated then the following applies: <br />
+     * If the given collection is a List, return a new ArrayList. <br />
+     * If the given collection is a Set, return a new HashSet. <br />
+     * If none of the previous, then return a new array list. <br />
+     * 
+     * @param <T> The type of the collection to be returned.
+     * @param collectionClass the type of the collection to be instantiated.
+     * @return a new instance of the given collection.
+     */
+    public static <T extends Collection> T createCollectionInstance(Class<?> collectionClass) {
+        
+        T ret = null;
+        try {
+            ret = (T) collectionClass.newInstance();
+        } catch (Exception ex) {
+            if (List.class.isAssignableFrom(collectionClass)) {
+                return (T) new ArrayList();
+            }
+            if (Set.class.isAssignableFrom(collectionClass)) {
+                return (T) new HashSet();
+            }
+            //none of the previous
+            return (T) new ArrayList();
+        }
+        return ret;
+    }
+
     /**
      * Check if the class has a default constructor.
      * @param cls
      * @return true if the type has default constructor, false if not.
      */
     public static boolean hasDefaultConstructor(Class cls) {
-        
+
         Constructor[] constructors = cls.getConstructors();
-        
+
         //go through all the constructors trying to find one with no
         //parameters
         for (Constructor constructor : constructors) {
@@ -88,7 +120,7 @@ public class BeanClassUtils {
         }
         return false;
     }
-    
+
     /**
      * Try to find a class out of a string or return null;
      * @param type
@@ -107,20 +139,20 @@ public class BeanClassUtils {
             return null;
         }
     }
-    
+
     /**
      * Find a constructor in the class for the argument types. This method converts
      * any checked exception in unchecked exception.
-     * @param cls
-     * @param types
+     * @param cls the class whos constructor will be found.
+     * @param types the types of the parameters of the constructor.
      * @return the constructor of the given class which has the given parameter types.
      */
     static Constructor safeGetConstructor(Class cls, Class[] types) {
         try {
             return cls.getDeclaredConstructor(types);
         } catch (Exception ex) {
-            logger.error("Error while trying to find constructor for class "+cls.getCanonicalName(), ex);
-            throw new RuntimeException("Error while trying to find constructor for class "+cls.getCanonicalName(), ex);
+            logger.error("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
+            throw new RuntimeException("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
         }
     }
 }

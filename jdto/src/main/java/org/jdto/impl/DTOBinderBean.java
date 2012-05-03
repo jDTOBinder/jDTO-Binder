@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.jdto.impl;
 
+import java.util.Collection;
 import org.jdto.BeanModifier;
 import org.jdto.DTOBinder;
 import java.io.InputStream;
@@ -129,5 +130,22 @@ public class DTOBinderBean implements DTOBinder {
 
     public void setBeanModifier(BeanModifier modifier) {
         this.implementationDelegate.setModifier(modifier);
+    }
+
+    @Override
+    public <T,R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjectsCollection) {
+        
+        if (businessObjectsCollection == null) {
+            return null;
+        }
+        
+        R ret = BeanClassUtils.createCollectionInstance(businessObjectsCollection.getClass());
+        
+        for (Object object : businessObjectsCollection) {
+            T result = bindFromBusinessObject(dtoClass, object);
+            ret.add(result);
+        }
+        
+        return (R) ret;
     }
 }
