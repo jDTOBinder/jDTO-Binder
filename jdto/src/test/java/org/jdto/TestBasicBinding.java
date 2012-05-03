@@ -16,8 +16,6 @@
 
 package org.jdto;
 
-import org.jdto.DTOBinder;
-import org.jdto.DTOBinderFactory;
 import org.jdto.entities.AnnotatedEntity;
 import org.jdto.dtos.FormatDTO;
 import org.jdto.entities.SimpleAssociation;

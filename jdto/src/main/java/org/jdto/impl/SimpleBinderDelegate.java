@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,10 @@ class SimpleBinderDelegate implements Serializable {
         if (metadata.isImmutableBean()) {
             for (FieldMetadata fieldMetadata : metadata.getConstructorArgs()) {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
+                
+                //if the source and target types are not compatible, then apply the compatibility logic
+                targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
+                
                 //if the object is immutable, then we need to store the value.
                 immutableConstructorArgs.add(targetValue);
             }
@@ -83,6 +87,10 @@ class SimpleBinderDelegate implements Serializable {
                 //get the configuration for the DTO objects.
                 FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
+                
+                //if the source and target types are not compatible, then apply the compatibility logic
+                targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
+                
                 modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
         }
@@ -322,5 +330,19 @@ class SimpleBinderDelegate implements Serializable {
             bma.setBeanModifier(modifier);
         }
 
+    }
+
+    private Object applyCompatibilityLogic(FieldMetadata fieldMetadata, Object targetValue) {
+        
+        if (targetValue == null) {
+            return null;
+        }
+        
+        //check if the types are compatible if so, then leave them alone
+        if (fieldMetadata.getTargetType().isAssignableFrom(targetValue.getClass())) {
+            return targetValue;
+        }
+        
+        return ValueConversionHelper.compatibilize(targetValue, fieldMetadata.getTargetType());
     }
 }

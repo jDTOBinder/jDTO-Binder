@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,9 @@ abstract class AbstractBeanInspector implements Serializable {
         //the standard cycle for analyzing a bean.
         for (String propertyName : beanGetters.keySet()) {
 
-            FieldMetadata metadata = buildFieldMetadata(propertyName, beanGetters.get(propertyName), beanClass);
+            Method getter = beanGetters.get(propertyName);
+            
+            FieldMetadata metadata = buildFieldMetadata(propertyName, getter, beanClass);
 
             //if the field is transient, then do not add it.
             if (metadata.isFieldTransient()) {
@@ -85,7 +87,10 @@ abstract class AbstractBeanInspector implements Serializable {
                 //or not found.
                 continue;
             }
-
+            
+            //the target type of the fieldMetadata is the same of the accerror type
+            metadata.setTargetType(getter.getReturnType());
+            
             logger.debug("\tBound " + propertyName + " to " + metadata.getSourceFields().toString());
 
 
@@ -108,7 +113,9 @@ abstract class AbstractBeanInspector implements Serializable {
             Annotation[] annotations = paramAnnotations[i];
 
             FieldMetadata metadata = buildFieldMetadata(i, type, annotations, beanClass);
-
+            
+            //set the target type
+            metadata.setTargetType(type);
             beanMetadata.addConstructorArgMetadata(metadata);
         }
     }

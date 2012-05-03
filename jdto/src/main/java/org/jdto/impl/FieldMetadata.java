@@ -36,6 +36,7 @@ public class FieldMetadata implements Serializable {
     private String[] mergerParameters;
     private MultiPropertyValueMerger propertyValueMerger;
     private String[] sourceBeanNames;
+    private Class targetType;
     
     /**
      * convenience attribute.
@@ -147,4 +148,17 @@ public class FieldMetadata implements Serializable {
         sourceMergersParams.put(propertyName, extraParams);
         sourceBeans.put(propertyName, sourceBean);
     }
+    
+    /**
+     * The type of the field
+     * @return 
+     */
+    public Class getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(Class targetType) {
+        this.targetType = targetType;
+    }
+    
 }
