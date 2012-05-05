@@ -31,7 +31,18 @@
     <packaging>jar</packaging>
 
     <name>jDTO Binder :: CDI Integration</name>
-    <url>http://maven.apache.org</url>
+    <url>http://www.jdto.org</url>
+    <description>CDI integration module for the jDTO Binder framework.</description>
+    
+    <!-- apache 2 license -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <build>
         <plugins>
             <plugin>

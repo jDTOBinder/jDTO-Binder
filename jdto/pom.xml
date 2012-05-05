@@ -31,8 +31,18 @@
     <packaging>jar</packaging>
 
     <name>jDTO Binder :: Core</name>
+    <description>Core Module of the jDTO Binder Project.</description>
     <url>http://www.jdto.org</url>
 
+    <!-- apache 2 license -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses> 
+    
     <!-- to control the versions of the dependencies. -->
     <build>
         <plugins>
