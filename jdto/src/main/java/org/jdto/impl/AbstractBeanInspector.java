@@ -16,10 +16,6 @@
 package org.jdto.impl;
 
 import java.io.Serializable;
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.SinglePropertyValueMerger;
-import org.jdto.mergers.FirstObjectPropertyValueMerger;
-import org.jdto.mergers.IdentityPropertyValueMerger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -27,6 +23,10 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.jdto.MultiPropertyValueMerger;
+import org.jdto.SinglePropertyValueMerger;
+import org.jdto.mergers.FirstObjectPropertyValueMerger;
+import org.jdto.mergers.IdentityPropertyValueMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -338,7 +338,6 @@ abstract class AbstractBeanInspector implements Serializable {
     /**
      * Try to infer the type of a property, if the property is a collection, then
      * try to infer generic type. <br />
-     * COPIED FROM BEAN INSPECTOR - //TODO UNIFY THIS INTO JUST ONE METHOD
      * @param field
      * @param ter
      * @param cascadeType
