@@ -13,34 +13,42 @@ To get started with jDTO Binder, you first need to know of the two main componen
 
 To get the DTOBinder instance:
 
-    //init the binder as a singleton.
-    DTOBinder binder = DTOBinderFactory.getBinder();
+```java
+//init the binder as a singleton.
+DTOBinder binder = DTOBinderFactory.getBinder();
+```
 
 With the DTOBinder instance you can do shallow copies of any object:
-    
-    //shallow copy directly an object.
-    MyObject obj = binder.bindFromBusinessObject(MyObject.class, original);
+
+```java    
+//shallow copy directly an object.
+MyObject obj = binder.bindFromBusinessObject(MyObject.class, original);
+```
 
 This is because all the fields are bound by convention matching with the field name.
 
 You can bind a collection of instances using the DTOBinder:
 
-    Set objects;//get them from somewhere
-    Set dtos = binder.bindFromBusinessObjectCollection(MyDTOObject.class, objects);
+```java
+Set objects;//get them from somewhere
+Set dtos = binder.bindFromBusinessObjectCollection(MyDTOObject.class, objects);
+```
 
 You can configure your DTO Objects using java annotations:
 
-    public class FormatDTO {
+```java
+public class FormatDTO {
 
-        @Source(value="aDouble", merger=StringFormatMerger.class, mergerParam="$ %.2f")
-        private String price;
+    @Source(value="aDouble", merger=StringFormatMerger.class, mergerParam="$ %.2f")
+    private String price;
 
-        @Sources(value={@Source("aDouble"), @Source("anInt")}, 
-                merger=StringFormatMerger.class, mergerParam="%.2f %08d")
-        private String compound;
+    @Sources(value={@Source("aDouble"), @Source("anInt")}, 
+            merger=StringFormatMerger.class, mergerParam="%.2f %08d")
+    private String compound;
 
-    ...//getters && setters.
-    }
+...//getters && setters.
+}
+```
 
 Many things can be achieved by configuration:
 
