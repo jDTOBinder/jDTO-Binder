@@ -39,7 +39,7 @@
     </licenses>  
     
     <scm>
-        <url>git://github.com/juancavallotti/jDTO-Binder.git</url>
+        <url>git://github.com/jDTOBinder/jDTO-Binder.git</url>
     </scm>
     
     <build>
