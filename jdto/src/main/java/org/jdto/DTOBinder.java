@@ -91,8 +91,8 @@ public interface DTOBinder extends Serializable{
      * possible, then the following rules apply: <br />
      * 
      * <ul>
-     *      <li>If the collection is a Set, then the returned object will be {@link java.util.HashSet}</li>
-     *      <li>If the collection is a List, then the returned object will be {@link java.util.LinkedList}</li>
+     *      <li>If the collection is a Set, then the returned object will be {@link java.util.HashSet ArrayList}</li>
+     *      <li>If the collection is a List, then the returned object will be {@link java.util.ArrayList ArrayList}</li>
      * </ul>
      * 
      * @param <T> The type of the DTOs to be bound.

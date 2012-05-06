@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.0\xspace}
+\newcommand{\JDV}{1.1\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -75,6 +75,10 @@
 \begin{huge}
  http://www.jdto.org
 \end{huge}
+
+\begin{LARGE}
+ jdto@jdto.org
+\end{LARGE}
 \end{center}
 
 
@@ -85,7 +89,7 @@
 
 %%%%% Begining of real content.
 
-\section{Introduction}
+\section{About \JDTO}
 
 
 Welcome to \JDTO framework, the main goal of \JDTO is to leverage the repetitive work it takes to use
@@ -108,28 +112,30 @@ The discussion of wether the DTOs are useful or not is left out of the picture. 
 the architect and the size of the application. As a personal opinion I like mixed architectures, there are
 moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
-%\subsection{What's new in \JDV}
+\subsection{What's new in \JDV}
 
-%\JDTO \JDV introduces new features:
-%\begin{itemize}
-%\item New namespace in packaging to match the framework website.
-%\item New maven artifact namespace to match the framework website.
-%\item Updated documentation heading towards the final release.
-%\item Updated the location of the maven repository.
-%\end{itemize}
+\JDTO source code has been moved to a new GitHub organization to match the website and branding name.
 
-%Issues solved:
-%\begin{itemize}
-%\item With the new maven repository, the server answers with a 404 error when looking for missing resources so maven won't blacklist it.
-%\end{itemize}
+\JDTO \JDV introduces new features:
+\begin{itemize}
+\item Added a convenience method to bind any type of Collection.
+\item Added the concept of "Value Compatibilization".
+\item Added a brand new method call merger.
+\end{itemize}
+
+Issues solved:
+
+\begin{itemize}
+\item Binding a \texttt{null} object now returns \texttt{null} instead of throwing \texttt{NullPointerException}.
+\end{itemize}
 
 \subsection{Getting the Source}
 
 Currently, \JDTO is hosted as an open source GitHub project and licensed with the Apache 2 open source license. You can find the source code deployed on \JDTO maven repository or in GitHub. The GitHub project url is: 
 
-https://github.com/juancavallotti/jDTO-Binder
+https://github.com/jDTOBinder/jDTO-Binder
 
-You may contribute by submitting a bug or extending the framework in different ways, if you want to contribute please take a look at http://www.jdto.org/\#contribute.
+You may contribute by submitting a bug or extending the framework in different ways, if you want to contribute please take a look at http://www.jdto.org/home/view/contribute.
 
 \section{Quick Start}
 
@@ -144,7 +150,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -300,7 +306,7 @@ private DTOBinder binder;
     <dependency>
         <groupId>org.jdto</groupId>
         <artifactId>jdto-cdi</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 \end{xml}
 
@@ -345,6 +351,7 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
+ \item \texttt{MethodCallMerger}: Call a no-arg non-void method in the argument and use the result as the merged value.
  \item \texttt{PropertyCollectionMerger}: Converts a collection of objects into a collection of one property of those objects.
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
  \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
@@ -368,13 +375,21 @@ private String formattedDate;
 
 There are cases when we want to ignore some of the fields of a DTO. In these cases the user may add the \texttt{@DTOTransient} annotation to the field and it will be ignored by the binder.
 
-\section{Binding a List of Business Objects}
+\section{Binding Collections of Business Objects}
 
 
-\JDTO is capable of binding whole lists of business objects to DTOs. To do this, the binder has an utility method to bind a list of business objects: \texttt{bindFromBusinessObjectList}.
+\JDTO is capable of binding whole collections of business objects to collections of DTOs. To do this, the binder has two utility methods to bind business objects:
 
-In the following sample code you can see how a list of business objects is converted into a List of DTOs. \JDTO has adopted the \texttt{List} collection as favorite type because it has the concept of insertion-oder, so if you had the business objects previously sorted, then the order remains. Also the framework needs a collection that has the possibility to access elements by index, so \texttt{List} was the right choice.
+\begin{itemize}
+\item \texttt{bindFromBusinessObjectCollection}: This method returns a collection of the same type as the one of the argument but filled with the DTOs. If the source collection cannot be instantiated (for example is immutable), then depending on the case \texttt{ArrayList} or \texttt{HashSet} will be returned.
 
+\item \texttt{bindFromBusinessObjectList}: This method is intended now for multi-source DTO Bindings, it has a var-args argument for lists of objects that need to be related by index to build the new DTO.
+
+\end{itemize}
+
+The first method will not modify the order of the objects if the used collection used doesn't. The second method will always preserve the order because of the nature of the list but does not ensure the returned list is of the same type of the source. In both cases the original collection is not altered.
+
+The following example shows how a list of business objects is converted into a List of DTOs.
 
 \begin{java}
 LinkedList<SimpleEntity> simpleEntities = 
@@ -384,7 +399,6 @@ simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
 
 List<FormatDTO> dtos = binder.bindFromBusinessObjectList(FormatDTO.class, simpleEntities);
 \end{java}
-
 
 \section{Cascade Binding}
 
@@ -558,6 +572,18 @@ By design, \JDTO sacrificed this capability of going back and forth 100\% for th
 
 The following snippet demonstrates how to apply reverse binding to extract a business object out of a DTO.
 
+\section{Value Compatibilization}
+
+When try to set a value on a target DTO, \JDTO will try to make that value compatible so there is no need for extra configuration.
+
+The following list describes the changes \JDTO does to the values so they're compatible:
+
+\begin{itemize}
+\item If the target type is a \texttt{String}, then call \texttt{toString} on the source object before attempting to set it.
+\item If the target type is \texttt{Enum} and the source type is \texttt{String}, then try to resolve the enum constant from the given string. 
+\end{itemize}
+
+More rules may be added in the future for developer convenience.
 
 \begin{java}
 //create a basic entity
