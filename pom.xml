@@ -23,7 +23,7 @@
     <!-- general artifact information -->
     <groupId>org.jdto</groupId>
     <artifactId>jdto-all</artifactId>
-    <version>1.1</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>jDTO Binder</name>
     <description>Java DTO population and data conversion framework.</description>
@@ -38,8 +38,17 @@
         </license>
     </licenses>  
     
+    
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    
     <scm>
-        <url>git://github.com/jDTOBinder/jDTO-Binder.git</url>
+        <connection>scm:git:git@github.com:jDTOBinder/jDTO-Binder.git</connection>
+        <developerConnection>scm:git:git@github.com:jDTOBinder/jDTO-Binder.git</developerConnection>
+        <url>git@github.com:jDTOBinder/jDTO-Binder.git</url>
     </scm>
     
     <build>
@@ -119,10 +128,12 @@
     </dependencyManagement>
     
     <!-- deployment -->
+    <!--
     <distributionManagement>
         <repository>
             <id>jdto-deployment</id>
             <url>ftp://ftp.jdto.org/</url>
         </repository>
     </distributionManagement>
+    -->
 </project>
