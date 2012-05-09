@@ -140,6 +140,7 @@ You may contribute by submitting a bug or extending the framework in different w
 \section{Quick Start}
 
 
+\subsection{Maven Dependencies}
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
 by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
 
@@ -166,20 +167,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
      <dependencies>
 \end{xml}
 
-You also want to add the \JDTO repository to your pom.xml file:
-
-\begin{xml}
-     <repositories>
-        <repository>
-            <id>org.jdto</id>
-            <name>jdto</name>
-            <url>http://maven2.jdto.org/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-\end{xml}
-
-This's all what's required in terms of dependencies, so now we can start binding DTOs.
+As part of \JDTO \JDV, maven artifacts are deployed on the central maven repository so you don't need to add any extra repositories as before.
 
 \subsection{Bootstrapping the Binder}
 
@@ -351,7 +339,7 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
- \item \texttt{MethodCallMerger}: Call a no-arg non-void method in the argument and use the result as the merged value.
+ \item \texttt{MethodCallMerger}: Call a no-arg non-void method and use the result as the merged value.
  \item \texttt{PropertyCollectionMerger}: Converts a collection of objects into a collection of one property of those objects.
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
  \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
