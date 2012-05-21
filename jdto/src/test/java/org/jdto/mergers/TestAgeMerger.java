@@ -20,7 +20,6 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  * Acceptance test for the age merger.
@@ -37,7 +36,7 @@ public class TestAgeMerger {
         assertEquals("should be 0", 0, expected.intValue());
     }
     
-    @Ignore @Test
+    @Test
     public void testAgeMergerDate() {
         AgeMerger merger = new AgeMerger();
         
@@ -51,7 +50,7 @@ public class TestAgeMerger {
         assertEquals("should be the same age", expected.intValue(), result.intValue());
     }
     
-    @Ignore @Test
+    @Test
     public void testAgeMergerCalendar() {
         AgeMerger merger = new AgeMerger();
         

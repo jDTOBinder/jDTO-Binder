@@ -28,6 +28,7 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  * Test if the sum merger and the sum product merger are working fine.
@@ -37,8 +38,8 @@ public class TestSumMerger {
     
     private static DTOBinder binder;
     
-    @Test
-    public void globalInit() {
+    @BeforeClass
+    public static void globalInit() {
         binder = DTOBinderFactory.buildBinder();
     }
     

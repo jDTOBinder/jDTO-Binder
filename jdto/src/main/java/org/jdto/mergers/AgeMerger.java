@@ -90,8 +90,8 @@ public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
         double otherStamp = getOtherStamp(value);
         
         double constant = resolveConstant(extraParam);
-        
-        return (todayStamp - otherStamp) / constant;
+                
+        return (double) Math.round((todayStamp - otherStamp) / constant);
         
     }
 
