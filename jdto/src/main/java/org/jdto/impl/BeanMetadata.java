@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package org.jdto.impl;
 
-import org.jdto.MultiPropertyValueMerger;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.jdto.MultiPropertyValueMerger;
 
 /**
  * Represents useful metadata needed to bind a bean.
@@ -59,7 +59,7 @@ public class BeanMetadata implements Serializable {
         }
     }
     
-    void putFieldMetadata(String beanProperty, List<String> sourceProperties, MultiPropertyValueMerger merger) {
+    void putFieldMetadata(String beanProperty, List<String> sourceProperties, Class<MultiPropertyValueMerger> merger) {
         FieldMetadata metadata = getMetadata(beanProperty);
         metadata.setSourceFields(sourceProperties);
         metadata.setPropertyValueMerger(merger);

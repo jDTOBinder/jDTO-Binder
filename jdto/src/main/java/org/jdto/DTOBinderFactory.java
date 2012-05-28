@@ -16,12 +16,9 @@
 
 package org.jdto;
 
-import org.jdto.impl.BeanMetadata;
-import org.jdto.impl.CoreBeanModifier;
-import org.jdto.impl.DTOBinderBean;
-import org.jdto.impl.InstancePool;
 import java.io.InputStream;
 import java.util.HashMap;
+import org.jdto.impl.*;
 
 /**
  * Factory class for getting a DTOBinder instance. Please do not use this approach
@@ -43,10 +40,9 @@ public class DTOBinderFactory {
      */
     public static DTOBinder buildBinder() {
         DTOBinderBean bean = new DTOBinderBean();
-
-        bean.setBeanModifier(getBeanModifier());
+        injectDependencies(bean);
         bean.setMetadata(new HashMap<Class, BeanMetadata>());
-
+        
         return bean;
     }
 
@@ -59,7 +55,8 @@ public class DTOBinderFactory {
      */
     public static DTOBinder buildBinder(InputStream xmlFile) {
         DTOBinderBean bean = new DTOBinderBean(xmlFile, true);
-        bean.setBeanModifier(getBeanModifier());
+        injectDependencies(bean);
+        
         return bean;
     }
 
@@ -77,8 +74,8 @@ public class DTOBinderFactory {
      */
     public static DTOBinder getBinder() {
         DTOBinderBean bean = InstancePool.getOrCreate(DTOBinderBean.class);
-        bean.setBeanModifier(getBeanModifier());
-
+        injectDependencies(bean);
+        
         if (bean.getMetadata() == null || bean.getMetadata().isEmpty()) {
             bean.setMetadata(new HashMap<Class, BeanMetadata>());
         }
@@ -87,5 +84,16 @@ public class DTOBinderFactory {
 
     private static BeanModifier getBeanModifier() {
         return InstancePool.getOrCreate(CoreBeanModifier.class);
+    }
+
+    private static PropertyValueMergerInstanceManager getMergerManager(BeanModifier beanModifier) {
+        BaseMergerInstanceManager baseMergerManger = InstancePool.getOrCreate(BaseMergerInstanceManager.class);
+        baseMergerManger.setModifier(beanModifier);
+        return baseMergerManger;
+    }
+    
+    private static void injectDependencies(DTOBinderBean bean) {
+        bean.setBeanModifier(getBeanModifier());
+        bean.setMergerManager(getMergerManager(bean.getBeanModifier()));
     }
 }

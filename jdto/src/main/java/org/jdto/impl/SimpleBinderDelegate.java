@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jdto.impl;
 
-import org.jdto.BeanModifier;
-import org.jdto.BeanModifierAware;
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.SinglePropertyValueMerger;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import org.apache.commons.lang.ArrayUtils;
+import org.jdto.BeanModifier;
+import org.jdto.MultiPropertyValueMerger;
+import org.jdto.PropertyValueMergerInstanceManager;
+import org.jdto.SinglePropertyValueMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Class responsible for binding the DTOs for real.
+ *
  * @author Juan Alberto Lopez Cavallotti
  */
 class SimpleBinderDelegate implements Serializable {
@@ -40,13 +36,14 @@ class SimpleBinderDelegate implements Serializable {
     private final DTOBinderBean binderBean;
     private AbstractBeanInspector inspector;
     private BeanModifier modifier;
+    private PropertyValueMergerInstanceManager mergerManager;
     private static final Logger logger = LoggerFactory.getLogger(SimpleBinderDelegate.class);
 
     SimpleBinderDelegate(DTOBinderBean binderBean) {
         this.binderBean = binderBean;
     }
 
-     <T> T bindFromBusinessObject(HashMap<Class, BeanMetadata> metadataMap, Class<T> dtoClass, Object... businessObjects) {
+    <T> T bindFromBusinessObject(HashMap<Class, BeanMetadata> metadataMap, Class<T> dtoClass, Object... businessObjects) {
         //first of all, we try to find the metadata for the DTO to build, if not
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
@@ -74,10 +71,10 @@ class SimpleBinderDelegate implements Serializable {
         if (metadata.isImmutableBean()) {
             for (FieldMetadata fieldMetadata : metadata.getConstructorArgs()) {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
-                
+
                 //if the source and target types are not compatible, then apply the compatibility logic
                 targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
-                
+
                 //if the object is immutable, then we need to store the value.
                 immutableConstructorArgs.add(targetValue);
             }
@@ -87,10 +84,10 @@ class SimpleBinderDelegate implements Serializable {
                 //get the configuration for the DTO objects.
                 FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
-                
+
                 //if the source and target types are not compatible, then apply the compatibility logic
                 targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
-                
+
                 modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
         }
@@ -123,14 +120,14 @@ class SimpleBinderDelegate implements Serializable {
 
 
         //merge the values into one
-        MultiPropertyValueMerger merger = fieldMetadata.getPropertyValueMerger();
+        Class mergerClass = fieldMetadata.getPropertyValueMerger();
 
         Object targetValue = null;
 
         if (fieldMetadata.isCascadePresent()) {
             targetValue = applyCascadeLogic(sourceValues, fieldMetadata);
         } else {
-            injectContextIfNeeded(merger);
+            MultiPropertyValueMerger merger = (MultiPropertyValueMerger) mergerManager.getPropertyValueMerger(mergerClass); //todo get the merger from the context.
             targetValue = merger.mergeObjects(sourceValues, fieldMetadata.getMergerParameter());
         }
 
@@ -140,10 +137,11 @@ class SimpleBinderDelegate implements Serializable {
 
     /**
      * Create the appropiate metadata if it doesn't exist.
+     *
      * @param <T>
      * @param metadataMap
      * @param dtoClass
-     * @return 
+     * @return
      */
     private <T> BeanMetadata findBeanMetadata(HashMap<Class, BeanMetadata> metadataMap, Class<T> dtoClass) {
 
@@ -160,9 +158,10 @@ class SimpleBinderDelegate implements Serializable {
 
     /**
      * Apply the cascade logic for generating the target value.
+     *
      * @param sourceValues
      * @param fieldMetadata
-     * @return 
+     * @return
      */
     private Object applyCascadeLogic(List<Object> sourceValues, FieldMetadata fieldMetadata) {
 
@@ -227,13 +226,14 @@ class SimpleBinderDelegate implements Serializable {
     //***************** REVERSE PROCESS ************************//
     /**
      * This is the modest reverse process. Not thaat useful but stay tuned :)
+     *
      * @param <T>
      * @param metadataMap
      * @param entityClass
      * @param dto
-     * @return 
+     * @return
      */
-     <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
+    <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
         BeanMetadata metadata = findBeanMetadata(metadataMap, dto.getClass());
 
         T ret = BeanClassUtils.createInstance(entityClass);
@@ -271,7 +271,7 @@ class SimpleBinderDelegate implements Serializable {
     }
 
     private Object applyMergeToSingleField(HashMap<String, Object> sourceBeans, String sourceProperty, FieldMetadata fieldMetadata) {
-        SinglePropertyValueMerger merger = fieldMetadata.getSourceMergers().get(sourceProperty);
+        Class mergerClass = fieldMetadata.getSourceMergers().get(sourceProperty);
         String[] mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
         String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
 
@@ -283,25 +283,8 @@ class SimpleBinderDelegate implements Serializable {
 
         Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
 
-        injectContextIfNeeded(merger);
+        SinglePropertyValueMerger merger = (SinglePropertyValueMerger) mergerManager.getPropertyValueMerger(mergerClass); //todo get the merger from the context
         return merger.mergeObjects(sourceValue, mergerExtraParam);
-    }
-
-    //GETTERS AND SETTERS
-    public AbstractBeanInspector getInspector() {
-        return inspector;
-    }
-
-    public void setInspector(AbstractBeanInspector inspector) {
-        this.inspector = inspector;
-    }
-
-    public BeanModifier getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(BeanModifier modifier) {
-        this.modifier = modifier;
     }
 
     private void populateSourceBeans(HashMap<String, Object> sourceBeans, BeanMetadata metadata, FieldMetadata fieldMetadata, Object[] bos) {
@@ -323,26 +306,42 @@ class SimpleBinderDelegate implements Serializable {
         sourceBeans.put("", bos[0]);
     }
 
-    private void injectContextIfNeeded(Object target) {
-
-        if (target instanceof BeanModifierAware) {
-            BeanModifierAware bma = (BeanModifierAware) target;
-            bma.setBeanModifier(modifier);
-        }
-
-    }
-
     private Object applyCompatibilityLogic(FieldMetadata fieldMetadata, Object targetValue) {
-        
+
         if (targetValue == null) {
             return null;
         }
-        
+
         //check if the types are compatible if so, then leave them alone
         if (fieldMetadata.getTargetType().isAssignableFrom(targetValue.getClass())) {
             return targetValue;
         }
-        
+
         return ValueConversionHelper.compatibilize(targetValue, fieldMetadata.getTargetType());
+    }
+
+    //GETTERS AND SETTERS
+    public AbstractBeanInspector getInspector() {
+        return inspector;
+    }
+
+    public void setInspector(AbstractBeanInspector inspector) {
+        this.inspector = inspector;
+    }
+
+    public BeanModifier getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(BeanModifier modifier) {
+        this.modifier = modifier;
+    }
+
+    public PropertyValueMergerInstanceManager getMergerManager() {
+        return mergerManager;
+    }
+
+    public void setMergerManager(PropertyValueMergerInstanceManager mergerManager) {
+        this.mergerManager = mergerManager;
     }
 }

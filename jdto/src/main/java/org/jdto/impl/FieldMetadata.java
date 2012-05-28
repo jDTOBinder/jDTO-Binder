@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package org.jdto.impl;
 
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.SinglePropertyValueMerger;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import org.jdto.MultiPropertyValueMerger;
+import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Represents the metadata for a given field.
@@ -30,11 +30,11 @@ public class FieldMetadata implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private List<String> sourceFields;
-    private HashMap<String, SinglePropertyValueMerger> sourceMergers;
+    private HashMap<String, Class> sourceMergers;
     private HashMap<String, String[]> sourceMergersParams;
     private HashMap<String, String> sourceBeans;
     private String[] mergerParameters;
-    private MultiPropertyValueMerger propertyValueMerger;
+    private Class<? extends MultiPropertyValueMerger> propertyValueMerger;
     private String[] sourceBeanNames;
     private Class targetType;
     
@@ -50,7 +50,7 @@ public class FieldMetadata implements Serializable {
     private boolean fieldTransient;
     
     public FieldMetadata() {
-        sourceMergers = new HashMap<String, SinglePropertyValueMerger>();
+        sourceMergers = new HashMap<String, Class>();
         sourceMergersParams = new HashMap<String, String[]>();
         sourceBeans = new HashMap<String, String>();
     }
@@ -63,11 +63,11 @@ public class FieldMetadata implements Serializable {
         this.mergerParameters = mergerParameter;
     }
 
-    public MultiPropertyValueMerger getPropertyValueMerger() {
+    public Class<? extends MultiPropertyValueMerger> getPropertyValueMerger() {
         return propertyValueMerger;
     }
 
-    public void setPropertyValueMerger(MultiPropertyValueMerger propertyValueMerger) {
+    public void setPropertyValueMerger(Class propertyValueMerger) {
         this.propertyValueMerger = propertyValueMerger;
     }
 
@@ -111,11 +111,11 @@ public class FieldMetadata implements Serializable {
         this.cascadeType = cascadeType;
     }
 
-    public HashMap<String, SinglePropertyValueMerger> getSourceMergers() {
+    public HashMap<String, Class> getSourceMergers() {
         return sourceMergers;
     }
 
-    public void setSourceMergers(HashMap<String, SinglePropertyValueMerger> sourceMergers) {
+    public void setSourceMergers(HashMap<String, Class> sourceMergers) {
         this.sourceMergers = sourceMergers;
     }
 
@@ -143,7 +143,7 @@ public class FieldMetadata implements Serializable {
         this.sourceBeans = sourceBeans;
     }
     
-    public void setSinglePropertyValueMerger(String propertyName, SinglePropertyValueMerger merger, String[] extraParams, String sourceBean) {
+    public void setSinglePropertyValueMerger(String propertyName, Class<SinglePropertyValueMerger> merger, String[] extraParams, String sourceBean) {
         sourceMergers.put(propertyName, merger);
         sourceMergersParams.put(propertyName, extraParams);
         sourceBeans.put(propertyName, sourceBean);

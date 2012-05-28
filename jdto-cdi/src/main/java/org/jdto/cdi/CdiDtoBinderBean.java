@@ -16,11 +16,11 @@
 
 package org.jdto.cdi;
 
+import java.util.HashMap;
+import javax.inject.Singleton;
 import org.jdto.impl.BeanMetadata;
 import org.jdto.impl.CoreBeanModifier;
 import org.jdto.impl.DTOBinderBean;
-import java.util.HashMap;
-import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -17,11 +17,13 @@
 package org.jdto.spring;
 
 import java.util.Collection;
-import org.jdto.DTOBinder;
-import org.jdto.impl.BeanMetadata;
-import org.jdto.impl.DTOBinderBean;
 import java.util.HashMap;
 import java.util.List;
+import org.jdto.DTOBinder;
+import org.jdto.PropertyValueMerger;
+import org.jdto.impl.BaseMergerInstanceManager;
+import org.jdto.impl.BeanMetadata;
+import org.jdto.impl.DTOBinderBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -55,7 +57,7 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
     }
 
     /**
-     * Default init method for spring framework.
+     * Default init method defined by spring framework.
      */
     @Override
     public void afterPropertiesSet() {
@@ -78,7 +80,10 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
 
         logger.debug("BeanModifier is BeanWrapperBeanModofier");
         delegate.setBeanModifier(new BeanWrapperBeanModifier());
-
+        BaseMergerInstanceManager mergerManager = new BaseMergerInstanceManager();
+        mergerManager.setModifier(delegate.getBeanModifier());
+        delegate.setMergerManager(mergerManager);
+        
     }
 
     /**
@@ -128,5 +133,14 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder {
     @Override
     public <T,R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjects) {
         return delegate.bindFromBusinessObjectCollection(dtoClass, businessObjects);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @since 1.2
+     */
+    @Override
+    public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass) {
+        return delegate.getPropertyValueMerger(mergerClass);
     }
 }

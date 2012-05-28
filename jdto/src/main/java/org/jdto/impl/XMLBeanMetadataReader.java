@@ -15,13 +15,11 @@
  */
 package org.jdto.impl;
 
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.SinglePropertyValueMerger;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.jdto.impl.xml.DTOElement;
 import org.jdto.impl.xml.DTOSourceField;
 import org.jdto.impl.xml.DTOTargetConfig;
-import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,9 +74,9 @@ class XMLBeanMetadataReader {
                 sourceFieldName = propertyName;
             }
 
-            SinglePropertyValueMerger merger = (SinglePropertyValueMerger) (StringUtils.isEmpty(sourceField.getMerger())
+            Class merger = StringUtils.isEmpty(sourceField.getMerger())
                     ? XMLBeanInspector.defaultSinglePropertyMerger()
-                    : InstancePool.getOrCreate(BeanClassUtils.safeGetClass(sourceField.getMerger())));
+                    : BeanClassUtils.safeGetClass(sourceField.getMerger());
 
             String[] mergerParam = StringUtils.isEmpty(sourceField.getMergerParam())
                     ? XMLBeanInspector.defaultMergerParameter()
@@ -98,9 +96,9 @@ class XMLBeanMetadataReader {
     static void readTargetFieldConfig(String propertyName, DTOTargetConfig config, FieldMetadata metadata) {
 
 
-        MultiPropertyValueMerger merger = (MultiPropertyValueMerger) (StringUtils.isEmpty(config.getMerger())
+        Class merger = StringUtils.isEmpty(config.getMerger())
                 ? XMLBeanInspector.defaultMultiPropertyMerger()
-                : InstancePool.getOrCreate(BeanClassUtils.safeGetClass(config.getMerger())));
+                : BeanClassUtils.safeGetClass(config.getMerger());
 
         String[] mergerParameter = StringUtils.isEmpty(config.getMergerParam())
                 ? XMLBeanInspector.defaultMergerParameter()

@@ -23,8 +23,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.SinglePropertyValueMerger;
 import org.jdto.mergers.FirstObjectPropertyValueMerger;
 import org.jdto.mergers.IdentityPropertyValueMerger;
 import org.slf4j.Logger;
@@ -236,8 +234,8 @@ abstract class AbstractBeanInspector implements Serializable {
      * The default multi property merger is the first value.
      * @return 
      */
-    static MultiPropertyValueMerger defaultMultiPropertyMerger() {
-        return InstancePool.getOrCreate(FirstObjectPropertyValueMerger.class);
+    static Class defaultMultiPropertyMerger() {
+        return FirstObjectPropertyValueMerger.class;
     }
     //to save energy
     private static final String[] defaultSrouceBeanNames = {""};
@@ -264,8 +262,8 @@ abstract class AbstractBeanInspector implements Serializable {
      * @param propertyName
      * @return 
      */
-    static HashMap<String, SinglePropertyValueMerger> defaultSinglePropertyMerger(String propertyName) {
-        HashMap<String, SinglePropertyValueMerger> ret = new HashMap<String, SinglePropertyValueMerger>();
+    static HashMap<String, Class> defaultSinglePropertyMerger(String propertyName) {
+        HashMap<String, Class> ret = new HashMap<String, Class>();
         ret.put(propertyName, defaultSinglePropertyMerger());
         return ret;
     }
@@ -285,8 +283,8 @@ abstract class AbstractBeanInspector implements Serializable {
      * The default single property merger instance.
      * @return 
      */
-    static SinglePropertyValueMerger defaultSinglePropertyMerger() {
-        return InstancePool.getOrCreate(IdentityPropertyValueMerger.class);
+    static Class defaultSinglePropertyMerger() {
+        return IdentityPropertyValueMerger.class;
     }
 
     /**

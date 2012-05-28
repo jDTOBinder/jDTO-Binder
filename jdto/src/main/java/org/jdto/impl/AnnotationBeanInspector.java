@@ -16,12 +16,6 @@
 
 package org.jdto.impl;
 
-import org.jdto.annotation.DTOCascade;
-import org.jdto.annotation.DTOConstructor;
-import org.jdto.annotation.DTOTransient;
-import org.jdto.annotation.Source;
-import org.jdto.annotation.SourceNames;
-import org.jdto.annotation.Sources;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
@@ -31,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jdto.annotation.*;
 
 /**
  * Class for annotation configuration. This will serve as the default bean 
@@ -161,7 +156,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
                 sources.add(sourceField);
                 //set the merger for this field.
                 target.setSinglePropertyValueMerger(sourceField,
-                        InstancePool.getOrCreate(source.merger()),
+                        (Class)source.merger(),
                         source.mergerParam(),
                         source.sourceBean());
             }
@@ -207,7 +202,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         if (simpleMapping != null && simpleMapping.merger() != null) {
             String sourceFieldName = StringUtils.isEmpty(simpleMapping.value()) ? propertyName : simpleMapping.value();
             metadata.setSinglePropertyValueMerger(sourceFieldName,
-                    InstancePool.getOrCreate(simpleMapping.merger()),
+                    (Class)simpleMapping.merger(),
                     simpleMapping.mergerParam(),
                     simpleMapping.sourceBean());
 
@@ -217,7 +212,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
 
         //add the compound property value merger.
         if (compoundMapping != null && compoundMapping.merger() != null) {
-            metadata.setPropertyValueMerger(InstancePool.getOrCreate(compoundMapping.merger()));
+            metadata.setPropertyValueMerger(compoundMapping.merger());
             metadata.setMergerParameter(compoundMapping.mergerParam());
             return;
         }

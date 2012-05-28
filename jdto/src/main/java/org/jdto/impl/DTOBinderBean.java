@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.jdto.PropertyValueMerger;
+import org.jdto.PropertyValueMergerInstanceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,8 @@ public class DTOBinderBean implements DTOBinder {
      * provided only for user convencience.
      */
     private final SimpleBinderDelegate implementationDelegate;
-
+    
+    
     /**
      * Please do not use this constructor directly unless you REALLY know what
      * you're doing.
@@ -75,7 +78,7 @@ public class DTOBinderBean implements DTOBinder {
         if (eagerLoad) {
             setMetadata(xmlInspector.buildMetadata());
         }
-
+        
     }
 
     @Override
@@ -125,11 +128,19 @@ public class DTOBinderBean implements DTOBinder {
     }
 
     public BeanModifier getBeanModifier() {
-        return implementationDelegate.getModifier();
+        return this.implementationDelegate.getModifier();
     }
 
     public void setBeanModifier(BeanModifier modifier) {
         this.implementationDelegate.setModifier(modifier);
+    }
+    
+    public PropertyValueMergerInstanceManager getMergerManager() {
+        return this.implementationDelegate.getMergerManager();
+    }
+    
+    public void setMergerManager(PropertyValueMergerInstanceManager manager) {
+        this.implementationDelegate.setMergerManager(manager);
     }
 
     @Override
@@ -148,4 +159,11 @@ public class DTOBinderBean implements DTOBinder {
         
         return (R) ret;
     }
+
+    @Override
+    public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass) {
+        return implementationDelegate.getMergerManager().getPropertyValueMerger(mergerClass);
+    }
+
+    
 }
