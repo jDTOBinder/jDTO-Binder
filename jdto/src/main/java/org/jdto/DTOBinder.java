@@ -123,4 +123,23 @@ public interface DTOBinder extends Serializable{
      * from the dto.
      */
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto);
+    
+    
+    /**
+     * Get an instance of a given property value merger. <br />
+     * 
+     * Property value mergers needs to be properly initialized before the user
+     * can start using them. <br />
+     * 
+     * In order to take advantage from the built-in (or custom) property value 
+     * mergers, this method provides a safe way of obtaining them. This method 
+     * guarantees that the mergers will be properly initialized. <br />
+     * 
+     * @param <T> The type of the returned merger.
+     * @param mergerClass The class of the returned merger.
+     * @return an instance of the given property value merger.
+     * @since 1.2
+     */
+    public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass);
+    
 }

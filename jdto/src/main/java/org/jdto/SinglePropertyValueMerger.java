@@ -31,7 +31,7 @@ import java.io.Serializable;
  * @author Juan Alberto Lopez Cavallotti
  * @serial 1.0
  */
-public interface SinglePropertyValueMerger<R, S> extends Serializable {
+public interface SinglePropertyValueMerger<R, S> extends PropertyValueMerger,Serializable {
 
     /**
      * Merge the value of type S into another object of type R.
