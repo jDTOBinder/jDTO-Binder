@@ -29,8 +29,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of the DTO binding lifecycle. Subclasses can extend this
- * in the way they find convenient by adding integration with frameworks or any 
+ * in the way they find convenient by adding integration with frameworks or any
  * additional feature.
+ *
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DTOBinderBean implements DTOBinder {
@@ -38,14 +39,14 @@ public class DTOBinderBean implements DTOBinder {
     private static final long serialVersionUID = 1L;
     private HashMap<Class, BeanMetadata> metadata;
     static final Logger logger = LoggerFactory.getLogger(DTOBinderBean.class);
+    ThreadLocal<HashMap> bindingContext = new ThreadLocal<HashMap>();
     /**
      * This delegate will hold the real implementation of the binding lifecycle
      * for simple instances, hiding the complexity of other types of bindings
      * provided only for user convencience.
      */
     private final SimpleBinderDelegate implementationDelegate;
-    
-    
+
     /**
      * Please do not use this constructor directly unless you REALLY know what
      * you're doing.
@@ -66,8 +67,9 @@ public class DTOBinderBean implements DTOBinder {
     }
 
     /**
-     * Build a binder instance which will read its configuration from an
-     * XML File received as the constructo parameter
+     * Build a binder instance which will read its configuration from an XML
+     * File received as the constructo parameter
+     *
      * @param xmlFile an input stream for the XML config file.
      */
     public DTOBinderBean(InputStream xmlFile, boolean eagerLoad) {
@@ -78,44 +80,110 @@ public class DTOBinderBean implements DTOBinder {
         if (eagerLoad) {
             setMetadata(xmlInspector.buildMetadata());
         }
-        
+
     }
 
     @Override
     public <T> T bindFromBusinessObject(Class<T> dtoClass, Object... businessObjects) {
-        if (businessObjects[0] == null){
-            return null;
+
+        boolean shouldReleaseThreadLocal = initBindingContextIfNecessary();
+        try {
+            if (businessObjects[0] == null) {
+                return null;
+            }
+            return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
+        } finally {
+            releaseBindingContext(shouldReleaseThreadLocal);
         }
-        return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
     }
 
     @Override
     public <T> List<T> bindFromBusinessObjectList(Class<T> dtoClass, List... businessObjectsLists) {
-        //this will apply repeatedly the conversion results to a list.
-        Object[] paramsBuffer = new Object[businessObjectsLists.length];
 
-        List<T> ret = new ArrayList<T>();
+        boolean shouldReleaseThreadLocal = initBindingContextIfNecessary();
+        try {
 
-        //the reference size will be the first list size
-        int refSize = businessObjectsLists[0].size();
+            //this will apply repeatedly the conversion results to a list.
+            Object[] paramsBuffer = new Object[businessObjectsLists.length];
 
-        //repeatedly run the simple binding.
-        for (int i = 0; i < refSize; i++) {
-            for (int j = 0; j < businessObjectsLists.length; j++) {
-                List param = businessObjectsLists[j];
-                paramsBuffer[j] = param.get(i);
+            List<T> ret = new ArrayList<T>();
+
+            //the reference size will be the first list size
+            int refSize = businessObjectsLists[0].size();
+
+            //repeatedly run the simple binding.
+            for (int i = 0; i < refSize; i++) {
+                for (int j = 0; j < businessObjectsLists.length; j++) {
+                    List param = businessObjectsLists[j];
+                    paramsBuffer[j] = param.get(i);
+                }
+
+                T result = bindFromBusinessObject(dtoClass, paramsBuffer);
+                ret.add(result);
             }
 
-            T result = bindFromBusinessObject(dtoClass, paramsBuffer);
-            ret.add(result);
+            return ret;
+        } finally {
+            releaseBindingContext(shouldReleaseThreadLocal);
         }
-
-        return ret;
     }
 
     @Override
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return implementationDelegate.extractFromDto(metadata, businessObjectClass, dto);
+    }
+
+    @Override
+    public <T, R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjectsCollection) {
+        boolean shouldReleaseThreadLocal = initBindingContextIfNecessary();
+        try {
+
+            if (businessObjectsCollection == null) {
+                return null;
+            }
+
+            R ret = BeanClassUtils.createCollectionInstance(businessObjectsCollection.getClass());
+
+            for (Object object : businessObjectsCollection) {
+                T result = bindFromBusinessObject(dtoClass, object);
+                ret.add(result);
+            }
+
+            return (R) ret;
+        } finally {
+            releaseBindingContext(shouldReleaseThreadLocal);
+        }
+
+    }
+
+    @Override
+    public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass) {
+        return implementationDelegate.getMergerManager().getPropertyValueMerger(mergerClass);
+    }
+    
+    /**
+     * Initializes the thread local and keeps track if it needs to be released.
+     * @return true if this method created the context, false if not.
+     */
+    private boolean initBindingContextIfNecessary() {
+        HashMap context = bindingContext.get();
+        if (context == null) {
+            bindingContext.set(new HashMap());
+            return true;
+        }
+
+        return false;
+    }
+    
+    /**
+     * Releases the binding context if necessary
+     * @param shouldRelease whether or not is necessary to release the binding context.
+     */
+    private void releaseBindingContext(boolean shouldRelease) {
+        if (!shouldRelease) {
+            return;
+        }
+        bindingContext.remove();
     }
 
     //GETTER + SETTER IMPLEMENTATION
@@ -134,36 +202,12 @@ public class DTOBinderBean implements DTOBinder {
     public void setBeanModifier(BeanModifier modifier) {
         this.implementationDelegate.setModifier(modifier);
     }
-    
+
     public PropertyValueMergerInstanceManager getMergerManager() {
         return this.implementationDelegate.getMergerManager();
     }
-    
+
     public void setMergerManager(PropertyValueMergerInstanceManager manager) {
         this.implementationDelegate.setMergerManager(manager);
     }
-
-    @Override
-    public <T,R extends Collection> R bindFromBusinessObjectCollection(Class<T> dtoClass, R businessObjectsCollection) {
-        
-        if (businessObjectsCollection == null) {
-            return null;
-        }
-        
-        R ret = BeanClassUtils.createCollectionInstance(businessObjectsCollection.getClass());
-        
-        for (Object object : businessObjectsCollection) {
-            T result = bindFromBusinessObject(dtoClass, object);
-            ret.add(result);
-        }
-        
-        return (R) ret;
-    }
-
-    @Override
-    public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass) {
-        return implementationDelegate.getMergerManager().getPropertyValueMerger(mergerClass);
-    }
-
-    
 }

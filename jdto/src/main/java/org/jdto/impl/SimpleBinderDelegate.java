@@ -59,6 +59,10 @@ class SimpleBinderDelegate implements Serializable {
             immutableConstructorArgs = new ArrayList();
         } else {
             ret = BeanClassUtils.createInstance(dtoClass);
+            for (Object object : businessObjects) {
+                //map the business objects with the DTOs for future reference.
+                binderBean.bindingContext.get().put(object, ret);
+            }
         }
 
 
