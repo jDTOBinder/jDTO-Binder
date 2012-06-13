@@ -23,7 +23,6 @@ import org.jdto.entities.Person;
 import org.jdto.entities.PersonAddress;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test cases for the cycle avoidance logic.
@@ -38,7 +37,7 @@ public class TestCycleAvoidance {
         binder = DTOBinderFactory.buildBinder();
     }
     
-    @Test @Ignore
+    @Test
     public void testCycleHandling() {
         
         Person p = new Person();
