@@ -328,6 +328,9 @@ abstract class AbstractBeanInspector implements Serializable {
         } else if (readAccesor != null) { //if not, then inferit by the declaration on the dto.
             Class targetType = inferTypeOfProperty(accessorType, readAccesor.getGenericReturnType(), cascadeType);
             target.setCascadeTargetClass(targetType);
+        } else if (readAccesor == null && accessorType != null) {
+            Class targetType = inferTypeOfProperty(accessorType, null, cascadeType);
+            target.setCascadeTargetClass(targetType);
         }
 
         target.setCascadeType(cascadeType);

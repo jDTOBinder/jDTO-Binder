@@ -47,10 +47,18 @@ class SimpleBinderDelegate implements Serializable {
         //first of all, we try to find the metadata for the DTO to build, if not
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
-
-        //the returned object.
-        T ret = null;
-
+        
+        DTOCacheKey cacheKey = new DTOCacheKey(metadata, businessObjects);
+        
+        //check if the object to return is cached, this enhances performance and 
+        //helps to mitigate the DTOCascade cycle problem.
+        
+        T ret = (T) binderBean.bindingContext.get().get(cacheKey);
+        
+        if (ret != null) {
+            return ret;
+        }
+        
         //the immutable constructor args list
         ArrayList immutableConstructorArgs = null;
 
@@ -59,10 +67,7 @@ class SimpleBinderDelegate implements Serializable {
             immutableConstructorArgs = new ArrayList();
         } else {
             ret = BeanClassUtils.createInstance(dtoClass);
-            for (Object object : businessObjects) {
-                //map the business objects with the DTOs for future reference.
-                binderBean.bindingContext.get().put(object, ret);
-            }
+            binderBean.bindingContext.get().put(cacheKey, ret);
         }
 
 
@@ -99,6 +104,7 @@ class SimpleBinderDelegate implements Serializable {
         //finally, if the bean is immutable, build the instance with the values!
         if (metadata.isImmutableBean()) {
             ret = BeanClassUtils.createInstance(dtoClass, metadata.getImmutableConstructor(), immutableConstructorArgs);
+            binderBean.bindingContext.get().put(cacheKey, ret);
         }
 
         return ret;
@@ -170,7 +176,7 @@ class SimpleBinderDelegate implements Serializable {
     private Object applyCascadeLogic(List<Object> sourceValues, FieldMetadata fieldMetadata) {
 
         Object[] values = sourceValues.toArray();
-
+                
         Object ret = null;
         List[] listValues = null;
 
