@@ -13,6 +13,9 @@ Version 1.2:
 
 ### Bugfixes:
 
+* Fixed circular refference problem for non-immutable DTOs by adding local cache for the binding process.
+* Now the @DTOCascade annotation can be used within a constructor argument.
+* Fixed small issue with the analysis of cascaded dto arguments.
 * Full refactor to improve code consistency and cohesion regarding PropertyValueMergers 
 * Fixed compilation issue with the DateMerger on some environments.
 * Changelog file started with version 1.2.
