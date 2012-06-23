@@ -49,9 +49,9 @@ public class TestDecimalFormatMerger {
         
         String[] params = {"#,###.00"};
         
-        assertTrue(subject.isUnmergeSupported(params));
+        assertTrue(subject.isRestoreSupported(params));
         
-        Number result = subject.unmergeObject(number, params);
+        Number result = subject.restoreObject(number, params);
         
         assertEquals("Should have found the same number but as double.", 12.5, result.doubleValue(), 0.00001);
     }

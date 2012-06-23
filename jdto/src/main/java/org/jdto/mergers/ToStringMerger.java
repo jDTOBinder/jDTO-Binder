@@ -49,12 +49,12 @@ public class ToStringMerger implements SinglePropertyValueMerger<String, Object>
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return false;
     }
 
     @Override
-    public Object unmergeObject(String object, String[] params) {
+    public Object restoreObject(String object, String[] params) {
         return null;
     }
     

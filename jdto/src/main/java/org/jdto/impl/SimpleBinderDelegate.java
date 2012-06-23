@@ -268,7 +268,7 @@ class SimpleBinderDelegate implements Serializable {
             //this is the only possibility left.
             String target = fieldMetadata.getSourceFields().get(0);
 
-            //no need to unmerge
+            //no need to restore
             //so we're ready to copy!
             Object value = modifier.readPropertyValue(source, dto);
 

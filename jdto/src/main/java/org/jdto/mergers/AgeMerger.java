@@ -96,13 +96,13 @@ public class AgeMerger implements SinglePropertyValueMerger<Double, Object> {
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         //there is no way yo know the original date by just an age.
         return false;
     }
 
     @Override
-    public Object unmergeObject(Double object, String[] params) {
+    public Object restoreObject(Double object, String[] params) {
         return null; //to fulfill the contract.
     }
     

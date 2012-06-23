@@ -83,13 +83,13 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         //the date format can be used to parse a date.
         return true; 
     }
 
     @Override
-    public Object unmergeObject(String object, String[] params) {
+    public Object restoreObject(String object, String[] params) {
         try {
             if (object == null) {
                 return null; //nothing to do

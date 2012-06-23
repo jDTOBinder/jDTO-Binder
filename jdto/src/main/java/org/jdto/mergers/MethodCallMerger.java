@@ -37,12 +37,12 @@ import org.slf4j.LoggerFactory;
  * The methods on this class will throw unchecked exceptions if misconfiguration 
  * is detected. <br />
  * 
- * This merger is capable of unmerging the values, in order to unmerge, the user
+ * This merger is capable of restoring the values, in order to restore, the user
  * must supply a second and optionally a third merger argument. The second argument
  * indicates the name of a class, and the third the name of a static method. In the
  * first scenario, the merger will try to call a constructor on the class to build
- * the unmerged object; on the second scenario, a static method will be invoked
- * with the object to be unmerged as a parameter. <br />
+ * the restored object; on the second scenario, a static method will be invoked
+ * with the object to be restored as a parameter. <br />
  * 
  * @author Juan Alberto Lopez Cavallotti
  * @since 1.1
@@ -95,12 +95,12 @@ public class MethodCallMerger implements SinglePropertyValueMerger<Object, Objec
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return params.length == 2 || params.length == 3;
     }
 
     @Override
-    public Object unmergeObject(Object object, String[] params) {
+    public Object restoreObject(Object object, String[] params) {
         
         if (object == null) {
             return null;

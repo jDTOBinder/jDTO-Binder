@@ -104,12 +104,12 @@ public class PropertyCollectionMerger implements SinglePropertyValueMerger<Colle
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return false;
     }
 
     @Override
-    public Collection unmergeObject(Collection object, String[] params) {
+    public Collection restoreObject(Collection object, String[] params) {
         return null;
     }
 }

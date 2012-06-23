@@ -44,12 +44,12 @@ public final class IdentityPropertyValueMerger implements SinglePropertyValueMer
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return true; //this one is easy
     }
 
     @Override
-    public Object unmergeObject(Object object, String[] params) {
+    public Object restoreObject(Object object, String[] params) {
         return object;
     }
     

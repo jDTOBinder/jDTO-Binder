@@ -93,13 +93,13 @@ public class ExpressionMerger implements SinglePropertyValueMerger<Double, Objec
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         //this could be fun to implement... but no.
         return false;
     }
 
     @Override
-    public Object unmergeObject(Double object, String[] params) {
+    public Object restoreObject(Double object, String[] params) {
         return null;
     }
 }

@@ -62,13 +62,13 @@ public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Nu
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         //the decimal format may be used to parse the number
         return true;
     }
 
     @Override
-    public Number unmergeObject(String object, String[] params) {
+    public Number restoreObject(String object, String[] params) {
         try {
             if (object == null) {
                 return null;

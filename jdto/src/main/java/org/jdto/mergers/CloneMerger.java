@@ -61,12 +61,12 @@ public class CloneMerger implements SinglePropertyValueMerger<Object, Object> {
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return false; //I cant return the orginal object from a clone, just another clone.
     }
 
     @Override
-    public Object unmergeObject(Object object, String[] params) {
+    public Object restoreObject(Object object, String[] params) {
         return null;
     }
 }

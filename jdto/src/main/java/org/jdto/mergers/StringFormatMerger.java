@@ -66,12 +66,12 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return false; //coiuld be fun, but no
     }
 
     @Override
-    public Object unmergeObject(String object, String[] params) {
+    public Object restoreObject(String object, String[] params) {
         return null;
     }
     

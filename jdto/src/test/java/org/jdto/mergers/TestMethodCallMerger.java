@@ -52,7 +52,7 @@ public class TestMethodCallMerger {
         Object expected = testValue.name();
         String[] method = {"name"};
         
-        assertFalse(subject.isUnmergeSupported(method));
+        assertFalse(subject.isRestoreSupported(method));
         
         Object result = subject.mergeObjects(testValue, method);
 
@@ -63,11 +63,11 @@ public class TestMethodCallMerger {
     public void testConstructorUnmerge() {
 
         String[] params = {"notImportant", "java.lang.Integer"};
-        assertTrue(subject.isUnmergeSupported(params));
+        assertTrue(subject.isRestoreSupported(params));
         
         String value = "10";
         
-        Integer result = (Integer) subject.unmergeObject(value, params);
+        Integer result = (Integer) subject.restoreObject(value, params);
         assertEquals("Should have the same value", 10, result.intValue());
 
     }
@@ -76,10 +76,10 @@ public class TestMethodCallMerger {
     public void testStaticMethodCallUnmerge() {
         
         String[] params = {"notImportant", "java.lang.Integer", "parseInt"};
-        assertTrue(subject.isUnmergeSupported(params));
+        assertTrue(subject.isRestoreSupported(params));
         
         String value = "12";
-        Integer result = (Integer) subject.unmergeObject(value, params);
+        Integer result = (Integer) subject.restoreObject(value, params);
         assertEquals("Should have the same value", 12, result.intValue());
 
     }

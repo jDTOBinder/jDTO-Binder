@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
- * Test the date format merger and the unmerge process.
+ * Test the date format merger and the restore process.
  * @author Juan Alberto Lopez Cavallotti
  */
 public class TestDateFormat {
@@ -53,9 +53,9 @@ public class TestDateFormat {
         String input = "2012-06-23";
         
         String[] params = {"yyyy-MM-dd"};
-        assertTrue(subject.isUnmergeSupported(params));
+        assertTrue(subject.isRestoreSupported(params));
         
-        Date result = (Date) subject.unmergeObject(input, params);
+        Date result = (Date) subject.restoreObject(input, params);
         Calendar cal = Calendar.getInstance();
         cal.setTime(result);
         

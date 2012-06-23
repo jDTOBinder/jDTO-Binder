@@ -83,12 +83,12 @@ public class SumExpressionMerger extends AbstractCalulationCollectionMerger {
     }
 
     @Override
-    public boolean isUnmergeSupported(String[] params) {
+    public boolean isRestoreSupported(String[] params) {
         return false;
     }
 
     @Override
-    public Object unmergeObject(Double object, String[] params) {
+    public Object restoreObject(Double object, String[] params) {
         return null;
     }
 }
