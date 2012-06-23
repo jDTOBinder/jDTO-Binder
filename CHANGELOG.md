@@ -6,6 +6,7 @@ Version 1.2:
 
 ### New Features:
 
+* Added new merger to calculate the time between two dates. (TimeBetweenDatesMerger)
 * Introduced new marker interface to treat all PropertyValueMergers as if they were of only one kind.
 * Added new method to obtain property value mergers to the DTOBinder interface.
     public <T extends PropertyValueMerger> T getPropertyValueMerger(Class<T> mergerClass);
