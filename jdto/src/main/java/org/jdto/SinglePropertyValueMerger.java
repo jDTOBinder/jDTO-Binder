@@ -57,7 +57,7 @@ public interface SinglePropertyValueMerger<R, S> extends PropertyValueMerger,Ser
     
     /**
      * Try to recover the original value form this merger, this operation may not
-     * be always available, you may call {@link #isRestoreSupported()} to check 
+     * be always available, you may call {@link #isRestoreSupported(java.lang.String[])} to check 
      * if this type of merger is reversible or not. <br />
      * 
      * If this merger is not reversible, then this method must return null. <br />
