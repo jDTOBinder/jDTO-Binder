@@ -82,7 +82,7 @@ class SimpleBinderDelegate implements Serializable {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
 
                 //if the source and target types are not compatible, then apply the compatibility logic
-                targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
+                targetValue = applyCompatibilityLogic(fieldMetadata.getTargetType(), targetValue);
 
                 //if the object is immutable, then we need to store the value.
                 immutableConstructorArgs.add(targetValue);
@@ -95,7 +95,7 @@ class SimpleBinderDelegate implements Serializable {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
 
                 //if the source and target types are not compatible, then apply the compatibility logic
-                targetValue = applyCompatibilityLogic(fieldMetadata, targetValue);
+                targetValue = applyCompatibilityLogic(fieldMetadata.getTargetType(), targetValue);
 
                 modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
@@ -235,7 +235,7 @@ class SimpleBinderDelegate implements Serializable {
 
     //***************** REVERSE PROCESS ************************//
     /**
-     * This is the modest reverse process. Not thaat useful but stay tuned :)
+     * This is the modest reverse process. Not that useful but stay tuned :)
      *
      * @param <T>
      * @param metadataMap
@@ -244,6 +244,11 @@ class SimpleBinderDelegate implements Serializable {
      * @return
      */
     <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
+        
+        if (dto == null) {
+            return null; //this satisfies f(null) = null
+        }
+        
         BeanMetadata metadata = findBeanMetadata(metadataMap, dto.getClass());
 
         T ret = BeanClassUtils.createInstance(entityClass);
@@ -267,11 +272,25 @@ class SimpleBinderDelegate implements Serializable {
 
             //this is the only possibility left.
             String target = fieldMetadata.getSourceFields().get(0);
-
+                        
             //no need to restore
             //so we're ready to copy!
             Object value = modifier.readPropertyValue(source, dto);
-
+            
+            //try to unmerge
+            value = applyRestoreToSingleField(value, target, fieldMetadata);
+            
+            //there are some cares where the setter wont be found but the value will be writable anyway.
+            //this wont work with chained properties but as a first attempt is good.
+            //maybe the compatibility logic needs to be applied on the bean modifier 
+            //and not here.
+            //in those cases compatibility logic is not possible.
+            Class targetType = BeanPropertyUtils.findMutatorArumentType(entityClass, target);
+            if (targetType != null) {
+                //if we are setting to a getter/
+                //apply the compatibility logic.
+                value = applyCompatibilityLogic(targetType, value);
+            }
             //and set
             modifier.writePropertyValue(target, value, ret);
         }
@@ -296,7 +315,21 @@ class SimpleBinderDelegate implements Serializable {
         SinglePropertyValueMerger merger = (SinglePropertyValueMerger) mergerManager.getPropertyValueMerger(mergerClass); //todo get the merger from the context
         return merger.mergeObjects(sourceValue, mergerExtraParam);
     }
-
+    
+    
+    private Object applyRestoreToSingleField(Object originalValue, String targetProperty, FieldMetadata fieldMetadata) {
+        Class mergerClass = fieldMetadata.getSourceMergers().get(targetProperty);
+        String[] mergerExtraParam = fieldMetadata.getSourceMergersParams().get(targetProperty);
+        
+        SinglePropertyValueMerger merger = (SinglePropertyValueMerger) mergerManager.getPropertyValueMerger(mergerClass); 
+        
+        if (merger.isRestoreSupported(mergerExtraParam)) {
+            return merger.restoreObject(originalValue, mergerExtraParam);
+        }
+        
+        return originalValue;
+    }
+    
     private void populateSourceBeans(HashMap<String, Object> sourceBeans, BeanMetadata metadata, FieldMetadata fieldMetadata, Object[] bos) {
 
         //clear the mappings
@@ -316,18 +349,18 @@ class SimpleBinderDelegate implements Serializable {
         sourceBeans.put("", bos[0]);
     }
 
-    private Object applyCompatibilityLogic(FieldMetadata fieldMetadata, Object targetValue) {
+    private Object applyCompatibilityLogic(Class targetType, Object targetValue) {
 
         if (targetValue == null) {
             return null;
         }
 
         //check if the types are compatible if so, then leave them alone
-        if (fieldMetadata.getTargetType().isAssignableFrom(targetValue.getClass())) {
+        if (targetType.isAssignableFrom(targetValue.getClass())) {
             return targetValue;
         }
 
-        return ValueConversionHelper.compatibilize(targetValue, fieldMetadata.getTargetType());
+        return ValueConversionHelper.compatibilize(targetValue, targetType);
     }
 
     //GETTERS AND SETTERS

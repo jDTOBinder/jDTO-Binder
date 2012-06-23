@@ -15,11 +15,7 @@
  */
 package org.jdto.impl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 
@@ -95,7 +91,7 @@ class BeanPropertyUtils {
      * Find a setter method out of a property name.
      * @param property
      * @param targetClass
-     * @return 
+     * @return The setter method or null.
      */
     static Method findSetterMethod(String property, Class targetClass) {
         //we're not accepting the object class
@@ -257,5 +253,25 @@ class BeanPropertyUtils {
             }
         }
         return null;
+    }
+    
+    /**
+     * Find the type of the argument of a setter method. If the method could not
+     * be found, then return null.
+     * @param sourceClass the class to inspect.
+     * @param fieldName the name of the setter we are looking for.
+     * @return the type of the argument or null if not found.
+     */
+    static Class findMutatorArumentType(Class sourceClass, String fieldName) {
+        
+        Method setter = findSetterMethod(fieldName, sourceClass);
+        
+        if (setter == null) {
+            return null;
+        }
+        
+        Class[] types = setter.getParameterTypes();
+        
+        return types[0];
     }
 }

@@ -15,6 +15,9 @@
  */
 package org.jdto.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Utility methods for making values compatible one another.
  * @author Juan Alberto Lopez Cavallotti
@@ -30,6 +33,11 @@ class ValueConversionHelper {
      */
     static Object compatibilize(Object targetValue, Class targetType) {
         
+        //the f(null) = null case
+        if (targetValue == null) {
+            return null;
+        }
+        
         //if the target type is String then call toString
         if (String.class.equals(targetType)) {
             return targetValue.toString();
@@ -39,6 +47,10 @@ class ValueConversionHelper {
         //try to convert it.
         if (targetType.isEnum() && String.class.equals(targetValue.getClass())) {
             return readEnumConstant((String)targetValue, targetType);
+        }
+        
+        if (Date.class.equals(targetType) || Calendar.class.equals(targetType)) {
+            return convertToDateOrCalendar(targetValue, targetType);
         }
         
         //enought of compatibility.
@@ -58,6 +70,26 @@ class ValueConversionHelper {
         } catch (Exception ex) {
             return targetValue;
         }
+    }
+
+    /**
+     * Safely try to convert between a date to a calendar or a calendar to a date.
+     * @param targetValue
+     * @param targetType
+     * @return a calendar converted to date, a date converted to calendar or the same value.
+     */
+    private static Object convertToDateOrCalendar(Object targetValue, Class targetType) {
+        
+        if (targetValue instanceof Calendar) {
+            return ((Calendar)targetValue).getTime();
+        }
+        
+        if (targetValue instanceof Date) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime((Date)targetValue);
+            return cal;
+        }
+        return targetValue;
     }
     
 }

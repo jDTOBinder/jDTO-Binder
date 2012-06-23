@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@
 
 package org.jdto;
 
+import java.util.Calendar;
 import org.jdto.DTOBinderFactory;
+import org.jdto.dtos.MergerDTO;
 import org.jdto.impl.DTOBinderBean;
 import org.jdto.dtos.SimpleAssociationDTO;
 import org.jdto.entities.AnnotatedEntity;
+import org.jdto.entities.GeneralPurposeEntity;
 import org.jdto.entities.SimpleAssociation;
 import org.jdto.entities.SimpleEntity;
 import org.jdto.spring.BeanWrapperBeanModifier;
@@ -41,6 +44,13 @@ public class TestReverseBinding {
     @BeforeClass
     public static void globalInit() {
         binder = (DTOBinderBean) DTOBinderFactory.buildBinder();
+    }
+    
+    @Test
+    public void testNullBinding() {
+        SimpleEntity source = null;
+        SimpleEntity result = binder.extractFromDto(SimpleEntity.class, source);
+        assertNull(result);
     }
     
     /**
@@ -105,7 +115,30 @@ public class TestReverseBinding {
         assertNotNull("related entity should not be null", entity.getRelated());
         assertEquals(dto.getSecondString(), entity.getRelated().getaString());
     }
-
+    
+    @Test
+    public void testValueRestoringReverseBinding() {
+        MergerDTO dto = new MergerDTO();
+        dto.setBigNumber("10.5");
+        dto.setFormattedDate("1983-02-10 07:00");
+        
+        GeneralPurposeEntity entity = binder.extractFromDto(GeneralPurposeEntity.class, dto);
+        assertNotNull(entity);
+        assertNotNull(entity.getTheBigDecimal());
+        assertNotNull(entity.getTheDate());
+        
+        assertEquals("The value should be 10.5", 10.5, entity.getTheBigDecimal().doubleValue(), 0.0001);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(entity.getTheDate());
+        
+        assertEquals("The year should be the same.", 1983, cal.get(Calendar.YEAR));
+        assertEquals("The month should be the same.", 01, cal.get(Calendar.MONTH));
+        assertEquals("The day should be the same.", 10, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals("The hour should be the same.", 7, cal.get(Calendar.HOUR));
+        assertEquals("The minute should be the same.", 0, cal.get(Calendar.MINUTE));
+    }
+    
     @Test
     public void testAssociationReverseBindingSpring() {
         

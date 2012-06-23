@@ -6,6 +6,8 @@ Version 1.2:
 
 ### New Features:
 
+* Added value restore logic to reverse binding process.
+* Added conversion from date to calendar and calendar to date to value compatibility logic.
 * IdentityPropertyValueMerger now can restore values.
 * DateFormatMerger now can restore values.
 * DecimalFormatMerger now can restore values. 

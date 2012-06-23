@@ -16,6 +16,7 @@
 
 package org.jdto.dtos;
 
+import java.util.Calendar;
 import org.jdto.annotation.Source;
 
 /**
@@ -25,6 +26,7 @@ import org.jdto.annotation.Source;
 public class CompatibilityDTO {
     private String strRep;
     private UsefulEnum usefulEnum;
+    private Calendar theDate;
     
     @Source("theInt")
     public String getStrRep() {
@@ -44,4 +46,11 @@ public class CompatibilityDTO {
         this.usefulEnum = usefulEnum;
     }
     
+    public Calendar getTheDate() {
+        return theDate;
+    }
+
+    public void setTheDate(Calendar theDate) {
+        this.theDate = theDate;
+    }
 }

@@ -15,6 +15,7 @@
  */
 package org.jdto;
 
+import java.util.Date;
 import org.jdto.dtos.CompatibilityDTO;
 import org.jdto.dtos.UsefulEnum;
 import org.jdto.entities.GeneralPurposeEntity;
@@ -40,10 +41,12 @@ public class TestCompatibilityLogic {
         GeneralPurposeEntity gpe = new GeneralPurposeEntity();
         gpe.setTheInt(210);
         gpe.setTheString("USELESS");
+        gpe.setTheDate(new Date());
         
         CompatibilityDTO dto = binder.bindFromBusinessObject(CompatibilityDTO.class, gpe);
         
         assertEquals("Should be the srting representation of an integer", ((Integer) gpe.getTheInt()).toString(), dto.getStrRep());
         assertEquals("Enum constant should be present and right", UsefulEnum.USELESS, dto.getUsefulEnum());
+        assertEquals("Calendar should be the same as original date", gpe.getTheDate(),  dto.getTheDate().getTime());
     }
 }

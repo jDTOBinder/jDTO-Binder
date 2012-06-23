@@ -41,6 +41,13 @@ public class TestBasicBinding {
         binder = DTOBinderFactory.buildBinder();
     }
     
+    @Test
+    public void testNullBinding() {
+        SimpleEntity source = null;
+        SimpleEntity result = binder.bindFromBusinessObject(SimpleEntity.class, source);
+        assertNull(result);
+    }
+    
     /**
      * One simple way to check if everything is working fine is binding an
      * entity against itself, first we'll start with simple attributes, no
