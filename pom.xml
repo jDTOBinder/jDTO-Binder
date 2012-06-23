@@ -22,7 +22,7 @@
     <!-- general artifact information -->
     <groupId>org.jdto</groupId>
     <artifactId>jdto-all</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>pom</packaging>
     <name>jDTO Binder</name>
     <description>Java DTO population and data conversion framework.</description>
