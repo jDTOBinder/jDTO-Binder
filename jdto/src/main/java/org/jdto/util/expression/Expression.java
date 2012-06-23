@@ -23,7 +23,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Represents a math expression, this expression can be evaluared in order to
+ * Represents a math expression, this expression can be evaluated in order to
  * obtain a result. <br />
  * The expression evaluation algorithm will go through some stages to convert
  * the formula in something easily evaluable. <br />
