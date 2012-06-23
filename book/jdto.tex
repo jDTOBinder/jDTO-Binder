@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.1\xspace}
+\newcommand{\JDV}{1.2\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -99,8 +99,9 @@ the DTO pattern for robust software architectures.
 takes the shallow copy approach, but with mechanisms such as cascading and cloning the user may achieve deep
 copying.
 
-Mainly the incorrect use of DTOs have some strong
-disadvantages: 
+When used the right way, DTO objects are key on building a scalable and loosely coupled service oriented architecture that can be deployed over the cloud.
+
+Mainly the incorrect use of DTOs have some strong disadvantages: 
 
 \begin{itemize}
 \item Multi powerful DTOs and the lost of lazy loading.
@@ -108,25 +109,32 @@ disadvantages:
 \item Hard to maintain service layer API's.
 \end{itemize}
 
-The discussion of wether the DTOs are useful or not is left out of the picture. It depends specially on 
-the architect and the size of the application. As a personal opinion I like mixed architectures, there are
-moments where DTOs are useful and there are moments where DTOs are a heavy load.
 
 \subsection{What's new in \JDV}
 
-\JDTO source code has been moved to a new GitHub organization to match the website and branding name.
+This release includes a great number of new features and improvements.
 
 \JDTO \JDV introduces new features:
 \begin{itemize}
-\item Added a convenience method to bind any type of Collection.
-\item Added the concept of "Value Compatibilization".
-\item Added a brand new method call merger.
+
+\item Improved the process of reverse binding by adding an optional "restore" functionality to the value mergers.
+\item Bean modifiers now can transparently convert between dates and calendars.
+\item Added restore functionality to four of the property mergers.
+\item Added a new merger to calculate the time between two dates in different time units.
+\item Introduced new marker interface to generalize the value mergers.
+\item Value merger instances can be obtained directly by the user to take advantage of their functionality.
+
 \end{itemize}
 
 Issues solved:
 
 \begin{itemize}
-\item Binding a \texttt{null} object now returns \texttt{null} instead of throwing \texttt{NullPointerException}.
+
+\item Circular reference mapping should now not be an issue on non-immutable DTOs.
+\item Now the @DTOCascade annotation can be used within a constructor argument.
+\item Fixed small analysis issue on immutable DTOs with the cascade option.
+\item Fixed test that would not pass under certain environments.
+
 \end{itemize}
 
 \subsection{Getting the Source}
@@ -137,10 +145,27 @@ https://github.com/jDTOBinder/jDTO-Binder
 
 You may contribute by submitting a bug or extending the framework in different ways, if you want to contribute please take a look at http://www.jdto.org/home/view/contribute.
 
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Quick Start}
 
+\subsection{Getting The Framework}
 
-\subsection{Maven Dependencies}
+You may download the framework's JAR files and add them to your project's classpath by using our download page. Also jDTO Binder is deployed on the central maven repository.
+
+\subsubsection{Downloading the JARs}
+
+JAR files with the binaries, source and javadoc are available for download at the \JDTO home page http://www.jdto.org/home/view/download you may also want to download separately the jars for the commons-lang and slf4j projects:
+
+\begin{itemize}
+\item Commons Lang (min version 2.6): http://commons.apache.org/lang/
+\item Simple Logging Facade for Java (min version 1.6): http://www.slf4j.org/
+\end{itemize}
+
+\subsubsection{Maven Dependencies}
+
 To start using \JDTO you'll have to add it to your maven dependencies, this can be done
 by adding it to your pom.xml under the dependencies section, you also want to add commons-lang and slf4j:
 
@@ -151,7 +176,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -248,6 +273,9 @@ by configuration using the \texttt{@Source} annotation.
 
 If the object passed as entity is an implementation of \texttt{java.util.Map}, then the values will be read as keys of the map instead of calling the object's getters, this means you can populate an object from a map, this also applies if a cascaded property is a map. 
 
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Integration}
 
 \subsection{Integration with the Spring Framework}
@@ -294,7 +322,7 @@ private DTOBinder binder;
     <dependency>
         <groupId>org.jdto</groupId>
         <artifactId>jdto-cdi</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
 \end{xml}
 
@@ -307,7 +335,10 @@ private DTOBinder binder;
 \end{java}
 
 The jdto-cdi dependency has as implicit dependency the jdto framework so you should not have to add it explicitly, nevertheless you may add it if that is your taste.
- 
+
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
 
 \section{Simple Field Binding}
 
@@ -333,13 +364,13 @@ The following is a complete list of the built-in single field mergers and a brie
 \begin{itemize}
  \item \texttt{AgeMerger}: Evaluates the age in days, weeks or years of a date or calendar instance.
  \item \texttt{CloneMerger}: Call clone in cloneable objects.
- \item \texttt{DateFormatMerger}: Formats a Date or Calendar instance by applying a format String.
- \item \texttt{DecimalFormatMerger}: Format any number by applying a format String.
+ \item \texttt{DateFormatMerger}: Formats a Date or Calendar instance by applying a format String. This merger can be used to restore the values it converts.
+ \item \texttt{DecimalFormatMerger}: Format any number by applying a format String. This merger can be used to restore the values it converts.
  \item \texttt{EnumMerger}: Convert an enum literal to it's String representation.
- \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value.
+ \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value. This merger can be used to restore the values it converts.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
- \item \texttt{MethodCallMerger}: Call a no-arg non-void method and use the result as the merged value.
+ \item \texttt{MethodCallMerger}: Call a no-arg non-void method and use the result as the merged value. This merger can be used to restore the values it converts in two ways, refer to javadoc for more information.
  \item \texttt{PropertyCollectionMerger}: Converts a collection of objects into a collection of one property of those objects.
  \item \texttt{SumMerger}: Add all of the items of a collection (or some property of it) into a single double.
  \item \texttt{SumExpressionMerger}: Add all the results of an expression evaluation for each value of a bean collection or array.
@@ -358,10 +389,28 @@ Here is an example usage of the \texttt{DateFormatMerger}, it will output someth
 private String formattedDate;
 \end{java}
 
+\subsection{Using the Mergers from outside the Framework}
+
+There are some cases in which the developer may need some functionality that is provided by some merger. Building merger instances have some steps and it is likely to become quite complex on the future. For this matter, jDTO Binder provides one method on the \texttt{DTOBinder} instance:
+
+\begin{java}
+
+DTOBinder binder = DTOBinderFactory.buildBinder();
+IdentityPropertyValueMerger merger = binder.getPropertyValueMerger(IdentityPropertyValueMerger.class);
+
+\end{java}
+
+The user may customize also how the mergers are located, cached and dependency-injected by implementing the interface \texttt{PropertyValueMergerInstanceManager} and configuring the DTOBinder object to use it.
+
 \subsection{Transient Values}
 
 
 There are cases when we want to ignore some of the fields of a DTO. In these cases the user may add the \texttt{@DTOTransient} annotation to the field and it will be ignored by the binder.
+
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 
 \section{Binding Collections of Business Objects}
 
@@ -388,8 +437,12 @@ simpleEntities.add(new SimpleEntity("simple 2", 34, 56.67, false));
 List<FormatDTO> dtos = binder.bindFromBusinessObjectList(FormatDTO.class, simpleEntities);
 \end{java}
 
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Cascade Binding}
 
+\subsection{Cascade Basics}
 
 \JDTO by default copies values, it does not clone instances so is up to the value merger object to decide wether to clone, format, duplicate, or anything else. 
 There are situations where you build a DTO (for example a Bill DTO) which is related to a single or a list of other DTOs. In this case the deep copy process will fail producing unexpected results. For this cases the framework provides an annotation type \texttt{DTOCascade} to instruct the binder it should build a DTO related instance.
@@ -426,6 +479,21 @@ The target DTO type can be configured as a parameter of the \texttt{DTOCascade} 
 }
 \end{java}
 
+
+\subsection{Circular References and Recursion}
+
+Cascade configuration is in some sense a recursive process but there may be situations where it is convenient to have cycles in your DTO objects graph (to represent bidirectional relationships is one example). 
+
+You need to keep in mind that you may configure mutable and immutable DTOs with cascading.
+
+The Way \JDTO stops the recursion is by caching the DTO objects it instantiates before resolving the values that they will carry, in this sense memory gets optimized because one DTO instance will be generated per domain object and also creates a barrier for cascade recursion.
+
+Since is not the aim \JDTO to use dynamic proxy objects (or cglib enhancers or similar), immutable DTOs cannot be cached in advance and therefore infinite recursion may happen when combining these two features.
+
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Compound Source Binding}
 
 \JDTO supports composing the value of a target field out of multiple sources. For this purpose it provides the \texttt{@Sources} annotation type and the \texttt{MultiPropertyValueMerger} interface to merge the sources.
@@ -438,6 +506,7 @@ The default value merger for the \texttt{@Sources} annotation type does not merg
 \begin{itemize}
  \item \texttt{FirstObjectPropertyValueMerger}: This is the default merger, it returns the first non-null value.
  \item \texttt{StringFormatMerger} as described before, this merger uses the String.format method to merge all the provided values into a single formatted string.
+ \item \texttt{TimeBetweenDatesMerger}: This merger merges two dates or calendars by calculating the time between them, by default the time unit is hours but you may specify seconds, minutes, hours, days or weeks.
 \end{itemize}
 
 
@@ -459,6 +528,8 @@ The following example illustrates how Multi Property Value Mergers can be used f
 }
 \end{java}
 
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
 
 \section{Multiple Business Objects Sources}
 
@@ -510,6 +581,9 @@ public class MultiSourceDTO2 {
 }
 \end{java}
 
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Immutable DTOs}
 
 \JDTO is capable of building instances of the DTOs using non default constructors, this brings you the possibility of creating immutable instances which
@@ -552,13 +626,54 @@ You can't configure a constructor argument to be transient since the class is im
 
 Some of these behaviors may change on the future.
 
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
 \section{Reverse Binding: DTO To Business Object}
 
-\JDTO is capable of reading DTO data and extract a business object of a given type by using the source fields (in the mapping) as target fields for the business object. Even though no extra configuration is required, this process is not as powerful as the original conversion. There are some hidden tricks here, for example, suppose your original business object had four integer fields that where added by some custom field merger. On the reverse process, how would the merger know how to unmerge these values?. 
+\subsection{Reverse Binding Basics}
+
+\JDTO is capable of reading DTO data and extract a business object of a given type by using the source fields (in the mapping) as target fields for the business object. Even though no extra configuration is required, this process is not as powerful as the original conversion. There are some hidden tricks here, for example, suppose your original business object had four integer fields that where added by some custom field merger. On the reverse process, how would the merger know how to restore these values?. 
 
 By design, \JDTO sacrificed this capability of going back and forth 100\% for the flexibility of populating DTOs in a complex way. If you would like a more robust reverse conversion, you could add binding annotations to the business object and treat is as if it was a DTO helping the merge process by writing your own custom reverse-mergers.
 
 The following snippet demonstrates how to apply reverse binding to extract a business object out of a DTO.
+
+\begin{java}
+//create a basic entity
+AnnotatedEntity entity = new AnnotatedEntity("Jones", "Tom", "NO");
+        
+//try and build a DTO out of the same entity.
+AnnotatedEntity dto = binder.bindFromBusinessObject(AnnotatedEntity.class, entity);
+        
+//change things on the dto
+dto.setFirstString("Myers");
+dto.setSecondString("Mike");
+        
+entity = binder.extractFromDto(AnnotatedEntity.class, dto);
+        
+\end{java}
+
+
+\subsection{Value Restauration}
+
+In some cases, a merger may be able to restore a converted value to its original state, sometimes this can be achieved in a generic way and other times is domain-specific.
+
+\texttt{SinglePropertyValueMerger} have two methods that the framework uses to check if value restoration is possible or not:
+
+\begin{itemize}
+
+\item \texttt{boolean isRestoreSupported(String[] params)} checks if with the given information the value can be restored.
+\item \texttt{public S restoreObject(R object, String[] params)} restores the value if the previous check returns \texttt{true}.
+
+\end{itemize}
+
+Some mergers have already built-in support for restoring the values, for more information refer to the javadoc of each merger.
+
+If you want to perform domain-specific value restoration, you are encouraged to subclass the merger and override the previously mentioned methods.
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
 
 \section{Value Compatibilization}
 
@@ -568,6 +683,7 @@ The following list describes the changes \JDTO does to the values so they're com
 
 \begin{itemize}
 \item If the target type is a \texttt{String}, then call \texttt{toString} on the source object before attempting to set it.
+\item If the target type is \texttt{Date} or \texttt{Calendar}, then try to convert between one another (normally by calling the method \texttt{getTime()} and \texttt{setTime()} on a calendar instance). 
 \item If the target type is \texttt{Enum} and the source type is \texttt{String}, then try to resolve the enum constant from the given string. 
 \end{itemize}
 
@@ -598,6 +714,9 @@ assertEquals("Changed!", entity.getaString());
 
 
 If the entity class argument is an implementation of \texttt{java.util.Map}, then the value returned will be a map, and the keys of the map will match the DTO mapping for the object passed as an argument. This means you can populate a map out of an object.
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
 
 
 \section{XML Configuration}
@@ -750,6 +869,9 @@ The order attribute is optional, if not present, the declaration order will be t
 
 All of the constructor arguments must be declared and also they must have at least one source property configured. This is mainly because there's no reliable way to read the argument names of one method in the java reflection API so it is impossible to assume a default configuration.
 
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
 
 \section{Extending the Framework}
 
