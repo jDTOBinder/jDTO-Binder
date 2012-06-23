@@ -6,6 +6,11 @@ Version 1.2:
 
 ### New Features:
 
+* IdentityPropertyValueMerger now can unmerge values.
+* DateFormatMerger now can unmerge values.
+* DecimalFormatMerger now can unmerge values. 
+* MethodCallMerger now can unmerge values.
+* Added extra methods to the SinglePropertyValueMerger interface to unmerge when possible the values.
 * Added new merger to calculate the time between two dates. (TimeBetweenDatesMerger)
 * Introduced new marker interface to treat all PropertyValueMergers as if they were of only one kind.
 * Added new method to obtain property value mergers to the DTOBinder interface.

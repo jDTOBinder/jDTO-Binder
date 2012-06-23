@@ -15,12 +15,12 @@
  */
 package org.jdto.mergers;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.jdto.BeanModifier;
 import org.jdto.BeanModifierAware;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.impl.InstancePool;
 import org.jdto.util.expression.Expression;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Single property value merger which takes a math expression by param and
@@ -90,5 +90,16 @@ public class ExpressionMerger implements SinglePropertyValueMerger<Double, Objec
     @Override
     public void setBeanModifier(BeanModifier modifier) {
         this.modifier = modifier;
+    }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        //this could be fun to implement... but no.
+        return false;
+    }
+
+    @Override
+    public Object unmergeObject(Double object, String[] params) {
+        return null;
     }
 }

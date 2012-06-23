@@ -16,43 +16,51 @@
 
 package org.jdto.mergers;
 
-import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
- *
+ * Test the date format merger and the unmerge process.
  * @author Juan Alberto Lopez Cavallotti
  */
-public class TestDecimalFormatMerger {
+public class TestDateFormat {
     
-    private static DecimalFormatMerger subject;
+    private static DateFormatMerger subject;
     
     @BeforeClass
     public static void init() {
-        subject = new DecimalFormatMerger();
+        subject = new DateFormatMerger();
     }
-    
     
     @Test
-    public void testDecimalFormatMerger() {
+    public void testDateFormatMerger() {
         
-        double value = 0.101;
+        final String format = "yyyy-MM-dd";
         
-        String result = subject.mergeObjects(value, new String[] {"% #,###.00"});
+        Date d = new Date();
         
-        assertEquals(new DecimalFormat("% #,###.00").format(value), result);
+        String result = subject.mergeObjects(d, new String[] {format});
+        
+        assertEquals(new SimpleDateFormat(format).format(d), result);
     }
     
-    public void testDecimalFormatUnmerge() {
-        String number = "12.5";
+    @Test
+    public void testUnmergeDate() {
         
-        String[] params = {"#,###.00"};
+        String input = "2012-06-23";
         
+        String[] params = {"yyyy-MM-dd"};
         assertTrue(subject.isUnmergeSupported(params));
         
-        Number result = subject.unmergeObject(number, params);
+        Date result = (Date) subject.unmergeObject(input, params);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(result);
         
-        assertEquals("Should have found the same number but as double.", 12.5, result.doubleValue(), 0.00001);
+        assertEquals(23, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(05, cal.get(Calendar.MONTH));
+        assertEquals(2012, cal.get(Calendar.YEAR));
     }
 }

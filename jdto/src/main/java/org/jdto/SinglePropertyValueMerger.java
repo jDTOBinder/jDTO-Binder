@@ -40,4 +40,32 @@ public interface SinglePropertyValueMerger<R, S> extends PropertyValueMerger,Ser
      * @return the merge resulting object.
      */
     public R mergeObjects(S value, String[] extraParam);
+    
+    
+    /**
+     * Check if this merger can be used for unmerging a given value with the 
+     * given parameters. If this method returns false then the 
+     * {@link #unmergeObject(java.lang.Object, java.lang.String[])}
+     * method must return null. <br />
+     * 
+     * @param params The parameters that will be passed to the unmerge method.
+     * 
+     * @return true if the unmerge operation is supported, false if not.
+     * @since 1.2.
+     */
+    public boolean isUnmergeSupported(String[] params);
+    
+    /**
+     * Try to recover the original value form this merger, this operation may not
+     * be always available, you may call {@link #isUnmergeSupported()} to check 
+     * if this type of merger is reversible or not. <br />
+     * 
+     * If this merger is not reversible, then this method must return null. <br />
+     * 
+     * @param object the object to unmerge.
+     * @param params the parameters passed in to the merge process.
+     * @return an unmerged object or null if something fails.
+     * @since 1.2
+     */
+    public S unmergeObject(R object, String[] params);
 }

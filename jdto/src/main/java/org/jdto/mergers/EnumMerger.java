@@ -57,5 +57,17 @@ public class EnumMerger implements SinglePropertyValueMerger<String, Enum> {
         
         return value.name();
     }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        //even though I can make it here, we have more information
+        //in the value compatibilization process.
+        return false;
+    }
+
+    @Override
+    public Enum unmergeObject(String object, String[] params) {
+        return null;
+    }
     
 }

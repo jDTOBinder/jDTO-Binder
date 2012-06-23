@@ -47,5 +47,15 @@ public class ToStringMerger implements SinglePropertyValueMerger<String, Object>
         
         return value.toString();
     }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return false;
+    }
+
+    @Override
+    public Object unmergeObject(String object, String[] params) {
+        return null;
+    }
     
 }

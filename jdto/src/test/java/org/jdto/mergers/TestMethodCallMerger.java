@@ -18,42 +18,69 @@ package org.jdto.mergers;
 import java.util.Arrays;
 import java.util.List;
 import org.jdto.dtos.UsefulEnum;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * Formally test the method call merger.
+ *
  * @author Juan Alberto López Cavallotti
  */
 public class TestMethodCallMerger {
-    
+
     /**
      * Object should work being stateless.
      */
     private static MethodCallMerger subject = new MethodCallMerger();
-    
+
     @Test
     public void testCallCollectionSize() {
-        
+
         List<String> testValue = Arrays.asList("First", "Second");
         Object expected = testValue.size();
         String[] method = {"size"};
-        
+
         Object result = subject.mergeObjects(testValue, method);
-        
-        assertEquals("result should be the size of the collection.",expected, result);
+
+        assertEquals("result should be the size of the collection.", expected, result);
     }
-    
-    
+
     @Test
     public void testCallEnumName() {
-        
+
         UsefulEnum testValue = UsefulEnum.USEFUL;
         Object expected = testValue.name();
         String[] method = {"name"};
         
-        Object result = subject.mergeObjects(testValue, method);
+        assertFalse(subject.isUnmergeSupported(method));
         
+        Object result = subject.mergeObjects(testValue, method);
+
         assertEquals("Should be the name of the enum constant", expected, result);
+    }
+
+    @Test
+    public void testConstructorUnmerge() {
+
+        String[] params = {"notImportant", "java.lang.Integer"};
+        assertTrue(subject.isUnmergeSupported(params));
+        
+        String value = "10";
+        
+        Integer result = (Integer) subject.unmergeObject(value, params);
+        assertEquals("Should have the same value", 10, result.intValue());
+
+    }
+    
+    @Test
+    public void testStaticMethodCallUnmerge() {
+        
+        String[] params = {"notImportant", "java.lang.Integer", "parseInt"};
+        assertTrue(subject.isUnmergeSupported(params));
+        
+        String value = "12";
+        Integer result = (Integer) subject.unmergeObject(value, params);
+        assertEquals("Should have the same value", 12, result.intValue());
+
     }
 }

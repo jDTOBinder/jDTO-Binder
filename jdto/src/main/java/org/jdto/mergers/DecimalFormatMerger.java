@@ -13,43 +13,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jdto.mergers;
 
-import org.jdto.SinglePropertyValueMerger;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import org.apache.commons.lang.ArrayUtils;
+import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Format a given number using a {@link DecimalFormat} instance with the format
- * string as the extra param. Please refer to the {@link DecimalFormat} documentation
- * to check how to write format Strings.
- * 
- * You must provide a format string as the extraParam, otherwise the an IllegalArgumentException
- * will be thrown. <br />
- * 
+ * string as the extra param. Please refer to the {@link DecimalFormat}
+ * documentation to check how to write format Strings.
+ *
+ * You must provide a format string as the extraParam, otherwise the an
+ * IllegalArgumentException will be thrown. <br />
+ *
  * @author Juan Alberto Lopez Cavallotti
  */
 public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Number> {
+
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Merge a number by using a {@link DecimalFormat} instance.
+     *
      * @param value the number to be formatted.
      * @param extraParam the format string.
      * @return the merged object formatted with JDK decimal format.
      */
     @Override
     public String mergeObjects(Number value, String[] extraParam) {
-        
+
+        if (value == null) {
+            return null;
+        }
+
+        DecimalFormat format = getDecimalFormat(extraParam);
+
+        return format.format(value);
+    }
+
+    private DecimalFormat getDecimalFormat(String[] extraParam) throws IllegalArgumentException {
         if (ArrayUtils.isEmpty(extraParam)) {
             throw new IllegalArgumentException("Number format param is required");
         }
-        
-        
         DecimalFormat format = new DecimalFormat(extraParam[0]);
-        
-        return format.format(value);
+        return format;
     }
-    
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        //the decimal format may be used to parse the number
+        return true;
+    }
+
+    @Override
+    public Number unmergeObject(String object, String[] params) {
+        try {
+            if (object == null) {
+                return null;
+            }
+
+            DecimalFormat format = getDecimalFormat(params);
+
+            return format.parse(object);
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
 }

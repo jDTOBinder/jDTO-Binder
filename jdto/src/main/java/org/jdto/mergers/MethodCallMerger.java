@@ -15,10 +15,13 @@
  */
 package org.jdto.mergers;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.reflect.MethodUtils;
 import org.jdto.SinglePropertyValueMerger;
+import org.jdto.impl.BeanClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +34,15 @@ import org.slf4j.LoggerFactory;
  * The method should be non-void. If the provided value is null, then null will
  * be returned. <br />
  * 
- * This method will throw unchecked exceptions if misconfiguration is detected. <br />
+ * The methods on this class will throw unchecked exceptions if misconfiguration 
+ * is detected. <br />
+ * 
+ * This merger is capable of unmerging the values, in order to unmerge, the user
+ * must supply a second and optionally a third merger argument. The second argument
+ * indicates the name of a class, and the third the name of a static method. In the
+ * first scenario, the merger will try to call a constructor on the class to build
+ * the unmerged object; on the second scenario, a static method will be invoked
+ * with the object to be unmerged as a parameter. <br />
  * 
  * @author Juan Alberto Lopez Cavallotti
  * @since 1.1
@@ -81,6 +92,38 @@ public class MethodCallMerger implements SinglePropertyValueMerger<Object, Objec
             logger.error("Error while trying to invoke method: "+extraParam[0], ex);
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return params.length == 2 || params.length == 3;
+    }
+
+    @Override
+    public Object unmergeObject(Object object, String[] params) {
+        
+        if (object == null) {
+            return null;
+        }
+        
+        //the second param on the array should be the class to return.
+        Class cls = BeanClassUtils.safeGetClass(params[1]);
+        
+        //if there is a third parameter, then we need to find a factory method.
+        //otherwise we need a constructor.
+        Class[] types = {object.getClass()};
+        if (params.length == 3) {
+            //get a static method.
+            Object[] args = {object};
+            return BeanClassUtils.invokeStaticMethod(cls, params[2], args);
+        } else {
+            //get a constructor.
+            ArrayList arguments = new ArrayList();
+            arguments.add(object);
+            Constructor c = BeanClassUtils.safeGetConstructor(cls, types);
+            return BeanClassUtils.createInstance(cls, c, arguments);
+        }
+        
     }
 
 }

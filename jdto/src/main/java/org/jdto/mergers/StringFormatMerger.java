@@ -64,5 +64,15 @@ public class StringFormatMerger implements MultiPropertyValueMerger<String>, Sin
     public String mergeObjects(Object value, String[] extraParam) {
         return mergeObjects(Arrays.asList(value), extraParam);
     }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return false; //coiuld be fun, but no
+    }
+
+    @Override
+    public Object unmergeObject(String object, String[] params) {
+        return null;
+    }
     
 }

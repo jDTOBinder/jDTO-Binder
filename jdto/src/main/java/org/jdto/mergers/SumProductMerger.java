@@ -89,4 +89,14 @@ public class SumProductMerger extends AbstractCalulationCollectionMerger {
 
         return ret;
     }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return false;
+    }
+
+    @Override
+    public Object unmergeObject(Double object, String[] params) {
+        return null;
+    }
 }

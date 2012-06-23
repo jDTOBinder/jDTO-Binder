@@ -16,12 +16,9 @@
 package org.jdto.impl;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,7 +123,7 @@ public class BeanClassUtils {
      * @param type
      * @return the Class object represented on the given parameter.
      */
-    static Class safeGetClass(String type) {
+    public static Class safeGetClass(String type) {
         //if no type then no class :D
         if (StringUtils.isEmpty(type)) {
             return null;
@@ -147,12 +144,30 @@ public class BeanClassUtils {
      * @param types the types of the parameters of the constructor.
      * @return the constructor of the given class which has the given parameter types.
      */
-    static Constructor safeGetConstructor(Class cls, Class[] types) {
+    public static Constructor safeGetConstructor(Class cls, Class[] types) {
         try {
             return cls.getDeclaredConstructor(types);
         } catch (Exception ex) {
             logger.error("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
             throw new RuntimeException("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
+        }
+    }
+    
+    /**
+     * Invoke a static method on a class and return the result without throwing
+     * exceptions. Just Silently return null if something bad happens.
+     * @param cls the class in which to invoke the static method.
+     * @param methodName the name of the method to be invoked.
+     * @param args the arguments that will be sent to the method.
+     * @return the result of the invocaiton (which may be null) or null if something goes wrong.
+     * @since 1.2
+     */
+    public static Object invokeStaticMethod(Class cls, String methodName, Object[] args) {
+        try {
+            return MethodUtils.invokeStaticMethod(cls, methodName, args);
+        } catch (Exception ex) {
+            logger.error("Got exception while trying to invoke static method: "+methodName + " on  class: "+cls.getCanonicalName(), ex);
+            return null;
         }
     }
 }

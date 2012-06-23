@@ -42,5 +42,15 @@ public final class IdentityPropertyValueMerger implements SinglePropertyValueMer
     public Object mergeObjects(Object value, String[] extraParam) {
         return value;
     }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return true; //this one is easy
+    }
+
+    @Override
+    public Object unmergeObject(Object object, String[] params) {
+        return object;
+    }
     
 }

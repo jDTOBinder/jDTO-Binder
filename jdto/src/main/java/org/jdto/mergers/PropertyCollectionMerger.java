@@ -15,13 +15,13 @@
  */
 package org.jdto.mergers;
 
+import java.util.Collection;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.jdto.BeanModifier;
 import org.jdto.BeanModifierAware;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.impl.BeanClassUtils;
-import java.util.Collection;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,5 +101,15 @@ public class PropertyCollectionMerger implements SinglePropertyValueMerger<Colle
     @Override
     public void setBeanModifier(BeanModifier modifier) {
         this.modifier = modifier;
+    }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        return false;
+    }
+
+    @Override
+    public Collection unmergeObject(Collection object, String[] params) {
+        return null;
     }
 }

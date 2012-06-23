@@ -16,11 +16,12 @@
 
 package org.jdto.mergers;
 
-import org.jdto.SinglePropertyValueMerger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.ArrayUtils;
+import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Merge a {@link Date} or {@link Calendar} using a {@link SimpleDateFormat} 
@@ -29,7 +30,11 @@ import org.apache.commons.lang.ArrayUtils;
  * You must provide a format string (as you were using SimpleDateFormat), otherwise
  * an IllegalArgumentException will be thrown. <br />
  * 
- * The input value can be either a {@link Date} or {@link Calendar} instance.
+ * The input value can be either a {@link Date} or {@link Calendar} instance. <br />
+ * 
+ * This merger is capable also of converting a string into a Date object. If 
+ * {@link Calendar} is needed instead of Date, the process of value compatibilization
+ * should take care of that. <br />
  * 
  * @author Juan Alberto Lopez Cavallotti
  */
@@ -50,16 +55,11 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
             return null;
         }
         
-        if (ArrayUtils.isEmpty(extraParam)) {
-            throw new IllegalArgumentException("Date format String parameter is required");
-        }
-        
         if (!(value instanceof Calendar) && !(value instanceof Date)) {
             throw new IllegalArgumentException("source value is not a Date or Calendar instance!!");
         }
         
-        //create a dateformat with the format String
-        SimpleDateFormat format = new SimpleDateFormat(extraParam[0]);
+        SimpleDateFormat format = getDateFormat(extraParam);
         
         Date target = null;
         
@@ -72,5 +72,34 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
         
         return format.format(target);
     }
-    
+
+    private SimpleDateFormat getDateFormat(String[] extraParam) throws IllegalArgumentException {
+        if (ArrayUtils.isEmpty(extraParam)) {
+            throw new IllegalArgumentException("Date format String parameter is required");
+        }
+        //create a dateformat with the format String
+        SimpleDateFormat format = new SimpleDateFormat(extraParam[0]);
+        return format;
+    }
+
+    @Override
+    public boolean isUnmergeSupported(String[] params) {
+        //the date format can be used to parse a date.
+        return true; 
+    }
+
+    @Override
+    public Object unmergeObject(String object, String[] params) {
+        try {
+            if (object == null) {
+                return null; //nothing to do
+            }
+            
+            SimpleDateFormat format = getDateFormat(params);
+            
+            return format.parse(object);
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
 }
