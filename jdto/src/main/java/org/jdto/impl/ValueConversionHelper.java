@@ -19,10 +19,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * jDTO Binder Internal API. DO NOT USE THE SIGNATURE OF THESE METHODS MAY 
+ * UNEXPECTEDLY CHANGE. <br />
  * Utility methods for making values compatible one another.
  * @author Juan Alberto Lopez Cavallotti
  */
-class ValueConversionHelper {
+public class ValueConversionHelper {
     
     /**
      * Make the target value compatible with the target type.
@@ -92,4 +94,25 @@ class ValueConversionHelper {
         return targetValue;
     }
     
+    /**
+     * Apply compatibilty logic so the given value is assignable to a variable
+     * of the target type.
+     * 
+     * @param targetType the target type for which te value needs to be compatible.
+     * @param targetValue the value to compatibilize.
+     * @return  the value converted or otherwise the same value if no possible conversion can be made.
+     */
+    public static Object applyCompatibilityLogic(Class targetType, Object targetValue) {
+
+        if (targetValue == null) {
+            return null;
+        }
+
+        //check if the types are compatible if so, then leave them alone
+        if (targetType.isAssignableFrom(targetValue.getClass())) {
+            return targetValue;
+        }
+
+        return compatibilize(targetValue, targetType);
+    }
 }

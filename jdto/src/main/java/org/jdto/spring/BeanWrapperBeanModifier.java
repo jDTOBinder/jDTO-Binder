@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package org.jdto.spring;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdto.impl.BaseBeanModifier;
 import org.jdto.impl.BeanClassUtils;
-import org.apache.commons.lang.StringUtils;
+import org.jdto.impl.ValueConversionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -97,6 +98,12 @@ public class BeanWrapperBeanModifier extends BaseBeanModifier{
             logger.info("Cannot write property path "+propertyPath+" of bean", instance);
             return;
         }
+        
+        //this can be improved by registering property editors on the bean wrapper
+        //at moment this approach is not so simple as the current functionality.
+        //nevertheless on the future this situation may change.
+        Class expectedType = beanWrapper.getPropertyType(propertyPath);
+        value = ValueConversionHelper.applyCompatibilityLogic(expectedType, value);
         
         beanWrapper.setPropertyValue(propertyPath, value);
     }

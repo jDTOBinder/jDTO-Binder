@@ -16,18 +16,16 @@
 
 package org.jdto.impl;
 
-import org.jdto.impl.CoreBeanModifier;
-import java.util.Map;
-import java.util.ArrayList;
-import org.jdto.entities.ComplexList;
+import java.util.*;
+import org.jdto.dtos.CompatibilityDTO;
+import org.jdto.dtos.UsefulEnum;
 import org.jdto.entities.ComplexEntity;
+import org.jdto.entities.ComplexList;
 import org.jdto.entities.SimpleAssociation;
 import org.jdto.entities.SimpleEntity;
-import java.util.Arrays;
-import java.util.HashMap;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -102,6 +100,24 @@ public class TestCoreBeanModifier {
         ArrayList readValue = (ArrayList) modifier.readPropertyValue("sourceList", complexList);
         
         assertSame(complexList.getSourceList(), readValue);
+    }
+    
+    @Test
+    public void testValueCompatibility() {
+        
+        CompatibilityDTO dto = new CompatibilityDTO();
+        
+        CoreBeanModifier modifier = new CoreBeanModifier();
+        
+        assertNull(dto.getTheDate());
+        
+        modifier.writePropertyValue("theDate", new Date(), dto);
+        modifier.writePropertyValue("usefulEnum", "USEFUL", dto);
+        modifier.writePropertyValue("strRep", 12.34, dto);
+        
+        assertNotNull(dto.getTheDate());
+        assertEquals(UsefulEnum.USEFUL, dto.getUsefulEnum());
+        assertEquals("12.34", dto.getStrRep());
     }
     
     @Test

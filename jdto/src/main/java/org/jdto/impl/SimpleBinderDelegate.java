@@ -82,31 +82,22 @@ class SimpleBinderDelegate implements Serializable {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
 
                 //if the source and target types are not compatible, then apply the compatibility logic
-                targetValue = applyCompatibilityLogic(fieldMetadata.getTargetType(), targetValue);
+                targetValue = ValueConversionHelper.applyCompatibilityLogic(fieldMetadata.getTargetType(), targetValue);
 
                 //if the object is immutable, then we need to store the value.
                 immutableConstructorArgs.add(targetValue);
             }
+            ret = BeanClassUtils.createInstance(dtoClass, metadata.getImmutableConstructor(), immutableConstructorArgs);
+            binderBean.bindingContext.get().put(cacheKey, ret);
         } else {
             //iterate through the properties and read the values from the business objects.
             for (String targetProperty : propertyMappings.keySet()) {
                 //get the configuration for the DTO objects.
                 FieldMetadata fieldMetadata = propertyMappings.get(targetProperty);
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
-
-                //if the source and target types are not compatible, then apply the compatibility logic
-                targetValue = applyCompatibilityLogic(fieldMetadata.getTargetType(), targetValue);
-
                 modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
         }
-
-        //finally, if the bean is immutable, build the instance with the values!
-        if (metadata.isImmutableBean()) {
-            ret = BeanClassUtils.createInstance(dtoClass, metadata.getImmutableConstructor(), immutableConstructorArgs);
-            binderBean.bindingContext.get().put(cacheKey, ret);
-        }
-
         return ret;
     }
 
@@ -277,20 +268,9 @@ class SimpleBinderDelegate implements Serializable {
             //so we're ready to copy!
             Object value = modifier.readPropertyValue(source, dto);
             
-            //try to unmerge
+            //try to restore the value
             value = applyRestoreToSingleField(value, target, fieldMetadata);
             
-            //there are some cares where the setter wont be found but the value will be writable anyway.
-            //this wont work with chained properties but as a first attempt is good.
-            //maybe the compatibility logic needs to be applied on the bean modifier 
-            //and not here.
-            //in those cases compatibility logic is not possible.
-            Class targetType = BeanPropertyUtils.findMutatorArumentType(entityClass, target);
-            if (targetType != null) {
-                //if we are setting to a getter/
-                //apply the compatibility logic.
-                value = applyCompatibilityLogic(targetType, value);
-            }
             //and set
             modifier.writePropertyValue(target, value, ret);
         }
@@ -347,20 +327,6 @@ class SimpleBinderDelegate implements Serializable {
 
         //add the default bean name.
         sourceBeans.put("", bos[0]);
-    }
-
-    private Object applyCompatibilityLogic(Class targetType, Object targetValue) {
-
-        if (targetValue == null) {
-            return null;
-        }
-
-        //check if the types are compatible if so, then leave them alone
-        if (targetType.isAssignableFrom(targetValue.getClass())) {
-            return targetValue;
-        }
-
-        return ValueConversionHelper.compatibilize(targetValue, targetType);
     }
 
     //GETTERS AND SETTERS

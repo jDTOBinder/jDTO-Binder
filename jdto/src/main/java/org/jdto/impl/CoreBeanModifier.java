@@ -178,11 +178,14 @@ public class CoreBeanModifier extends BaseBeanModifier {
 
             //at this point maybe a little type casting it would be helpful
             Class expectedType = setter.getParameterTypes()[0];
-
+            
             //try to cast
             if (expectedType.isArray()) {
                 finalValue = copyToProperArray(expectedType, finalValue);
             }
+            
+            //apply the value compatibility logic
+            finalValue = ValueConversionHelper.applyCompatibilityLogic(expectedType, finalValue);
 
             //set it
             setter.invoke(actualInstance, finalValue);

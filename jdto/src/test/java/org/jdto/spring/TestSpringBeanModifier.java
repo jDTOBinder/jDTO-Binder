@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package org.jdto.spring;
 
-import org.jdto.spring.BeanWrapperBeanModifier;
-import java.util.Map;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import org.jdto.dtos.CompatibilityDTO;
+import org.jdto.dtos.UsefulEnum;
 import org.jdto.entities.ComplexEntity;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
@@ -51,6 +52,24 @@ public class TestSpringBeanModifier {
 
         //this should be not null because the modifier should have made up missing values on path.
         assertNotNull(testIt.getAssociation());
+    }
+    
+    @Test
+    public void testValueCompatibility() {
+        
+        CompatibilityDTO dto = new CompatibilityDTO();
+        
+        BeanWrapperBeanModifier modifier = new BeanWrapperBeanModifier();
+        
+        assertNull(dto.getTheDate());
+        
+        modifier.writePropertyValue("theDate", new Date(), dto);
+        modifier.writePropertyValue("usefulEnum", "USEFUL", dto);
+        modifier.writePropertyValue("strRep", 12.34, dto);
+        
+        assertNotNull(dto.getTheDate());
+        assertEquals(UsefulEnum.USEFUL, dto.getUsefulEnum());
+        assertEquals("12.34", dto.getStrRep());
     }
 
     @Test
