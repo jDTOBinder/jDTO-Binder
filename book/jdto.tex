@@ -99,16 +99,13 @@ the DTO pattern for robust software architectures.
 takes the shallow copy approach, but with mechanisms such as cascading and cloning the user may achieve deep
 copying.
 
-When used the right way, DTO objects are key on building a scalable and loosely coupled service oriented architecture that can be deployed over the cloud.
+DTOs (Data Transfer Objects) are part of the API of a service oriented architecture. When this API is loosely coupled, the services can be exposed in various ways including RMI, SOAP and RESTful; and still be used directly. This loose coupling is needed when the application needs to scale up and work over the cloud.
 
-Mainly the incorrect use of DTOs have some strong disadvantages: 
+The main reason that developers have to not use DTOs at the initial phases of the development of an application is that the use of DTOs takes valuable time, specially adds extra lines of code to make the copy process from and to domain objects. \JDTO takes care of this concern by letting small applications be scalable from the very beginning.
 
-\begin{itemize}
-\item Multi powerful DTOs and the lost of lazy loading.
-\item High memory footprint (and unnecessary).
-\item Hard to maintain service layer API's.
-\end{itemize}
+This approach also enables developers to use another declarative tools like JSR-303 (bean declarative validation), and hooks perfectly into model 2 web frameworks.
 
+\JDTO has illustrated these concepts in very simple sample projects which are available as open source at https://github.com/jDTOBinder/jdto-sample-projects. These sample projects serve both as a starting point and as proof of concept so they're definitely worth looking at.
 
 \subsection{What's new in \JDV}
 
@@ -192,13 +189,12 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
      <dependencies>
 \end{xml}
 
-As part of \JDTO \JDV, maven artifacts are deployed on the central maven repository so you don't need to add any extra repositories as before.
+Beginning from \JDTO 1.1, maven artifacts are deployed on the central maven repository so you don't need to add any extra repositories as before.
 
 \subsection{Bootstrapping the Binder}
 
 
-In order to bind DTOs, a binder must be bootstrapped. At the moment two types of binders
-are supported: the core binder, and the spring framework binder\footnote{In order to use the spring framework binder, you should add the spring framework dependency.}.
+In order to bind DTOs, a binder instance must be bootstrapped. \JDTO can be used as a standalone library but also it is integrated with the Spring Framework\footnote{In order to use the spring framework binder, you should add the spring framework dependency.} and CDI\footnote{In order to use the CDI integration, you should add the jdto-cdi artifact to your dependencies.} (JSR-330 Contexts and Dependency Injection).
 
 
 The following snippet shows how to bootstrap the core binder, the core binder is kept as a singleton instance, so it's safe to call the \texttt{getBinder()} method at any time, and the same instance will be returned.
@@ -217,7 +213,7 @@ DTOBinder binder = DTOBinderFactory.buildBinder(
     DTOBinder.class.getResourceAsStream("/xmlmappingtest.xml"));
 \end{java}
 
-By default, the framework looks for a file named \DEFAULTCONFIG on the classpath, if this file is present and no other XML file has been specified, then it will use XML configuration instead of annotations with the configuration specified in \DEFAULTCONFIG file.
+By default, the framework looks for a file named \DEFAULTCONFIG on the classpath, if this file is present and no other XML file has been specified, then it will use XML configuration instead of annotations using the configurations specified in \DEFAULTCONFIG file.
 
 The bean analysis over XML file is kind of expensive (not much but kind of) so to get the best performance you should keep that bean as a singleton.
 
@@ -349,7 +345,7 @@ This annotation type can take four parameters but only three are commented in th
 \begin{itemize}
  \item value: Indicates the source field to read from, can be a property path.
  \item merger: An implementation of \texttt{SinglePropertyValueMerger} which will take care of the transformation of this item as a single thing.
- \item mergerParam: A string param which may help the merger to decide how to convert the value.
+ \item mergerParam: An array of strings which may help the merger to decide how to convert the value.
 \end{itemize}
 
 Users are encouraged to create their own implementations. \textbf{\underline{Important Note}}: The user should see
@@ -378,7 +374,11 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{ToStringMerger}: Convert any object into it's string representation by calling toString.
 \end{itemize}
 
+\begin{quote}\begin{footnotesize}
+
 \underline{Note about expression evaluation}: Currently the expression evaluation API supports only five operators: addition (+), subtraction (-), multiplication (*), division(/), and pow (\symbol{94}). Also it supports negative numbers and any amount of balanced parenthesis. If the expression is not well formed, the framework will throw an \texttt{IllegalArgumentException}.
+
+\end{footnotesize}\end{quote}
 
 Here is an example usage of the \texttt{DateFormatMerger}, it will output something like "2011/10/11".
 
