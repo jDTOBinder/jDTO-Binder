@@ -1,8 +1,19 @@
-# jDTO Binder - Java DTO/OOM Framework
+jDTO Binder - Java DTO/OOM Framework
+====================================
 
 To get started, please visit http://www.jdto.org and get more information and links to documentation.
 
 To learn how to use the framework please take a look at the book [https://github.com/jDTOBinder/jDTO-Binder/raw/master/book/jdto.pdf], further documentation and examples will be developed and published on the website news feed and Google+ page.
+
+## Building the artifacts from source.
+
+Even thoug jDTO Binder is publicly available on the central maven repository, if you want 
+to try out new features you can clone the repository and compile the artifacts yourself,
+in order to do that simply run on a terminal:
+
+    $ mvn clean install
+
+And after that, the jar files will be available in the target directory.
 
 ## Quick Start
 
