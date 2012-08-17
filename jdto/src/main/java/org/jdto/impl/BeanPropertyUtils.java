@@ -199,7 +199,7 @@ class BeanPropertyUtils {
 
         //check the naming conventions
         String methodName = method.getName();
-        if (!StringUtils.startsWithAny(methodName, prefixes)) {
+        if (!org.jdto.util.StringUtils.startsWithAny(methodName, prefixes)) {
             return false;
         }
 

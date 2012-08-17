@@ -18,7 +18,7 @@ package org.jdto.impl;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.jdto.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

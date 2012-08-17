@@ -19,9 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.reflect.MethodUtils;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.impl.BeanClassUtils;
+import org.jdto.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

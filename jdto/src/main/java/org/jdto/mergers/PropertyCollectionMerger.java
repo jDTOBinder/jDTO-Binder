@@ -17,7 +17,7 @@ package org.jdto.mergers;
 
 import java.util.Collection;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
+import org.jdto.util.ObjectUtils;
 import org.jdto.BeanModifier;
 import org.jdto.BeanModifierAware;
 import org.jdto.SinglePropertyValueMerger;
