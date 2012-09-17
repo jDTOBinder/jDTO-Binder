@@ -74,12 +74,14 @@
     <modules>
         <module>jdto</module>
         <module>jdto-cdi</module>
+        <module>jdto-scripting</module>
     </modules>
     
     <!-- version management of dependencies -->
     <properties>
         <cdi.version>1</cdi.version>
         <commonslang.version>2.4</commonslang.version>
+        <groovy.version>2.0.2</groovy.version>
         <junit.version>4.9</junit.version>
         <slf4j.version>1.6.2</slf4j.version>
         <spring.version>2.5.6</spring.version>
@@ -122,6 +124,11 @@
                 <groupId>org.jdto</groupId>
                 <artifactId>jdto</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
