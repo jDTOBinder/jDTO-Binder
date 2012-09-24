@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.jdto.entities.GeneralPurposeEntity;
 import org.junit.BeforeClass;
 import org.jdto.entities.SimpleEntity;
 import java.util.Calendar;
+import org.jdto.dtos.MultiSourceDTO3;
 import org.junit.Test;
 import static org.junit.Assert.*;
 /**
@@ -59,7 +60,7 @@ public class TestMultiSource {
     @Test
     public void testMultiSourceDates() {
         
-        SimpleEntity source1 = new SimpleEntity("hello!!", 2, 0, true);
+        SimpleEntity source1 = new SimpleEntity("hello!!", 4, 0, true);
         GeneralPurposeEntity source2 = new GeneralPurposeEntity();
         
         Calendar testDate = Calendar.getInstance();
@@ -74,7 +75,17 @@ public class TestMultiSource {
         MultiSourceDTO2 dto = binder.bindFromBusinessObject(MultiSourceDTO2.class, source1, source2);
         
         assertEquals(source1.getaString(), dto.getString1());
-        assertEquals("02 10/02/1983", dto.getString2());
+        assertEquals("04 10/02/1983", dto.getString2());
         assertEquals("10/02/1983", dto.getString3());
+    }
+    
+    @Test
+    public void testSameBean() {
+        SimpleEntity entity1 = new SimpleEntity("Hello", 0, 0, false);
+        SimpleEntity entity2 = new SimpleEntity("World", 0, 0, false);
+        
+        MultiSourceDTO3 dto = binder.bindFromBusinessObject(MultiSourceDTO3.class, entity1, entity2);
+        
+        assertEquals("Hello and World!", dto.getTestString());
     }
 }

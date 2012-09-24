@@ -172,8 +172,11 @@ abstract class AbstractBeanInspector implements Serializable {
 
         //the default source fields is the same property name.
         ret.setSourceFields(defaultSourceFields(propertyName));
+        
+        ret.initSourceFieldWithSize(1);
+        
         //set the data associated with the single property value merger
-        ret.setSinglePropertyValueMerger(propertyName, defaultSinglePropertyMerger(), defaultMergerParameter(), defaultSourceBeanName());
+        ret.setSinglePropertyValueMerger(propertyName, defaultSinglePropertyMerger(), defaultMergerParameter(), defaultSourceBeanName(), 0);
 
         //and that is the default field metadata.
         //later on it can be used to customise it on other ways.

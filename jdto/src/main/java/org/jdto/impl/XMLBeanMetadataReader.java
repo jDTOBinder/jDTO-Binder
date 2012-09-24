@@ -64,7 +64,11 @@ class XMLBeanMetadataReader {
         //go through the source fields
         //first clear the source field list
         metadata.getSourceFields().clear();
-
+        
+        //init the source fields.
+        metadata.initSourceFieldWithSize(sources.size());
+        
+        int sourceFieldIndex = 0;
         for (DTOSourceField sourceField : sources) {
 
             String sourceFieldName = sourceField.getName();
@@ -88,7 +92,10 @@ class XMLBeanMetadataReader {
 
             //finally set the metadata
             metadata.getSourceFields().add(sourceFieldName);
-            metadata.setSinglePropertyValueMerger(sourceFieldName, merger, mergerParam, sourceBeanName);
+            metadata.setSinglePropertyValueMerger(sourceFieldName, merger, mergerParam, sourceBeanName, sourceFieldIndex);
+            
+            //increase the source field index/
+            sourceFieldIndex++;
         }
 
     }

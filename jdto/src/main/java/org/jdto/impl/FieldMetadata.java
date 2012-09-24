@@ -30,9 +30,9 @@ public class FieldMetadata implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private List<String> sourceFields;
-    private HashMap<String, Class> sourceMergers;
-    private HashMap<String, String[]> sourceMergersParams;
-    private HashMap<String, String> sourceBeans;
+    private Class[] sourceMergers;
+    private String[][] sourceMergersParams;
+    private String[] sourceBeans;
     private String[] mergerParameters;
     private Class<? extends MultiPropertyValueMerger> propertyValueMerger;
     private String[] sourceBeanNames;
@@ -50,11 +50,17 @@ public class FieldMetadata implements Serializable {
     private boolean fieldTransient;
     
     public FieldMetadata() {
-        sourceMergers = new HashMap<String, Class>();
-        sourceMergersParams = new HashMap<String, String[]>();
-        sourceBeans = new HashMap<String, String>();
+        sourceMergers = null;
+        sourceMergersParams = null;
+        sourceBeans = null;
     }
-
+    
+    void initSourceFieldWithSize(int amount) {
+        sourceMergers = new Class[amount];
+        sourceMergersParams = new String[amount][];
+        sourceBeans = new String[amount];
+    }
+    
     public String[] getMergerParameter() {
         return mergerParameters;
     }
@@ -111,19 +117,19 @@ public class FieldMetadata implements Serializable {
         this.cascadeType = cascadeType;
     }
 
-    public HashMap<String, Class> getSourceMergers() {
+    public Class[] getSourceMergers() {
         return sourceMergers;
     }
 
-    public void setSourceMergers(HashMap<String, Class> sourceMergers) {
+    public void setSourceMergers(Class[] sourceMergers) {
         this.sourceMergers = sourceMergers;
     }
 
-    public HashMap<String, String[]> getSourceMergersParams() {
+    public String[][] getSourceMergersParams() {
         return sourceMergersParams;
     }
 
-    public void setSourceMergersParams(HashMap<String, String[]> sourceMergersParams) {
+    public void setSourceMergersParams(String[][] sourceMergersParams) {
         this.sourceMergersParams = sourceMergersParams;
     }
 
@@ -135,18 +141,18 @@ public class FieldMetadata implements Serializable {
         this.sourceBeanNames = sourceBeanNames;
     }
 
-    public HashMap<String, String> getSourceBeans() {
+    public String[] getSourceBeans() {
         return sourceBeans;
     }
 
-    public void setSourceBeans(HashMap<String, String> sourceBeans) {
+    public void setSourceBeans(String[] sourceBeans) {
         this.sourceBeans = sourceBeans;
     }
     
-    public void setSinglePropertyValueMerger(String propertyName, Class<SinglePropertyValueMerger> merger, String[] extraParams, String sourceBean) {
-        sourceMergers.put(propertyName, merger);
-        sourceMergersParams.put(propertyName, extraParams);
-        sourceBeans.put(propertyName, sourceBean);
+    public void setSinglePropertyValueMerger(String propertyName, Class<SinglePropertyValueMerger> merger, String[] extraParams, String sourceBean, int sourcePropertyIndex) {
+        sourceMergers[sourcePropertyIndex] = merger;
+        sourceMergersParams[sourcePropertyIndex] = extraParams;
+        sourceBeans[sourcePropertyIndex] = sourceBean;
     }
     
     /**

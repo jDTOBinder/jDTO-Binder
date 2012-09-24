@@ -151,6 +151,10 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
         //if the compound mapping is present, then map it.
         if (compoundMapping != null) {
             sources.clear(); //remove the default value.
+            
+            target.initSourceFieldWithSize(compoundMapping.value().length);
+            
+            int sourceBeanIndex = 0;
             for (Source source : compoundMapping.value()) {
                 String sourceField = applyMapping(source, propertyName);
                 sources.add(sourceField);
@@ -158,7 +162,11 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
                 target.setSinglePropertyValueMerger(sourceField,
                         (Class)source.merger(),
                         source.mergerParam(),
-                        source.sourceBean());
+                        source.sourceBean(),
+                        sourceBeanIndex);
+                
+                //increase the number of source bean.
+                sourceBeanIndex++;
             }
         }
 
@@ -197,14 +205,16 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
             String[] sources = readSourceBeanNamesFromAnnotation(sourceNames);
             metadata.setSourceBeanNames(sources);
         }
-
+        
+        
         //add the single property value merger.
         if (simpleMapping != null && simpleMapping.merger() != null) {
             String sourceFieldName = StringUtils.isEmpty(simpleMapping.value()) ? propertyName : simpleMapping.value();
             metadata.setSinglePropertyValueMerger(sourceFieldName,
                     (Class)simpleMapping.merger(),
                     simpleMapping.mergerParam(),
-                    simpleMapping.sourceBean());
+                    simpleMapping.sourceBean(),
+                    0);
 
             //the default merger is already set on the metadate for it's being pre-filled with default data.
             return;
