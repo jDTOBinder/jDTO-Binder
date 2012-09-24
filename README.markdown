@@ -7,7 +7,7 @@ To learn how to use the framework please take a look at the book [https://github
 
 ## Building the artifacts from source.
 
-Even thoug jDTO Binder is publicly available on the central maven repository, if you want 
+Even though jDTO Binder is publicly available on the central maven repository, if you want 
 to try out new features you can clone the repository and compile the artifacts yourself,
 in order to do that simply run on a terminal:
 
