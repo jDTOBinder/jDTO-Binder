@@ -18,10 +18,8 @@ package org.jdto.impl;
 import java.io.Serializable;
 import java.util.*;
 import org.apache.commons.lang.ArrayUtils;
-import org.jdto.BeanModifier;
-import org.jdto.MultiPropertyValueMerger;
-import org.jdto.PropertyValueMergerInstanceManager;
-import org.jdto.SinglePropertyValueMerger;
+import org.apache.commons.lang.StringUtils;
+import org.jdto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -263,9 +261,13 @@ class SimpleBinderDelegate implements Serializable {
 
             //this is the only possibility left.
             String target = fieldMetadata.getSourceFields().get(0);
-                        
-            //no need to restore
-            //so we're ready to copy!
+            
+            //if the source was the root object, then it's safer to ignore it.
+            if (StringUtils.equals(Binding.ROOT_OBJECT, target)) {
+                continue;
+            }
+            
+            //read the source value
             Object value = modifier.readPropertyValue(source, dto);
             
             //try to restore the value
@@ -280,17 +282,13 @@ class SimpleBinderDelegate implements Serializable {
     }
 
     private Object applyMergeToSingleField(HashMap<String, Object> sourceBeans, String sourceProperty, FieldMetadata fieldMetadata) {
+
+        //read the source value
+        Object sourceValue = readSourceValue(sourceBeans, sourceProperty, fieldMetadata);
+        
+        //read the merger information
         Class mergerClass = fieldMetadata.getSourceMergers().get(sourceProperty);
         String[] mergerExtraParam = fieldMetadata.getSourceMergersParams().get(sourceProperty);
-        String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
-
-        Object bo = sourceBeans.get(sourceBean);
-
-        if (bo == null) {
-            throw new IllegalStateException("could not find source bean with name: " + sourceBean);
-        }
-
-        Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
 
         SinglePropertyValueMerger merger = (SinglePropertyValueMerger) mergerManager.getPropertyValueMerger(mergerClass); //todo get the merger from the context
         return merger.mergeObjects(sourceValue, mergerExtraParam);
@@ -309,6 +307,27 @@ class SimpleBinderDelegate implements Serializable {
         
         return originalValue;
     }
+    
+    
+    private Object readSourceValue(HashMap<String,Object> sourceBeans, String sourceProperty, FieldMetadata fieldMetadata) {
+        String sourceBean = fieldMetadata.getSourceBeans().get(sourceProperty);
+
+        Object bo = sourceBeans.get(sourceBean);
+        
+        if (bo == null) {
+            throw new IllegalStateException("could not find source bean with name: " + sourceBean);
+        }
+        
+        //if it is the root object, then just return it.
+        if (StringUtils.equals(sourceProperty, Binding.ROOT_OBJECT)) {
+            return bo;
+        }
+        
+        Object sourceValue = modifier.readPropertyValue(sourceProperty, bo);
+        
+        return sourceValue;
+    }
+    
     
     private void populateSourceBeans(HashMap<String, Object> sourceBeans, BeanMetadata metadata, FieldMetadata fieldMetadata, Object[] bos) {
 

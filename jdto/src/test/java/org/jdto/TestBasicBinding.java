@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.jdto.entities.AnnotatedEntity;
 import org.jdto.dtos.FormatDTO;
 import org.jdto.entities.SimpleAssociation;
 import org.jdto.dtos.SimpleAssociationDTO;
+import org.jdto.dtos.WrapperDTO;
 import org.jdto.entities.SimpleEntity;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -120,6 +121,17 @@ public class TestBasicBinding {
         
         assertEquals(expectedPrice, dto.getPrice());
         assertEquals(expectedCompound, dto.getCompound());
+    }
+    
+    
+    @Test
+    public void testRootObjectBinding() {
+        
+        SimpleEntity entity = new SimpleEntity("MyString", 10, 20, true);
+        
+        WrapperDTO<SimpleEntity> dto = binder.bindFromBusinessObject(WrapperDTO.class, entity);
+        
+        assertSame("Should be the exact same reference.", entity, dto.getWrapped());
     }
     
 }

@@ -16,13 +16,10 @@
 
 package org.jdto.annotation;
 
+import java.lang.annotation.*;
+import org.jdto.Binding;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.mergers.IdentityPropertyValueMerger;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
  * Annotation type to bind the target attribute of a DTO with a source attrbiute. <br />
@@ -42,7 +39,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 public @interface Source {
-
+    
+    /**
+     * Constant which defines the keyword used to refer the root object of
+     * a DTO Binding.
+     * 
+     * @see org.jdto.Binding
+     */
+    public static final String ROOT_OBJECT = Binding.ROOT_OBJECT;
+    
     /**
      * The name of a property (or nested property) which will act as the source value. <br />
      * Please note that if there is a type mismatch over the property types then

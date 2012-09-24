@@ -21,6 +21,7 @@ import org.jdto.DTOBinderFactory;
 import org.jdto.dtos.MergerDTO;
 import org.jdto.impl.DTOBinderBean;
 import org.jdto.dtos.SimpleAssociationDTO;
+import org.jdto.dtos.WrapperDTO;
 import org.jdto.entities.AnnotatedEntity;
 import org.jdto.entities.GeneralPurposeEntity;
 import org.jdto.entities.SimpleAssociation;
@@ -154,5 +155,17 @@ public class TestReverseBinding {
         assertEquals(dto.getFirstString(), entity.getMyString());
         assertNotNull("related entity should not be null", entity.getRelated());
         assertEquals(dto.getSecondString(), entity.getRelated().getaString());
+    }
+    
+    @Test
+    public void testRootObjectBinding() {
+        WrapperDTO<SimpleAssociation> source = new WrapperDTO<SimpleAssociation>();
+        SimpleAssociation entity = new SimpleAssociation();
+        source.setWrapped(entity);
+        
+        //the wrapped instance should just be ignored.
+        SimpleAssociation result = binder.extractFromDto(SimpleAssociation.class, source);
+        
+        assertNotNull("Should have returned a result", result);
     }
 }
