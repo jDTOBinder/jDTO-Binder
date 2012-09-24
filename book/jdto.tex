@@ -13,7 +13,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.2\xspace}
+\newcommand{\JDV}{1.3\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -114,12 +114,9 @@ This release includes a great number of new features and improvements.
 \JDTO \JDV introduces new features:
 \begin{itemize}
 
-\item Improved the process of reverse binding by adding an optional "restore" functionality to the value mergers.
-\item Bean modifiers now can transparently convert between dates and calendars.
-\item Added restore functionality to four of the property mergers.
-\item Added a new merger to calculate the time between two dates in different time units.
-\item Introduced new marker interface to generalize the value mergers.
-\item Value merger instances can be obtained directly by the user to take advantage of their functionality.
+\item Relaxed the minimum version requirement for the commons lang framework to 2.4.
+\item Added new scripting mergers module and two brand new groovy mergers.
+\item Added a special keyword (+rootObject) to reference the whole source root object.
 
 \end{itemize}
 
@@ -127,10 +124,7 @@ Issues solved:
 
 \begin{itemize}
 
-\item Circular reference mapping should now not be an issue on non-immutable DTOs.
-\item Now the @DTOCascade annotation can be used within a constructor argument.
-\item Fixed small analysis issue on immutable DTOs with the cascade option.
-\item Fixed test that would not pass under certain environments.
+\item Improved field metadata architecture to solve a bug with multiple source bindings if two source fields shared the same name.
 
 \end{itemize}
 
@@ -157,7 +151,7 @@ You may download the framework's JAR files and add them to your project's classp
 JAR files with the binaries, source and javadoc are available for download at the \JDTO home page http://www.jdto.org/home/view/download you may also want to download separately the jars for the commons-lang and slf4j projects:
 
 \begin{itemize}
-\item Commons Lang (min version 2.6): http://commons.apache.org/lang/
+\item Commons Lang (min version 2.4): http://commons.apache.org/lang/
 \item Simple Logging Facade for Java (min version 1.6): http://www.slf4j.org/
 \end{itemize}
 
@@ -173,7 +167,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -183,7 +177,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <version>2.4</version>
         </dependency>
      ...
      <dependencies>
@@ -318,7 +312,7 @@ private DTOBinder binder;
     <dependency>
         <groupId>org.jdto</groupId>
         <artifactId>jdto-cdi</artifactId>
-        <version>1.2</version>
+        <version>1.3</version>
     </dependency>
 \end{xml}
 
@@ -332,6 +326,57 @@ private DTOBinder binder;
 
 The jdto-cdi dependency has as implicit dependency the jdto framework so you should not have to add it explicitly, nevertheless you may add it if that is your taste.
 
+\subsection{Scripting Language Integration}
+
+\JDTO ships with a scripting module. You may use scripting languages such as Groovy to create simple but powerful field bindings, the binding logic can be configured directly as a merger param, and many things can be achieved with just one line of code.
+
+In order to use the scripting module, you need to add the following dependency to your pom.xml file:
+
+%%%%%%%%%% TODO - MANUAL VERSION CHANGE
+
+\begin{xml}
+    <dependency>
+        <groupId>org.jdto</groupId>
+        <artifactId>jdto-scripting</artifactId>
+        <version>1.3</version>
+    </dependency>
+\end{xml}
+
+In the following example is shown how to use the groovy mergers to perform complex bindings:
+
+
+\begin{java}
+
+@SourceNames({"bean1", "bean2"})
+public class GroovyDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Source(value="myString", merger=GroovyMerger.class, 
+            mergerParam="sourceValue == null ? 'is null' : 'is not null'")
+    private String singleSource;
+
+    @Sources(value = {@Source("myString"), @Source(value = "myString", sourceBean="bean2")},
+            merger = MultiGroovyMerger.class, 
+            mergerParam = "sourceValues[0] + ' and ' + sourceValues[1]")
+    private String multipleSource;
+
+    ...// getters and setters
+
+}
+
+\end{java}
+
+
+Some special features have been enabled on the Groovy runtime for convenience:
+
+\begin{itemize}
+
+\item A variable called \texttt{logger} has been introduced, this variable may be used for logging values.
+\item The packages java.math.*, java.util.* and org.apache.commons.lang.* have been automatically imported.
+
+\end{itemize}
+
+For more information and examples, please read the corresponding Javadoc API.
 
 %%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
 \clearpage
@@ -351,6 +396,25 @@ This annotation type can take four parameters but only three are commented in th
 Users are encouraged to create their own implementations. \textbf{\underline{Important Note}}: The user should see
 the value mergers as singleton, therefore the use of instance variables is discouraged unless you know what you're doing.
 
+As part of \JDTO 1.3, a special keyword has been introduced to reference the root object instead of one of its properties, \texttt{+rootObject}, this keyword is also represented as an API constant, the following example demonstrates the usage:
+
+\begin{java}
+
+public class WrapperDTO<T> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * Get the root object.
+     */
+    @Source(Source.ROOT_OBJECT)
+    private T wrapped;
+    
+    ... //Getters and setters
+    
+}
+\end{java}
+
 
 \subsection{List of Built-in field Mergers}
 
@@ -363,6 +427,7 @@ The following is a complete list of the built-in single field mergers and a brie
  \item \texttt{DateFormatMerger}: Formats a Date or Calendar instance by applying a format String. This merger can be used to restore the values it converts.
  \item \texttt{DecimalFormatMerger}: Format any number by applying a format String. This merger can be used to restore the values it converts.
  \item \texttt{EnumMerger}: Convert an enum literal to it's String representation.
+ \item \texttt{GroovyMerger}: Merge the objects by evaluating a Groovy expression. (Requires jdto-scripting module).
  \item \texttt{IdentityPropertyValueMerger}: Default merger, returns the same instance of the value. This merger can be used to restore the values it converts.
  \item \texttt{StringFormatMerger}: Format the value by using a format string (String.format).
  \item \texttt{ExpressionMerger}: Evaluate a math expression out out literal values and properties of the input bean (or the actual value if the input does not represent a bean).
@@ -505,6 +570,7 @@ The default value merger for the \texttt{@Sources} annotation type does not merg
 
 \begin{itemize}
  \item \texttt{FirstObjectPropertyValueMerger}: This is the default merger, it returns the first non-null value.
+ \item \texttt{MultiGroovyMerger}: Merge the objects by evaluating a Groovy expression. (Requires jdto-scripting module).
  \item \texttt{StringFormatMerger} as described before, this merger uses the String.format method to merge all the provided values into a single formatted string.
  \item \texttt{TimeBetweenDatesMerger}: This merger merges two dates or calendars by calculating the time between them, by default the time unit is hours but you may specify seconds, minutes, hours, days or weeks.
 \end{itemize}
