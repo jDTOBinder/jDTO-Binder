@@ -1,6 +1,16 @@
 jDTO Binder Version Changelog
 ==============================
 
+Version 1.4 (Development):
+------------
+
+### New Features:
+
+ * Property value mergers are looked into the spring context and then the internal instance pool as a fallback mechanism.
+
+### Bugfixes:
+
+
 Version 1.3:
 ------------
 
