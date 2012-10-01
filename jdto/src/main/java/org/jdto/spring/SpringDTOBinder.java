@@ -187,6 +187,12 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder, Application
     private <T extends PropertyValueMerger> T springContextLookup(Class<T> mergerClass) {
         try {
             
+            if (applicationContext == null) {
+                logger.warn("No application context, please veryfy you are using this bean the right way.");
+                return null;
+            }
+            
+            
             String[] names = applicationContext.getBeanNamesForType(mergerClass);
             
             if (names.length > 1) {

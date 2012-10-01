@@ -29,7 +29,7 @@ import org.jdto.impl.*;
  * @author Juan Alberto Lopez Cavallotti
  * @since 1.0
  */
-public class DTOBinderFactory {
+public abstract class DTOBinderFactory {
 
     /**
      * Create a new instance of a DTO binder with default settings. <br />
@@ -76,7 +76,7 @@ public class DTOBinderFactory {
         DTOBinderBean bean = InstancePool.getOrCreate(DTOBinderBean.class);
         injectDependencies(bean);
         
-        if (bean.getMetadata() == null || bean.getMetadata().isEmpty()) {
+        if (bean.getMetadata() == null) {
             bean.setMetadata(new HashMap<Class, BeanMetadata>());
         }
         return bean;

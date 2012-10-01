@@ -22,6 +22,7 @@ import org.jdto.entities.SimpleAssociation;
 import org.jdto.dtos.SimpleAssociationDTO;
 import org.jdto.dtos.WrapperDTO;
 import org.jdto.entities.SimpleEntity;
+import org.jdto.impl.DTOBinderBean;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -41,6 +42,20 @@ public class TestBasicBinding {
     public static void globalInit() {
         binder = DTOBinderFactory.buildBinder();
     }
+    
+    
+    @Test
+    public void testGetSingletonInstance() {
+        
+        DTOBinderBean binder1 = (DTOBinderBean) DTOBinderFactory.getBinder();
+        
+        binder1.getMetadata().clear();
+        
+        DTOBinder binder2 = DTOBinderFactory.getBinder();
+        
+        assertSame("getBinder() should produce a singleton instance", binder1, binder2);
+    }
+    
     
     @Test
     public void testNullBinding() {
