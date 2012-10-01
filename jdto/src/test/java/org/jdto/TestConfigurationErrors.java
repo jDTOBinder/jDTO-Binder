@@ -15,8 +15,14 @@
  */
 package org.jdto;
 
-import static org.junit.Assert.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jdto.impl.DTOBinderBean;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test different scenarios where configuration errors can happen.
@@ -24,6 +30,22 @@ import org.junit.Test;
  */
 public class TestConfigurationErrors {
     
+    
+    @BeforeClass
+    public static void globalInit() {
+        Logger logger = Logger.getLogger("org.jdto.impl.BeanClassUtils");
+        logger.setLevel(Level.OFF);
+        logger = Logger.getLogger("org.jdto.impl.AbstractBeanInspector");
+        logger.setLevel(Level.OFF);
+    }
+    
+    @AfterClass
+    public static void globalTearDown() {
+        Logger logger = Logger.getLogger("org.jdto.impl.BeanClassUtils");
+        logger.setLevel(Level.INFO);
+        logger = Logger.getLogger("org.jdto.impl.AbstractBeanInspector");
+        logger.setLevel(Level.INFO);
+    }
     
     /**
      * Check the cases when the provided xml resoruce is null
@@ -51,12 +73,16 @@ public class TestConfigurationErrors {
     
     
     /**
-     * Test the exception when an invalid merger class is found, this can happen
-     * when dealing with XML.
+     * Test the exception when an invalid bean class is defined in the XML File.
      */
     @Test
-    public void testInvalidMergerClass() {
+    public void testInvalidBeanClass() {
         
+        //build the configuration.
+        DTOBinderBean bean = (DTOBinderBean) DTOBinderFactory.buildBinder(getClass().getResourceAsStream("/erroneous/unexistent.xml"));
+        
+        //test that the metadata is empty.
+        assertTrue("Metadata should be empty.", bean.getMetadata().isEmpty());
     }
     
 }

@@ -16,7 +16,9 @@
 
 package org.jdto.dtos;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import org.jdto.annotation.Source;
 
 /**
@@ -27,6 +29,8 @@ public class CompatibilityDTO {
     private String strRep;
     private UsefulEnum usefulEnum;
     private Calendar theDate;
+    private Date theCalendar;
+    private Double theBigDecimal;
     
     @Source("theInt")
     public String getStrRep() {
@@ -53,4 +57,21 @@ public class CompatibilityDTO {
     public void setTheDate(Calendar theDate) {
         this.theDate = theDate;
     }
+
+    public Date getTheCalendar() {
+        return theCalendar;
+    }
+
+    public void setTheCalendar(Date theCalendar) {
+        this.theCalendar = theCalendar;
+    }
+
+    public Double getTheBigDecimal() {
+        return theBigDecimal;
+    }
+
+    public void setTheBigDecimal(Double theBigDecimal) {
+        this.theBigDecimal = theBigDecimal;
+    }
+    
 }

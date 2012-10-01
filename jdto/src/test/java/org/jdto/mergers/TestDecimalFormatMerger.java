@@ -32,27 +32,67 @@ public class TestDecimalFormatMerger {
     public static void init() {
         subject = new DecimalFormatMerger();
     }
+
+    @Test
+    public void testNullFormat() {
+        
+        final String testFormat = "#,###.00";
+        
+        String[] params = {testFormat};
+        Object result = subject.mergeObjects(null, params);
+        
+        assertNull("Merge null should produce null", result);
+        
+        result = subject.restoreObject(null, params);
+        assertNull("Restore null should produce null", result);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testEmptyParams() {
+        
+        String[] params = {};
+        subject.mergeObjects(12.34, params);
+        fail("Should not have reached this point");
+        
+    }
     
     
+    @Test(expected=IllegalArgumentException.class)
+    public void testIllegalFormatStringRestore() {
+        
+        final String testFormat = "#,###.00";
+        
+        String[] params = {testFormat};
+        subject.restoreObject("# abcd # efghi", params);
+        fail("Should not have reached this point");
+        
+    }
+        
     @Test
     public void testDecimalFormatMerger() {
         
         double value = 0.101;
+        final String testFormat = "% #,###.00";
         
-        String result = subject.mergeObjects(value, new String[] {"% #,###.00"});
+        String result = subject.mergeObjects(value, new String[] {testFormat});
         
-        assertEquals(new DecimalFormat("% #,###.00").format(value), result);
+        assertEquals(new DecimalFormat(testFormat).format(value), result);
     }
     
-    public void testDecimalFormatUnmerge() {
-        String number = "12.5";
+    @Test
+    public void testDecimalFormatRestore() throws Exception {
+        String number = "12,5";
+
+        final String testFormat = "#,###.00";
         
-        String[] params = {"#,###.00"};
+        String[] params = {testFormat};
         
         assertTrue(subject.isRestoreSupported(params));
         
         Number result = subject.restoreObject(number, params);
         
-        assertEquals("Should have found the same number but as double.", 12.5, result.doubleValue(), 0.00001);
+        double expected = new DecimalFormat(testFormat).parse(number).doubleValue();
+        
+        assertEquals("Should have found the same number but as double.", expected, result.doubleValue(), 0.00001);
     }
 }

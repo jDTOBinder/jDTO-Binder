@@ -54,7 +54,7 @@ public class TestConcurrencyStability {
     public void testCase() {
         String threadName =  Thread.currentThread().getName();
         
-        logger.info(threadName);
+        logger.debug(threadName);
         
         ArrayList<GeneralPurposeEntity> simpleEntities = new ArrayList<GeneralPurposeEntity>();
         

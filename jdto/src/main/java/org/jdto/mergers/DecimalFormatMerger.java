@@ -47,10 +47,10 @@ public class DecimalFormatMerger implements SinglePropertyValueMerger<String, Nu
         if (value == null) {
             return null;
         }
+        
+            DecimalFormat format = getDecimalFormat(extraParam);
 
-        DecimalFormat format = getDecimalFormat(extraParam);
-
-        return format.format(value);
+            return format.format(value);
     }
 
     private DecimalFormat getDecimalFormat(String[] extraParam) throws IllegalArgumentException {

@@ -36,6 +36,54 @@ public class TestDateFormat {
     }
     
     @Test
+    public void testNullFormat() {
+        
+        String[] params = {"yyyy-MM-dd"};
+        Object result = subject.mergeObjects(null, params);
+        
+        assertNull("Merge null should produce null", result);
+        
+        result = subject.restoreObject(null, params);
+        assertNull("Restore null should produce null", result);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testEmptyParams() {
+        
+        String[] params = {};
+        subject.mergeObjects(new Date(), params);
+        fail("Should not have reached this point");
+        
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testIllegalFormatString() {
+        
+        String[] params = {"abcdefghijk"};
+        subject.mergeObjects(new Date(), params);
+        fail("Should not have reached this point");
+        
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testIllegalFormatStringRestore() {
+        
+        String[] params = {"yyyy-MM-dd"};
+        subject.restoreObject("abcdefghi", params);
+        fail("Should not have reached this point");
+        
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testIllegalDate() {
+        
+        String[] params = {"yyyy-MM-dd"};
+        subject.mergeObjects(new Long(40), params);
+        fail("Should not have reached this point");
+        
+    }
+    
+    @Test
     public void testDateFormatMerger() {
         
         final String format = "yyyy-MM-dd";
