@@ -273,7 +273,10 @@ public class XMLBeanInspector extends AbstractBeanInspector implements Serializa
      */
     public synchronized HashMap<Class, BeanMetadata> buildMetadata() {
         HashMap<Class, BeanMetadata> ret = new HashMap<Class, BeanMetadata>();
-
+        
+        if (mappings.getElements() == null) {
+            return ret;
+        }
 
         //for each configured dto, build its metadata.
         for (DTOElement dtoElement : mappings.getElements()) {

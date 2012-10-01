@@ -45,7 +45,18 @@ public class TestXMLMapping {
     public static void globalInit() {
         binder = DTOBinderFactory.buildBinder(TestXMLMapping.class.getResourceAsStream("/xmlmappingtest.xml"));
     }
-
+    
+    
+    /**
+     * Excercises the handler for empty xml configuration resource. Issue #25
+     */
+    @Test
+    public void testEmptyConfig() {
+        
+        DTOBinder myBinder = DTOBinderFactory.buildBinder(getClass().getResourceAsStream("/empty.xml"));
+        assertNotNull("Empty configurations are valid", myBinder);
+    }
+    
     @Test
     public void testTransientBinding() {
 
