@@ -15,9 +15,6 @@
  */
 package org.jdto.mergers;
 
-import org.jdto.mergers.EnumMerger;
-import org.jdto.mergers.ToStringMerger;
-import org.jdto.mergers.CloneMerger;
 import java.util.ArrayList;
 import org.junit.Test;
 
@@ -75,6 +72,26 @@ public class TestSimpleObjectMergers {
         assertNotSame("Lists should not be the same",testString, result);
     }
     
+    @Test
+    public void testCloneFailed() {
+        
+        CloneMerger merger = new CloneMerger();
+        
+        //restore is not supported for this merger.
+        assertFalse(merger.isRestoreSupported(null));
+        assertNull(merger.restoreObject(null, null));
+        
+        class NotCloneable {
+            public Object clone() throws CloneNotSupportedException {
+                throw new CloneNotSupportedException();
+            }
+        }
+        
+        Object result = merger.mergeObjects(new NotCloneable(), null);
+        
+        assertNull("Object was not cloneable", result);
+    }
+    
     enum TestLiterals {
         MyLiteral{
 
@@ -91,6 +108,12 @@ public class TestSimpleObjectMergers {
         EnumMerger merger = new EnumMerger();
 
         String result = null;
+        
+        //this merger is not supposed to restore this kinds of values, because
+        //the functionality is already built in.
+        assertFalse(merger.isRestoreSupported(null));
+        assertNull(merger.restoreObject(null, null));
+        
         
         //testing nulls
         result = merger.mergeObjects(null, null);

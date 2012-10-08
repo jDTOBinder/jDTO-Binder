@@ -44,7 +44,27 @@ public class TestMethodCallMerger {
 
         assertEquals("result should be the size of the collection.", expected, result);
     }
-
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testNulls() {
+        
+        String[] method = {"getClass"};
+        
+        assertNull("Null object should return null", subject.mergeObjects(null, method));
+        assertNull("Null object should return null", subject.restoreObject(null, method));
+        
+        //should throw illegal argument exception
+        subject.mergeObjects(method, null);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testUnexistentMethod() {
+        
+        String[] method = {"nonSenseMethod"};
+        //execute a non existing method.
+        subject.mergeObjects(this, method);
+    }
+    
     @Test
     public void testCallEnumName() {
 

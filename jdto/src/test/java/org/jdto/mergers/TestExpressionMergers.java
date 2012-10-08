@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2012 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.jdto.mergers;
 
-import org.jdto.mergers.ExpressionMerger;
-import org.jdto.mergers.SumExpressionMerger;
 import java.util.HashSet;
 import org.jdto.entities.BillItem;
 import org.jdto.impl.CoreBeanModifier;
@@ -45,6 +43,29 @@ public class TestExpressionMergers {
         sumMerger.setBeanModifier(modifier);
     }
     
+    @Test(expected=IllegalArgumentException.class)
+    public void testErrorConditions() {
+        
+        assertFalse("Restore is not supported", merger.isRestoreSupported(null));
+        assertNull("Restore is not supported", merger.restoreObject(null, null));
+        
+        merger.mergeObjects(null, null);
+    }
+    
+    @Test
+    public void testRepeatExpression() {
+        
+        String[] expr = {"5 * 9"};
+        
+        double result = merger.mergeObjects(null, expr);
+        
+        assertEquals(45, result, 0.0001);
+        
+        //same expression should produce same result
+        result = merger.mergeObjects(null, expr);
+        assertEquals(45, result, 0.0001);
+        
+    }
     
     @Test
     public void testExpressionMergerValue() {
