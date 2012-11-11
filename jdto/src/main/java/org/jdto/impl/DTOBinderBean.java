@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang.ArrayUtils;
 import org.jdto.PropertyValueMerger;
 import org.jdto.PropertyValueMergerInstanceManager;
 import org.slf4j.Logger;
@@ -102,15 +103,19 @@ public class DTOBinderBean implements DTOBinder {
 
         boolean shouldReleaseThreadLocal = initBindingContextIfNecessary();
         try {
-
+            
             //this will apply repeatedly the conversion results to a list.
             Object[] paramsBuffer = new Object[businessObjectsLists.length];
 
+            int refSize = getSourceListsSize(businessObjectsLists);
+            
+            //all of the elements are null
+            if (refSize == -1) {
+                return null;
+            }
+            
+            
             List<T> ret = new ArrayList<T>();
-
-            //the reference size will be the first list size
-            int refSize = businessObjectsLists[0].size();
-
             //repeatedly run the simple binding.
             for (int i = 0; i < refSize; i++) {
                 for (int j = 0; j < businessObjectsLists.length; j++) {
@@ -209,5 +214,17 @@ public class DTOBinderBean implements DTOBinder {
 
     public void setMergerManager(PropertyValueMergerInstanceManager manager) {
         this.implementationDelegate.setMergerManager(manager);
+    }
+    
+    //get the size of the first not-null list
+    private int getSourceListsSize(List[] businessObjectsLists) {
+        
+        for (List list : businessObjectsLists) {
+            if (list != null) {
+                return list.size();
+            }
+        }
+        
+        return -1;
     }
 }

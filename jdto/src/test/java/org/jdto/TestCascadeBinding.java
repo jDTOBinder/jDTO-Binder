@@ -81,6 +81,18 @@ public class TestCascadeBinding {
         assertNotNull(cldto.getFormatDtos());
         assertTrue(cldto.getFormatDtos().size() == 2);
     }
+    
+    @Test
+    public void testNullListCascade() {
+        
+        
+        ComplexList list = new ComplexList(null);
+        
+        ComplexListDTO cldto = binder.bindFromBusinessObject(ComplexListDTO.class, list);
+        
+        assertNotNull(cldto);
+        assertNull("Cascade a null object should result in null", cldto.getFormatDtos());
+    }
 
     @Test
     public void testCascadeListArray() {

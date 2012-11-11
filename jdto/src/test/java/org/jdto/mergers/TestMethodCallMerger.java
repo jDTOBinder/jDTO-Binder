@@ -57,7 +57,7 @@ public class TestMethodCallMerger {
         subject.mergeObjects(method, null);
     }
     
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected=RuntimeException.class)
     public void testUnexistentMethod() {
         
         String[] method = {"nonSenseMethod"};

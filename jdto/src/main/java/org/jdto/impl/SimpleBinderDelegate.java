@@ -209,7 +209,11 @@ class SimpleBinderDelegate implements Serializable {
     }
 
     private List convertValueToList(Object value) {
-
+        
+        if (value == null) {
+            return null;
+        }
+        
         if (value instanceof List) {
             return (List) value;
         }
