@@ -15,8 +15,12 @@
  */
 package org.jdto.impl;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.lang.ClassUtils;
 
 /**
  * jDTO Binder Internal API. DO NOT USE THE SIGNATURE OF THESE METHODS MAY 
@@ -104,6 +108,12 @@ public class ValueConversionHelper {
      */
     public static Object applyCompatibilityLogic(Class targetType, Object targetValue) {
 
+        //compatibilize nulls
+        if (targetType.isPrimitive() && targetValue == null) {
+            return nullToPrimitive(targetType);
+        }
+        
+        
         if (targetValue == null) {
             return null;
         }
@@ -114,5 +124,24 @@ public class ValueConversionHelper {
         }
 
         return compatibilize(targetValue, targetType);
+    }
+
+    private static final Class[] strType = {String.class};
+    private static final String ZERO = "0";
+    
+    private static Object nullToPrimitive(Class targetType) {
+                
+        if (targetType == boolean.class) {
+            return false;
+        }
+        
+        if (targetType == char.class) {
+            return (char) 0;
+        }
+        
+        Class wrapper = ClassUtils.primitiveToWrapper(targetType);
+        Constructor c = BeanClassUtils.safeGetConstructor(wrapper, strType);
+        
+        return BeanClassUtils.createInstance(wrapper, c, ZERO);
     }
 }
