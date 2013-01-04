@@ -71,6 +71,7 @@ public abstract class DTOBinderFactory {
      * @since 1.4
      */
     public static DTOBinder buildBinder(String classpathResource) {
+        
         InputStream is = DTOBinderFactory.class.getResourceAsStream(classpathResource);
         return buildBinder(is); 
     }
