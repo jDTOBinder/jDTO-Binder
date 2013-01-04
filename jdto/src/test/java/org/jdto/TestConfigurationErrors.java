@@ -15,6 +15,7 @@
  */
 package org.jdto;
 
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdto.impl.DTOBinderBean;
@@ -53,7 +54,7 @@ public class TestConfigurationErrors {
     @Test(expected=IllegalArgumentException.class)
     public void testNullXMLConfiguration() {
         
-        DTOBinderFactory.buildBinder(null);
+        DTOBinderFactory.buildBinder((InputStream)null);
         
         fail("Should not have reached this point");
     }

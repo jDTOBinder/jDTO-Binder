@@ -7,6 +7,7 @@ Version 1.4 (Development):
 ### New Features:
 
  * Property value mergers are looked into the spring context and then the internal instance pool as a fallback mechanism.
+ * Added convenience API to DTOBinderFactory to load XML configuration from the classpath.
 
 ### Bugfixes:
 

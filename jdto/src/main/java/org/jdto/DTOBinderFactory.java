@@ -52,6 +52,7 @@ public abstract class DTOBinderFactory {
      * @param xmlFile
      * @return a new binder instance configured with the default bean modifier 
      * and metadata read from an XML configruation file.
+     * @throws IllegalArgumentException if the classpath resource is not found.
      */
     public static DTOBinder buildBinder(InputStream xmlFile) {
         DTOBinderBean bean = new DTOBinderBean(xmlFile, true);
@@ -59,7 +60,21 @@ public abstract class DTOBinderFactory {
         
         return bean;
     }
-
+    
+    /**
+     * Create a new instance of a DTO binder which will read the binding configuration
+     * out of the given XML file wich should be present in the classpath.
+     * @param classpathResource a String pointing to a classpath resource.
+     * @return a new binder instance configured with the default bean modifier
+     * and metadata read from an XML configuration file.
+     * @throws IllegalArgumentException if the classpath resource is not found.
+     * @since 1.4
+     */
+    public static DTOBinder buildBinder(String classpathResource) {
+        InputStream is = DTOBinderFactory.class.getResourceAsStream(classpathResource);
+        return buildBinder(is); 
+    }
+    
     /**
      * Get a singleton instance of a DTO binder. This will cache the object
      * in the instance pool and will retrieve it on further usage. <br />
