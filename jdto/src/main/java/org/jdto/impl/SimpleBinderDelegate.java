@@ -87,7 +87,8 @@ class SimpleBinderDelegate implements Serializable {
         HashMap<String, Object> sourceBeans = new HashMap<String, Object>();
 
         if (metadata.isImmutableBean()) {
-            for (FieldMetadata fieldMetadata : metadata.getConstructorArgs()) {
+            List<FieldMetadata> args = metadata.getConstructorArgs();
+            for (FieldMetadata fieldMetadata : args) {
                 Object targetValue = buildTargetValue(metadata, fieldMetadata, ret, sourceBeans, businessObjects);
 
                 //if the source and target types are not compatible, then apply the compatibility logic

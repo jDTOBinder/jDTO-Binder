@@ -17,7 +17,12 @@
 package org.jdto.impl;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import org.jdto.DTOBinder;
+import org.jdto.DTOBindingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the lifecycle of DTO Objects, this class is responsible for creating
@@ -33,7 +38,8 @@ class ObjectLifecycleManager implements Serializable {
      * The dto binder associated with this lifecycle manager.
      */
     private final DTOBinder binder;
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(ObjectLifecycleManager.class);
     
     /**
      * Build a new instance of this lifecycle manager.
@@ -53,6 +59,26 @@ class ObjectLifecycleManager implements Serializable {
      */
     <T> void notify(LifecyclePhase phase, T target, BeanMetadata metadata, Object... sourceBeans) {
         
+        Method handler = metadata.getLifecycleHandlers().get(phase);
+        
+        if (handler == null) {
+            //method does not implement lifecycle handler for this phase.
+            return;
+        }
+        
+        if (!Modifier.isPublic(handler.getModifiers())) {
+            logger.warn("Handler might not be accessible, ignoring it.");
+            return;
+        }
+        
+        DTOBindingContext context = new DTOBindingContext(metadata, binder, sourceBeans);
+        
+        try {
+            //call the handler on the same thread.
+            handler.invoke(target, context);
+        } catch (Exception ex) {
+            logger.error("Got unmanaged exception while invoking lifecycle handler method", ex);
+        }
     }
     
     

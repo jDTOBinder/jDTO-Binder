@@ -22,8 +22,32 @@ package org.jdto.impl;
  * @since 1.4
  */
 enum LifecyclePhase {
-    BEFORE_PROPERTIES_SET,
-    AFTER_PROFPERTIES_SET,
     
+    /**
+     * This lifecycle phase happens after the target DTO is created but before
+     * start setting its properties.
+     */
+    BEFORE_PROPERTIES_SET("beforePropertiesSet"),
+    
+    /**
+     * This lifecycle phase happens after the target DTO is populated and before
+     * it is returned.
+     */
+    AFTER_PROFPERTIES_SET("afterPropertiesSet"),;
+    
+    
+    private final String handlerMethodName;
+
+    private LifecyclePhase(String handlerMethodName) {
+        this.handlerMethodName = handlerMethodName;
+    }
+
+    /**
+     * The name of the conventional handler method for this lifecycle phase.
+     * @return a String with the method name.
+     */
+    public String getHandlerMethodName() {
+        return handlerMethodName;
+    }
     
 }

@@ -18,16 +18,19 @@ package org.jdto.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.jdto.DTOMetadata;
 import org.jdto.MultiPropertyValueMerger;
 
 /**
  * Represents useful metadata needed to bind a bean.
  * @author Juan Alberto Lopez Cavallotti
  */
-public class BeanMetadata implements Serializable {
+public class BeanMetadata implements DTOMetadata,Serializable {
     private static final long serialVersionUID = 1L;
     
     private String[] defaultBeanNames;
@@ -36,11 +39,13 @@ public class BeanMetadata implements Serializable {
     private List<FieldMetadata> constructorArgs;
     private Constructor immutableConstructor;
     
+    private EnumMap<LifecyclePhase, Method> lifecycleHandlers;
+    
     /**
      * Initialize the metadata object for a standard bean.
      */
     public BeanMetadata() {
-        fieldMetadata = new HashMap<String, FieldMetadata>();
+        this(false);
     }
     
     
@@ -51,6 +56,7 @@ public class BeanMetadata implements Serializable {
      * @param immutableBean 
      */
     public BeanMetadata(boolean immutableBean) {
+        lifecycleHandlers = new EnumMap<LifecyclePhase, Method>(LifecyclePhase.class);
         if (immutableBean) {
             this.immutableBean = immutableBean;
             constructorArgs = new LinkedList<FieldMetadata>();
@@ -79,7 +85,8 @@ public class BeanMetadata implements Serializable {
     
     //GETTERS AND SETTERS
 
-    public HashMap<String, FieldMetadata> getFieldMetadata() {
+    @Override
+    public HashMap getFieldMetadata() {
         return fieldMetadata;
     }
 
@@ -96,6 +103,7 @@ public class BeanMetadata implements Serializable {
         return ret;
     }
 
+    @Override
     public String[] getDefaultBeanNames() {
         return defaultBeanNames;
     }
@@ -104,20 +112,31 @@ public class BeanMetadata implements Serializable {
         this.defaultBeanNames = defaultBeanNames;
     }
 
-    public List<FieldMetadata> getConstructorArgs() {
+    @Override
+    public List getConstructorArgs() {
         return constructorArgs;
     }
 
+    @Override
     public boolean isImmutableBean() {
         return immutableBean;
     }
 
+    @Override
     public Constructor getImmutableConstructor() {
         return immutableConstructor;
     }
 
     public void setImmutableConstructor(Constructor immutableConstructor) {
         this.immutableConstructor = immutableConstructor;
+    }
+
+    EnumMap<LifecyclePhase, Method> getLifecycleHandlers() {
+        return lifecycleHandlers;
+    }
+
+    void setLifecycleHandlers(EnumMap<LifecyclePhase, Method> lifecycleHandlers) {
+        this.lifecycleHandlers = lifecycleHandlers;
     }
     
 }

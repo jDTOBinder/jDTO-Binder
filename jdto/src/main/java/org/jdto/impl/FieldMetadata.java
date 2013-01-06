@@ -17,8 +17,8 @@
 package org.jdto.impl;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
+import org.jdto.DTOFieldMetadata;
 import org.jdto.MultiPropertyValueMerger;
 import org.jdto.SinglePropertyValueMerger;
 
@@ -26,7 +26,7 @@ import org.jdto.SinglePropertyValueMerger;
  * Represents the metadata for a given field.
  * @author Juan Alberto Lopez Cavallotti
  */
-public class FieldMetadata implements Serializable {
+public class FieldMetadata implements DTOFieldMetadata, Serializable {
     private static final long serialVersionUID = 1L;
     
     private List<String> sourceFields;
@@ -61,6 +61,7 @@ public class FieldMetadata implements Serializable {
         sourceBeans = new String[amount];
     }
     
+    @Override
     public String[] getMergerParameter() {
         return mergerParameters;
     }
@@ -69,6 +70,7 @@ public class FieldMetadata implements Serializable {
         this.mergerParameters = mergerParameter;
     }
 
+    @Override
     public Class<? extends MultiPropertyValueMerger> getPropertyValueMerger() {
         return propertyValueMerger;
     }
@@ -77,6 +79,7 @@ public class FieldMetadata implements Serializable {
         this.propertyValueMerger = propertyValueMerger;
     }
 
+    @Override
     public List<String> getSourceFields() {
         return sourceFields;
     }
@@ -85,6 +88,7 @@ public class FieldMetadata implements Serializable {
         this.sourceFields = sourceFields;
     }
 
+    @Override
     public boolean isFieldTransient() {
         return fieldTransient;
     }
@@ -93,6 +97,7 @@ public class FieldMetadata implements Serializable {
         this.fieldTransient = fieldTransient;
     }
 
+    @Override
     public boolean isCascadePresent() {
         return cascadePresent;
     }
@@ -101,6 +106,7 @@ public class FieldMetadata implements Serializable {
         this.cascadePresent = cascadePresent;
     }
 
+    @Override
     public Class getCascadeTargetClass() {
         return cascadeTargetClass;
     }
@@ -109,6 +115,7 @@ public class FieldMetadata implements Serializable {
         this.cascadeTargetClass = cascadeTargetClass;
     }
 
+    @Override
     public CascadeType getCascadeType() {
         return cascadeType;
     }
@@ -117,6 +124,7 @@ public class FieldMetadata implements Serializable {
         this.cascadeType = cascadeType;
     }
 
+    @Override
     public Class[] getSourceMergers() {
         return sourceMergers;
     }
@@ -125,6 +133,7 @@ public class FieldMetadata implements Serializable {
         this.sourceMergers = sourceMergers;
     }
 
+    @Override
     public String[][] getSourceMergersParams() {
         return sourceMergersParams;
     }
@@ -133,6 +142,7 @@ public class FieldMetadata implements Serializable {
         this.sourceMergersParams = sourceMergersParams;
     }
 
+    @Override
     public String[] getSourceBeanNames() {
         return sourceBeanNames;
     }
@@ -141,6 +151,7 @@ public class FieldMetadata implements Serializable {
         this.sourceBeanNames = sourceBeanNames;
     }
 
+    @Override
     public String[] getSourceBeans() {
         return sourceBeans;
     }
@@ -159,6 +170,7 @@ public class FieldMetadata implements Serializable {
      * The type of the field
      * @return 
      */
+    @Override
     public Class getTargetType() {
         return targetType;
     }

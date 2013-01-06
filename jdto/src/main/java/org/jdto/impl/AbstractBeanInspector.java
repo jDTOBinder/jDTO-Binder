@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.jdto.DTOBindingContext;
 import org.jdto.mergers.FirstObjectPropertyValueMerger;
 import org.jdto.mergers.IdentityPropertyValueMerger;
 import org.slf4j.Logger;
@@ -56,7 +57,9 @@ abstract class AbstractBeanInspector implements Serializable {
             } else {
                 inspectMutableBean(beanClass, ret);
             }
-
+            
+            extractLifecycleHandlerMethods(beanClass, ret);
+            
             String[] sourceBeanNames = readSourceBeanNames(beanClass);
 
             ret.setDefaultBeanNames(sourceBeanNames);
@@ -183,7 +186,19 @@ abstract class AbstractBeanInspector implements Serializable {
 
         return ret;
     }
-
+    
+    private static final Class[] lifecycleArgumentTypes = { DTOBindingContext.class };
+    
+    private <T> void extractLifecycleHandlerMethods(Class<T> beanClass, BeanMetadata beanMetadata) {
+        for (LifecyclePhase lifecyclePhase : LifecyclePhase.values()) {
+            
+            Method m = BeanClassUtils.safeGetMethod(beanClass, lifecyclePhase.getHandlerMethodName(), lifecycleArgumentTypes);
+            if (m != null) {
+                beanMetadata.getLifecycleHandlers().put(lifecyclePhase, m);
+            }
+        }
+    }
+    
     /**
      * Encapuslate the default value for cascade present.
      * @return 

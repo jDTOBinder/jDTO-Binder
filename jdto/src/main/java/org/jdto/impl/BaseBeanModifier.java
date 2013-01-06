@@ -16,9 +16,9 @@
 
 package org.jdto.impl;
 
-import org.jdto.BeanModifier;
 import java.io.Serializable;
 import java.util.Map;
+import org.jdto.BeanModifier;
 
 /**
  * Base class for bean modifiers, this adds basic features common to all 

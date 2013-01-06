@@ -16,6 +16,7 @@
 package org.jdto.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.jdto.util.MethodUtils;
@@ -175,6 +176,35 @@ public class BeanClassUtils {
             logger.error("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
             throw new RuntimeException("Error while trying to find constructor for class " + cls.getCanonicalName(), ex);
         }
+    }
+    
+    /**
+     * Find a method in the class with the given name and argument types. This method
+     * will iterate through superclasses and even inspect the Object class.
+     * @param cls the class where to search the method.
+     * @param methodName the name of the method that is being searched.
+     * @param argumentTypes the types of the arguments of the method.
+     * @return the method or null if not found.
+     * 
+     * @since 1.4
+     */
+    public static Method safeGetMethod(Class cls, String methodName, Class[] argumentTypes) {
+        while (cls != null) {
+            Method method;
+            
+            try {
+                method = cls.getDeclaredMethod(methodName, argumentTypes);
+            } catch (Exception ex) {
+                method = null;
+            }
+            
+            if (method == null) {
+                cls = cls.getSuperclass();
+                continue;
+            }
+            return method;
+        }
+        return null;
     }
 
     /**
