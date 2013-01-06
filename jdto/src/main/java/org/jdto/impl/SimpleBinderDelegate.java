@@ -36,12 +36,22 @@ class SimpleBinderDelegate implements Serializable {
     private BeanModifier modifier;
     private PropertyValueMergerInstanceManager mergerManager;
     private static final Logger logger = LoggerFactory.getLogger(SimpleBinderDelegate.class);
+    
+    private ObjectLifecycleManager lifecycleManager;
 
     SimpleBinderDelegate(DTOBinderBean binderBean) {
         this.binderBean = binderBean;
+        this.lifecycleManager = new ObjectLifecycleManager(binderBean);
     }
 
     <T> T bindFromBusinessObject(HashMap<Class, BeanMetadata> metadataMap, Class<T> dtoClass, Object... businessObjects) {
+        
+        //log what I'm doing
+        if (logger.isDebugEnabled()) {
+            logger.debug("Populating dto of type: " + dtoClass.getName());
+            logger.debug("\t from source objects: " + Arrays.toString(businessObjects));
+        }
+        
         //first of all, we try to find the metadata for the DTO to build, if not
         //then we build it.
         BeanMetadata metadata = findBeanMetadata(metadataMap, dtoClass);
@@ -65,6 +75,7 @@ class SimpleBinderDelegate implements Serializable {
             immutableConstructorArgs = new ArrayList();
         } else {
             ret = BeanClassUtils.createInstance(dtoClass);
+            lifecycleManager.notify(LifecyclePhase.BEFORE_PROPERTIES_SET ,ret, metadata, businessObjects);
             binderBean.bindingContext.get().put(cacheKey, ret);
         }
 
@@ -96,6 +107,9 @@ class SimpleBinderDelegate implements Serializable {
                 modifier.writePropertyValue(targetProperty, targetValue, ret);
             }
         }
+        
+        lifecycleManager.notify(LifecyclePhase.AFTER_PROFPERTIES_SET ,ret, metadata, businessObjects);
+        
         return ret;
     }
 
