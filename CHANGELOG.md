@@ -1,7 +1,16 @@
 jDTO Binder Version Changelog
 ==============================
 
-Version 1.4 (Development):
+Version 1.5:
+------------
+
+### New Features:
+
+
+### Bugfixes:
+
+
+Version 1.4:
 ------------
 
 ### New Features:
