@@ -42,8 +42,8 @@ public class TestBindingLifecycle {
     public static void globalInit() {
         
         //increase logging level
-        currentLevel = Logger.getGlobal().getLevel();
-        Logger.getGlobal().setLevel(Level.FINEST);
+        currentLevel = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).getLevel();
+        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINEST);
         
         binder = DTOBinderFactory.buildBinder();
     }
@@ -88,7 +88,7 @@ public class TestBindingLifecycle {
     @AfterClass
     public static void globalTearDown() {        
         //rollback the logger to its original state.
-        Logger.getGlobal().setLevel(currentLevel);
+        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(currentLevel);
     }
     
     
