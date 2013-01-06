@@ -21,12 +21,12 @@
     <parent>
         <artifactId>jdto-all</artifactId>
         <groupId>org.jdto</groupId>
-        <version>1.4</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
     
     <groupId>org.jdto</groupId>
     <artifactId>jdto-scripting</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     
     
     <name>jDTO Binder :: Scripting Module</name>
