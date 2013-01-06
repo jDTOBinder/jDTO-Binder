@@ -1,3 +1,5 @@
+% JDTO Binder Users Manual
+% Author: Juan Alberto López Cavallotti
 
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -13,7 +15,7 @@
 
 %customized commands and environments
 \newcommand{\JDTO}{jDTO Binder\xspace}
-\newcommand{\JDV}{1.3\xspace}
+\newcommand{\JDV}{1.4\xspace}
 \newcommand{\DEFAULTCONFIG}{/jdto-mappings.xml\xspace}
 
 %for java syntax highlighting
@@ -101,7 +103,7 @@ copying.
 
 DTOs (Data Transfer Objects) are part of the API of a service oriented architecture. When this API is loosely coupled, the services can be exposed in various ways including RMI, SOAP and RESTful; and still be used directly. This loose coupling is needed when the application needs to scale up and work over the cloud.
 
-The main reason that developers have to not use DTOs at the initial phases of the development of an application is that the use of DTOs takes valuable time, specially adds extra lines of code to make the copy process from and to domain objects. \JDTO takes care of this concern by letting small applications be scalable from the very beginning.
+The main reason why developers have to not used DTOs at the initial phases of the development of an application is that the use of DTOs takes valuable time, specially adds extra lines of code to make the copy process from and to domain objects. \JDTO takes care of this concern by letting small applications be scalable from the very beginning.
 
 This approach also enables developers to use another declarative tools like JSR-303 (bean declarative validation), and hooks perfectly into model 2 web frameworks.
 
@@ -114,9 +116,10 @@ This release includes a great number of new features and improvements.
 \JDTO \JDV introduces new features:
 \begin{itemize}
 
-\item Relaxed the minimum version requirement for the commons lang framework to 2.4.
-\item Added new scripting mergers module and two brand new groovy mergers.
-\item Added a special keyword (+rootObject) to reference the whole source root object.
+\item Added support for DTO binding lifecycle with two specific lifecycle hooks, \texttt{beforePropertiesSet} and \texttt{afterPropertiesSet}. Issue \#27.
+\item Property value mergers are looked into the spring context and then the internal instance pool as a fallback mechanism.
+\item Added convenience API to DTOBinderFactory to load XML configuration from the classpath.
+\item Added null to 0 conversion when dealing with primitives for compatibility logic.
 
 \end{itemize}
 
@@ -124,7 +127,8 @@ Issues solved:
 
 \begin{itemize}
 
-\item Improved field metadata architecture to solve a bug with multiple source bindings if two source fields shared the same name.
+\item Fixed \texttt{NullPointerException} when loading empty XML configuration. Issue \#25
+\item Fixed \texttt{NullPointerException} on cascade when the source value is null. Issue \#26.
 
 \end{itemize}
 
@@ -167,7 +171,7 @@ by adding it to your pom.xml under the dependencies section, you also want to ad
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -301,6 +305,10 @@ Once configured, you can inject the binder bean as usual, for example:
 @Autowired
 private DTOBinder binder;
 \end{java}
+
+\subsubsection{Property Value Mergers Lookup}
+
+Starting from version 1.4, \JDTO looks up on the spring registry for property value mergers before looking for them on the internal instance pool, this allows the user to access the Spring Context and features within these mergers and so, making easy to implement functionality otherwise difficult to achieve.
 
 \subsection{Integration with CDI}
 
@@ -738,23 +746,6 @@ Some mergers have already built-in support for restoring the values, for more in
 
 If you want to perform domain-specific value restoration, you are encouraged to subclass the merger and override the previously mentioned methods.
 
-%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
-\clearpage
-
-\section{Value Compatibilization}
-
-When try to set a value on a target DTO, \JDTO will try to make that value compatible so there is no need for extra configuration.
-
-The following list describes the changes \JDTO does to the values so they're compatible:
-
-\begin{itemize}
-\item If the target type is a \texttt{String}, then call \texttt{toString} on the source object before attempting to set it.
-\item If the target type is \texttt{Date} or \texttt{Calendar}, then try to convert between one another (normally by calling the method \texttt{getTime()} and \texttt{setTime()} on a calendar instance). 
-\item If the target type is \texttt{Enum} and the source type is \texttt{String}, then try to resolve the enum constant from the given string. 
-\end{itemize}
-
-More rules may be added in the future for developer convenience.
-
 \begin{java}
 //create a basic entity
 SimpleEntity entity = new SimpleEntity("test", 123, 345.35, true);
@@ -780,6 +771,63 @@ assertEquals("Changed!", entity.getaString());
 
 
 If the entity class argument is an implementation of \texttt{java.util.Map}, then the value returned will be a map, and the keys of the map will match the DTO mapping for the object passed as an argument. This means you can populate a map out of an object.
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
+\section{DTO Binding Lifecycle}
+
+Starting from version 1.4, \JDTO has incorporated the concept of "Binding Lifecycle" and it provides a set of notifications which might be used by the developer to customize the way that DTO's are populated or to trigger custom code on the process. The current lifecycle has the following stages:
+
+\begin{itemize}
+
+\item Before Properties Set: This phase is activated after the DTO instance is created and the framework will call by convention a method with name \texttt{beforePropertiesSet} which takes as argument a \texttt{org.jdto.DTOBindingContext} instance, this method, if present, is not called on immutable DTOs.
+
+\item After Properties Set: This phase is activated after the DTO instance has been populated and the framework will call by convention a method with name \texttt{afterPropertiesSet} which takes as argument a \texttt{org.jdto.DTOBindingContext} instance, this method, if present, is called regardless the type of DTO.
+
+\end{itemize}
+
+These conventional methods must be \texttt{public} or otherwise the framework will ignore them.
+
+Through the \texttt{DTOBindingContext} instance, the developer has access to the \texttt{DTOBinder} involved on the process as well as the resulting metadata from the initial bean inspection process and the source values used to populate the DTO.
+
+This kind of lifecycle handlers are only applied when populating DTOs from business objects and not the inverse, this is mainly because we want to keep domain objects as clean as possible.
+
+The following is an example of how the developer might take advantage of this lifecycle:
+
+\begin{java}
+import java.io.Serializable;
+import org.jdto.DTOBindingContext;
+
+public class MyDTO implements Serializable {
+    
+    //... normal DTO implementation
+	
+    public void afterPropertiesSet(DTOBindingContext context) {
+        //TODO - Add your own logic.
+    }
+}
+
+\end{java}
+
+It is a design decision not to add conventions without parameters which might affect code readability and also could be confused with lifecycle calls of other frameworks such as the Spring Framework.
+
+%%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
+\clearpage
+
+\section{Value Compatibilization}
+
+When try to set a value on a target DTO, \JDTO will try to make that value compatible so there is no need for extra configuration.
+
+The following list describes the changes \JDTO does to the values so they're compatible:
+
+\begin{itemize}
+\item If the target type is a \texttt{String}, then call \texttt{toString} on the source object before attempting to set it.
+\item If the target type is \texttt{Date} or \texttt{Calendar}, then try to convert between one another (normally by calling the method \texttt{getTime()} and \texttt{setTime()} on a calendar instance). 
+\item If the target type is \texttt{Enum} and the source type is \texttt{String}, then try to resolve the enum constant from the given string.
+\item If the target type is primitive and the source value is \texttt{null}, then it is converted to \texttt{false} or 0 depending on the type.
+\end{itemize}
+
+More rules may be added in the future for developer convenience.
 
 %%%%%%%%%%%%% END SECTION %%%%%%%%%%%%%%
 \clearpage
