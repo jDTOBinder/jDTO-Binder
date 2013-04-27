@@ -34,5 +34,10 @@
     
     </properties>
     <dependencies>
+        <!-- jdto binder -->
+        <dependency>
+            <groupId>org.jdto</groupId>
+            <artifactId>jdto</artifactId>
+        </dependency>
     </dependencies>
 </project>
