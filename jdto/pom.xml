@@ -25,7 +25,6 @@
         <version>1.5-SNAPSHOT</version>
     </parent>
     
-    <groupId>org.jdto</groupId>
     <artifactId>jdto</artifactId>
     <packaging>jar</packaging>
 
