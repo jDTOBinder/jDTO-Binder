@@ -41,7 +41,7 @@
     
     <dependencies>
         
-        <!-- jdto bindet -->
+        <!-- jdto binder -->
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
