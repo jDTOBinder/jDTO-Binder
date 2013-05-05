@@ -60,17 +60,21 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         
         Set<? extends Element> elms = roundEnv.getElementsAnnotatedWith(elm);
         
+        //at this point we have all the DTO's annotated with @DTOVerify
         for (Element element : elms) {
-            messager.printMessage(Diagnostic.Kind.NOTE, element.toString());
-            
-            
-            
-            
+            messager.printMessage(Diagnostic.Kind.NOTE, "Validating: " + element.toString());
+            validateDTO(element);
         }
         
         
         
         return true;
+    }
+
+    private void validateDTO(Element element) {
+        //configuration ought to be on the getter, the setter or the field.
+        //since we're copying from beans first inspect the getters/setters
+        
     }
 
 }
