@@ -8,3 +8,4 @@
 /jdto-cdi/target/
 /jdto-scripting/target/
 /jdto-verifier/target/
+*.class
