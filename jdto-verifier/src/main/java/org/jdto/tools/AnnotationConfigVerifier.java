@@ -72,7 +72,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
 
             TypeElement targetType = extractTargetType(element, annotationElement, messager);
 
-            validateDTO((TypeElement)element, targetType, messager);
+            validateDTO((TypeElement) element, targetType, messager);
         }
 
 
@@ -88,7 +88,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         List<? extends Element> elms = element.getEnclosedElements();
 
         for (Element enclElement : elms) {
-            
+
             //we're interested on getters.
             if (elementIsRelevant(enclElement)) {
                 
@@ -122,17 +122,17 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
      * This needs to take more arguments for proper validations.
      */
     private void validateElementConfiguration(String sourceProperty, Element getter, TypeElement targetObject, Messager messager) {
-        
+
         //means unknown configuration.
         if (sourceProperty == null) {
             return;
         }
-        
+
         //the target object should have the getter.
         if (!hasGetter(sourceProperty, targetObject)) {
             messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Property not found on source Object: " + sourceProperty, getter);
         }
-        
+
     }
 
     private TypeElement extractTargetType(Element element, TypeElement annotationElement, Messager messager) {
@@ -165,85 +165,107 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
     }
 
     private String extractSourceProperty(TypeElement element, Element enclElement) {
-        
+
         //check for annotations.
         Source annot = enclElement.getAnnotation(Source.class);
-        
+
         if (annot != null) {
             return annot.value();
         }
-        
+
         //normalize the value.
         String name = enclElement.getSimpleName().toString();
-        
+
         name = (name.startsWith("is")) ? name.substring(2) : name.substring(3);
-        
+
         //uncapitalize.
         name = StringUtils.uncapitalize(name);
-        
+
         //at this point the annotaiton is either on the field or not present.
         Element field = findFieldOnType(element, name);
-        
+
         //if no field is found, that is a valid configuration. return the name of the property.
         if (field == null) {
             return name;
         }
-        
+
         //if no annotation is present on the field then also return the field name.
         annot = field.getAnnotation(Source.class);
-        
+
         if (annot == null) {
             return name;
         }
-        
+
         return annot.value();
     }
 
     private Element findFieldOnType(TypeElement element, String name) {
-        
+
         for (Element enclosedElement : element.getEnclosedElements()) {
-            
+
             if (enclosedElement.getKind() == ElementKind.FIELD && name.equals(enclosedElement.getSimpleName().toString())) {
                 return enclosedElement;
             }
-            
+
         }
-        
+
         return null;
     }
 
     private Element findGetterOnType(TypeElement element, String name) {
-        
+
         for (Element enclosedElement : element.getEnclosedElements()) {
             if (enclosedElement.getKind() != ElementKind.METHOD) {
                 continue;
             }
-            
+
             String elementName = enclosedElement.getSimpleName().toString();
-            
+
             if (elementName.startsWith("get")) {
-                
+
                 elementName = StringUtils.uncapitalize(elementName.substring(3));
-                
+
                 if (name.equals(elementName)) {
                     return enclosedElement;
                 }
             }
-            
+
             if (elementName.startsWith("is")) {
-                
+
                 elementName = StringUtils.uncapitalize(elementName.substring(2));
-                
+
                 if (name.equals(elementName)) {
                     return enclosedElement;
                 }
             }
-            
+
         }
-        
+
         return null;
     }
-    
+
+    private Element findSetterOnType(TypeElement element, String name) {
+        for (Element enclosedElement : element.getEnclosedElements()) {
+            if (enclosedElement.getKind() != ElementKind.METHOD) {
+                continue;
+            }
+
+            String elementName = enclosedElement.getSimpleName().toString();
+
+            if (elementName.startsWith("set")) {
+
+                elementName = StringUtils.uncapitalize(elementName.substring(3));
+
+                if (name.equals(elementName)) {
+                    return enclosedElement;
+                }
+            }
+
+        }
+
+        return null;
+    }
+
     private boolean hasGetter(String sourceProperty, TypeElement targetObject) {
         return findGetterOnType(targetObject, sourceProperty) != null;
     }
