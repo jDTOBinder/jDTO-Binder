@@ -92,7 +92,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
             //we're interested on getters.
             if (elementIsRelevant(enclElement)) {
                 
-                String sourceProperty = extractSourceProperty(element, enclElement);
+                String sourceProperty = extractSourceProperty(element, enclElement, msg);
                 validateElementConfiguration(sourceProperty, enclElement, targetType, msg);
             }
 
@@ -164,7 +164,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         return null;
     }
 
-    private String extractSourceProperty(TypeElement element, Element enclElement) {
+    private String extractSourceProperty(TypeElement element, Element enclElement, Messager msg) {
 
         //check for annotations.
         Source annot = enclElement.getAnnotation(Source.class);
@@ -195,7 +195,10 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         if (annot == null) {
             return name;
         }
-
+        
+        //if the field is annotated, issue a compiler warning for performance.
+        msg.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Annotations on getters perform better than annotations on fields.", field);
+        
         return annot.value();
     }
 
