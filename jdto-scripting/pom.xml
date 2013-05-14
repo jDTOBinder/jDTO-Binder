@@ -24,10 +24,8 @@
         <version>1.5-SNAPSHOT</version>
     </parent>
     
-    <groupId>org.jdto</groupId>
     <artifactId>jdto-scripting</artifactId>
-    <version>1.5-SNAPSHOT</version>
-    
+    <packaging>jar</packaging>
     
     <name>jDTO Binder :: Scripting Module</name>
     <url>http://www.jdto.org</url>
@@ -43,7 +41,7 @@
     
     <dependencies>
         
-        <!-- jdto bindet -->
+        <!-- jdto binder -->
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
