@@ -164,23 +164,32 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         return null;
     }
 
-    private String extractSourceProperty(TypeElement element, Element enclElement, Messager msg) {
+    private String extractSourceProperty(TypeElement element, Element getter, Messager msg) {
 
         //check for annotations.
-        Source annot = enclElement.getAnnotation(Source.class);
+        Source annot = getter.getAnnotation(Source.class);
 
         if (annot != null) {
             return annot.value();
         }
 
         //normalize the value.
-        String name = enclElement.getSimpleName().toString();
+        String name = getter.getSimpleName().toString();
 
         name = (name.startsWith("is")) ? name.substring(2) : name.substring(3);
 
         //uncapitalize.
         name = StringUtils.uncapitalize(name);
-
+        
+        //config might be on the getter.
+        Element setter = findSetterOnType(element, name);
+        
+        annot = setter.getAnnotation(Source.class);
+        
+        if (annot != null) {
+            return annot.value();
+        }
+        
         //at this point the annotaiton is either on the field or not present.
         Element field = findFieldOnType(element, name);
 
