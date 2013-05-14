@@ -24,7 +24,7 @@ import org.jdto.annotation.Source;
  * @author juancavallotti
  */
 @DTOVerify(sourceBean=NestedEntity.class)
-public class NestedDTO {
+public class SetterDTO {
     
     private int someInt;
 

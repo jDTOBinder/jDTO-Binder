@@ -181,13 +181,13 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         //uncapitalize.
         name = StringUtils.uncapitalize(name);
         
-        //config might be on the getter.
+        //config might be on the setter which is incorrect.
         Element setter = findSetterOnType(element, name);
         
         annot = setter.getAnnotation(Source.class);
         
         if (annot != null) {
-            return annot.value();
+            msg.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "@Source or @Sources annotation must not appear on setters", setter);
         }
         
         //at this point the annotaiton is either on the field or not present.
