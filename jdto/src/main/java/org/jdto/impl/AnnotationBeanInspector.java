@@ -1,5 +1,5 @@
 /*
- *    Copyright 2011 Juan Alberto López Cavallotti
+ *    Copyright 2013 Juan Alberto López Cavallotti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
     @Override
     FieldMetadata buildFieldMetadata(String propertyName, Method readAccessor, Class beanClass) {
 
-        //creste the default field metadata and override where necessary.
+        //create the default field metadata and override where necessary.
         FieldMetadata ret = buildDefaultFieldMetadata(propertyName);
 
         //we have the settings so we can apply them.
