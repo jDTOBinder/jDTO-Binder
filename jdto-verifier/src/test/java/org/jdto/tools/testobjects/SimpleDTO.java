@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Juan Alberto Lopez Cavallotti.
+ * Copyright 2013 Juan Alberto López Cavallotti.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.jdto.tools;
+package org.jdto.tools.testobjects;
 
 import org.jdto.annotation.DTOVerify;
+import org.jdto.annotation.Source;
 
 /**
  *
- * @author Juan Alberto Lopez Cavallotti
+ * @author Juan Alberto López Cavallotti
  */
 @DTOVerify(sourceBean=SimpleEntity.class)
 public class SimpleDTO {
@@ -37,6 +38,7 @@ public class SimpleDTO {
         this.myString = myString;
     }
 
+    @Source("myInt")
     public int getMyInt() {
         return myInt;
     }

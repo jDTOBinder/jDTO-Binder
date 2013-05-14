@@ -13,59 +13,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jdto.tools;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import org.jdto.tools.verifiercases.SimpleVerifierCase;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Test case for the compile time verifier.
+ *
  * @author Juan Alberto López Cavallotti
  */
+@RunWith(Parameterized.class)
 public class TestCompileTimeVerifier {
-    
+
+    @Parameters
+    public static Collection<Object[]> data() {
+        LinkedList<Object[]> ret = new LinkedList<Object[]>();
+
+        ret.add(new Object[]{new SimpleVerifierCase()});
+
+        return ret;
+    }
     private static JavaCompiler compiler;
-    
+    private StandardJavaFileManager fileManager;
+    private DiagnosticCollector<JavaFileObject> collector;
+    private CompilerTestCase currentTestCase;
+
+    public TestCompileTimeVerifier(CompilerTestCase currentTestCase) {
+        this.currentTestCase = currentTestCase;
+    }
+
     @BeforeClass
     public static void initClass() throws Exception {
-        
+
         //get the java compiler.
         compiler = ToolProvider.getSystemJavaCompiler();
-        
-        //configure it.
-        
-        
     }
-    
+
+    @Before
+    public void initTest() throws Exception {
+
+        //configure the diagnostics collector.
+        collector = new DiagnosticCollector<JavaFileObject>();
+        fileManager = compiler.getStandardFileManager(collector, Locale.US, Charset.forName("UTF-8"));
+    }
+
     @Test
-    public void testNormalCompile() throws Exception {
-        
-        //streams.
-        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        ByteArrayOutputStream stderr = new ByteArrayOutputStream();
-        
+    public void testCompilation() throws Exception {
         //the files to be compiled.
-        String filesToCompile[] = {"src/test/java/org/jdto/tools/SimpleEntity.java" , "src/test/java/org/jdto/tools/SimpleDTO.java" };
-        
-        int result = compiler.run(null, stdout, stderr, filesToCompile);
-        
-        String stdoutS = new String(stdout.toByteArray());
-        String stderrS = new String(stderr.toByteArray());
-        
-        //finished compiling task lets print the results.
-        System.out.println(stdoutS);
-        
-        System.out.println(stderrS);
-        
-        
-        assertEquals("Files should have no compilation errors", 0, result);
+        String[] files = currentTestCase.getClassesToCompile();
+        try {
+            //streams.
+            ByteArrayOutputStream stdoutStream = new ByteArrayOutputStream();
+            OutputStreamWriter stdout = new OutputStreamWriter(stdoutStream);
+
+
+            JavaCompiler.CompilationTask task = compiler.getTask(stdout, fileManager, collector, null, null, fileManager.getJavaFileObjects(files));
+
+            Boolean result = task.call();
+
+            String stdoutS = new String(stdoutStream.toByteArray());
+
+
+            //perform the verifications.
+            currentTestCase.test(collector.getDiagnostics(), stdoutS, result);
+        } finally {
+            CompilerTestUtils.cleanClassFiles(0, files);
+        }
     }
-    
 }
