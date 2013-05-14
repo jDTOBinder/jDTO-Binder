@@ -28,7 +28,7 @@ public class NestedDTO {
     
     private int someInt;
 
-    @Source("related.myIntt")
+    @Source("related.myInt")
     public int getSomeInt() {
         return someInt;
     }
