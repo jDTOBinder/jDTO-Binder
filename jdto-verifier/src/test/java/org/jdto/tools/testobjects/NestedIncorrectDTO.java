@@ -24,7 +24,7 @@ import org.jdto.annotation.Source;
  * @author Juan Alberto López Cavallotti
  */
 @DTOVerify(sourceBean=NestedEntity.class)
-public class NestedDTO {
+public class NestedIncorrectDTO {
     
     private int someInt;
 

@@ -127,12 +127,27 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         if (sourceProperty == null) {
             return;
         }
-
-        //the target object should have the getter.
-        if (!hasGetter(sourceProperty, targetObject)) {
-            messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Property not found on source Object: " + sourceProperty, getter);
+        
+        //split the properties.
+        String[] propertyPath = StringUtils.split(sourceProperty, ".");
+        
+        TypeElement currentObject = targetObject;
+        
+        //go through the paths looking for the getters.
+        
+        for (String property : propertyPath) {
+            
+            ExecutableElement element = ModelUtils.findGetterOnType(currentObject, property);
+            
+            //the target object should have the getter.
+            if (element == null) {
+                messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Property " + property + " not found on type: " + currentObject, getter);
+                break; //no further analysis can be done.
+            } else {
+                currentObject = (TypeElement) processingEnv.getTypeUtils().asElement(element.getReturnType());
+            }
         }
-
+        
     }
 
     private TypeElement extractTargetType(Element element, TypeElement annotationElement, Messager messager) {
@@ -182,7 +197,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         name = StringUtils.uncapitalize(name);
         
         //config might be on the setter which is incorrect.
-        Element setter = findSetterOnType(element, name);
+        Element setter = ModelUtils.findSetterOnType(element, name);
         
         annot = setter.getAnnotation(Source.class);
         
@@ -191,7 +206,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         }
         
         //at this point the annotaiton is either on the field or not present.
-        Element field = findFieldOnType(element, name);
+        Element field = ModelUtils.findFieldOnType(element, name);
 
         //if no field is found, that is a valid configuration. return the name of the property.
         if (field == null) {
@@ -209,76 +224,5 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         msg.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Annotations on getters perform better than annotations on fields.", field);
         
         return annot.value();
-    }
-
-    private Element findFieldOnType(TypeElement element, String name) {
-
-        for (Element enclosedElement : element.getEnclosedElements()) {
-
-            if (enclosedElement.getKind() == ElementKind.FIELD && name.equals(enclosedElement.getSimpleName().toString())) {
-                return enclosedElement;
-            }
-
-        }
-
-        return null;
-    }
-
-    private Element findGetterOnType(TypeElement element, String name) {
-
-        for (Element enclosedElement : element.getEnclosedElements()) {
-            if (enclosedElement.getKind() != ElementKind.METHOD) {
-                continue;
-            }
-
-            String elementName = enclosedElement.getSimpleName().toString();
-
-            if (elementName.startsWith("get")) {
-
-                elementName = StringUtils.uncapitalize(elementName.substring(3));
-
-                if (name.equals(elementName)) {
-                    return enclosedElement;
-                }
-            }
-
-            if (elementName.startsWith("is")) {
-
-                elementName = StringUtils.uncapitalize(elementName.substring(2));
-
-                if (name.equals(elementName)) {
-                    return enclosedElement;
-                }
-            }
-
-        }
-
-        return null;
-    }
-
-    private Element findSetterOnType(TypeElement element, String name) {
-        for (Element enclosedElement : element.getEnclosedElements()) {
-            if (enclosedElement.getKind() != ElementKind.METHOD) {
-                continue;
-            }
-
-            String elementName = enclosedElement.getSimpleName().toString();
-
-            if (elementName.startsWith("set")) {
-
-                elementName = StringUtils.uncapitalize(elementName.substring(3));
-
-                if (name.equals(elementName)) {
-                    return enclosedElement;
-                }
-            }
-
-        }
-
-        return null;
-    }
-
-    private boolean hasGetter(String sourceProperty, TypeElement targetObject) {
-        return findGetterOnType(targetObject, sourceProperty) != null;
     }
 }
