@@ -26,6 +26,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import org.jdto.tools.verifiercases.HappyPathVerifierCase;
 import org.jdto.tools.verifiercases.NestedIncorrectVerifierCase;
 import org.jdto.tools.verifiercases.NestedVerifierCase;
 import org.jdto.tools.verifiercases.SetterAnnotatedVerifierCase;
@@ -53,6 +54,7 @@ public class TestCompileTimeVerifier {
         ret.add(new Object[]{new NestedVerifierCase()});
         ret.add(new Object[]{new NestedIncorrectVerifierCase()});
         ret.add(new Object[]{new SetterAnnotatedVerifierCase()});
+        ret.add(new Object[]{new HappyPathVerifierCase("src/test/java/org/jdto/tools/testobjects/RootObjectDTO.java")});
 
         return ret;
     }

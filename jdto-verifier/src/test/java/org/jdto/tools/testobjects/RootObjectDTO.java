@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-package org.jdto.tools.verifiercases;
+package org.jdto.tools.testobjects;
+
+import org.jdto.annotation.DTOVerify;
+import org.jdto.annotation.Source;
 
 /**
  *
  * @author Juan Alberto López Cavallotti
  */
-public class SimpleVerifierCase extends HappyPathVerifierCase {
+@DTOVerify(sourceBean=SimpleEntity.class)
+public class RootObjectDTO {
+    
+    private SimpleEntity entity;
 
-    public SimpleVerifierCase() {
-        super("src/test/java/org/jdto/tools/testobjects/SimpleDTO.java");
+    @Source(Source.ROOT_OBJECT)
+    public SimpleEntity getEntity() {
+        return entity;
     }
 
+    public void setEntity(SimpleEntity entity) {
+        this.entity = entity;
+    }
+    
 }

@@ -92,7 +92,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
             //we're interested on getters.
             if (elementIsRelevant(enclElement)) {
                 
-                String sourceProperty = extractSourceProperty(element, enclElement, msg);
+                SourceConfiguration sourceProperty = extractSourceProperty(element, enclElement, msg);
                 validateElementConfiguration(sourceProperty, enclElement, targetType, msg);
             }
 
@@ -121,12 +121,20 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
     /*
      * This needs to take more arguments for proper validations.
      */
-    private void validateElementConfiguration(String sourceProperty, Element getter, TypeElement targetObject, Messager messager) {
-
+    private void validateElementConfiguration(SourceConfiguration sourceConfig, Element getter, TypeElement targetObject, Messager messager) {
+        
+        String sourceProperty = sourceConfig.getPropertyName();
+        
         //means unknown configuration.
         if (sourceProperty == null) {
             return;
         }
+        
+        //source does not need to be validated.
+        if (Source.ROOT_OBJECT.equals(sourceProperty)) {
+            return;
+        }
+        
         
         //split the properties.
         String[] propertyPath = StringUtils.split(sourceProperty, ".");
@@ -141,7 +149,7 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
             
             //the target object should have the getter.
             if (element == null) {
-                messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Property " + property + " not found on type: " + currentObject, getter);
+                messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Property " + property + " not found on type: " + currentObject, sourceConfig.getConfiguredElement());
                 break; //no further analysis can be done.
             } else {
                 currentObject = (TypeElement) processingEnv.getTypeUtils().asElement(element.getReturnType());
@@ -179,13 +187,13 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
         return null;
     }
 
-    private String extractSourceProperty(TypeElement element, Element getter, Messager msg) {
+    private SourceConfiguration extractSourceProperty(TypeElement element, Element getter, Messager msg) {
 
         //check for annotations.
         Source annot = getter.getAnnotation(Source.class);
 
         if (annot != null) {
-            return annot.value();
+            return new SourceConfiguration(annot.value(), getter);
         }
 
         //normalize the value.
@@ -210,19 +218,19 @@ public class AnnotationConfigVerifier extends AbstractProcessor {
 
         //if no field is found, that is a valid configuration. return the name of the property.
         if (field == null) {
-            return name;
+            return new SourceConfiguration(name, getter);
         }
 
         //if no annotation is present on the field then also return the field name.
         annot = field.getAnnotation(Source.class);
 
         if (annot == null) {
-            return name;
+            return new SourceConfiguration(name, field);
         }
         
         //if the field is annotated, issue a compiler warning for performance.
         msg.printMessage(Diagnostic.Kind.MANDATORY_WARNING, "Annotations on getters perform better than annotations on fields.", field);
         
-        return annot.value();
+        return new SourceConfiguration(annot.value(), field);
     }
 }
