@@ -16,10 +16,19 @@
 package org.jdto.impl;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jdto.*;
+import org.jdto.BeanModifier;
+import org.jdto.Binding;
+import org.jdto.MultiPropertyValueMerger;
+import org.jdto.PropertyValueMergerInstanceManager;
+import org.jdto.SinglePropertyValueMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -254,16 +263,25 @@ class SimpleBinderDelegate implements Serializable {
      * @param dto
      * @return
      */
-    <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {
+    <T> T extractFromDto(HashMap metadataMap, Class<T> entityClass, Object dto) {    	
+    	return extractFromDto2BussinesObject(metadataMap, entityClass, dto, null); 
+    }
+    
+    
+    <T> T extractFromDto2BussinesObject(HashMap metadataMap, Class<T> entityClass, Object dto, Object entity) {
         
         if (dto == null) {
             return null; //this satisfies f(null) = null
         }
         
         BeanMetadata metadata = findBeanMetadata(metadataMap, dto.getClass());
-
-        T ret = BeanClassUtils.createInstance(entityClass);
-
+        
+        T ret = null;
+        if(null==entity){
+        	ret = BeanClassUtils.createInstance(entityClass);
+        }else{
+        	ret = (T)entity;
+        }
         HashMap<String, FieldMetadata> mappings = metadata.getFieldMetadata();
 
         for (String source : mappings.keySet()) {
@@ -294,7 +312,12 @@ class SimpleBinderDelegate implements Serializable {
             
             //try to restore the value
             value = applyRestoreToSingleField(value, fieldMetadata, 0);
-            
+                        
+            //valor ya existente en la entidad, no cambiamos el campo id            
+            if(source.toUpperCase().equals("id".toUpperCase())){
+	            continue;            	
+            }
+                                    
             //and set
             modifier.writePropertyValue(target, value, ret);
         }

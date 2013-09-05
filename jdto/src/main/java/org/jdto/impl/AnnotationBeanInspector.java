@@ -275,7 +275,12 @@ class AnnotationBeanInspector extends AbstractBeanInspector {
             }
         }
         
-        //return the last constructor.
-        return beanConstructors[beanConstructors.length - 1];
+        if(beanConstructors!= null && beanConstructors.length>0){
+        	//return the last constructor.
+            return beanConstructors[beanConstructors.length - 1];
+        }else{
+        	return null;
+        }
+                
     }
 }
