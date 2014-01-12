@@ -9,3 +9,5 @@
 /jdto-scripting/target/
 /jdto-verifier/target/
 *.class
+.idea
+*.iml
