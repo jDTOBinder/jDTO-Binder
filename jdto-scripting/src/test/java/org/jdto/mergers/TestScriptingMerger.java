@@ -16,7 +16,10 @@
 
 package org.jdto.mergers;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,6 +29,8 @@ import static org.hamcrest.Matchers.*;
 /**
  * Test the JSR 233 Srcipting Merger.
  * @author Juan Alberto López Cavallotti
+ * 
+ * @since 1.5
  */
 public class TestScriptingMerger {
     private ScriptMerger merger;
@@ -64,4 +69,36 @@ public class TestScriptingMerger {
         assertThat(resultMap, allOf(hasEntry("a", "test"), hasEntry("b", testValue)));
     }
     
+    @Test(expected = RuntimeException.class)
+    public void testScriptFailure() {
+        
+        //define an invalid script
+        String script = "a - b"; //neither a or b exist in the binding.
+        
+        String[] params = { script, "groovy" };
+        
+        merger.mergeObjects("test", params);
+        
+        fail();
+    }
+    
+    @Test
+    public void testMultiValueMerging() {
+        
+        //the input values
+        List<String> sources = Arrays.asList("Hello", "world");
+        
+        //groovy
+        String script = "\"${sourceValues[0]} ${sourceValues[1]}\"";
+        
+        String[] params = { script, "groovy" };
+        
+        Object result = merger.mergeObjects(sources, params);
+        
+        String expected = StringUtils.join(sources, " ");
+        
+        assertNotNull("Result must not be null", result);
+        
+        assertThat("We should get the same string", result.toString(), equalTo(expected));
+    }
 }

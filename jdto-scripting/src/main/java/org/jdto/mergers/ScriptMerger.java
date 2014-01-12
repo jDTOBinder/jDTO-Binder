@@ -16,11 +16,13 @@
 
 package org.jdto.mergers;
 
+import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jdto.MultiPropertyValueMerger;
 import org.jdto.SinglePropertyValueMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author Juan Alberto López Cavallotti
  * @since 1.5
  */
-public class ScriptMerger implements SinglePropertyValueMerger<Object, Object> {
+public class ScriptMerger implements SinglePropertyValueMerger<Object, Object>, MultiPropertyValueMerger<Object> {
     
     /**
      * The default script engine this merger will use.
@@ -58,19 +60,67 @@ public class ScriptMerger implements SinglePropertyValueMerger<Object, Object> {
     
     private static final Logger logger = LoggerFactory.getLogger(ScriptMerger.class);
     
+    /**
+     * Merge the input object by evaluating a scripting expression given on the
+     * first extraParam. The result is the execution of the expression by the
+     * selected script engine. <br />
+     * 
+     * If extraParam array has a second element, then it must be a valid script
+     * engine name, this script engine will be used to evaluate the script on
+     * the first parameter. <br />
+     * 
+     * @param value the value to merge. This value will be available to the 
+     * script expression under the 'sourceValue' variable.
+     * @param extraParam the first element of this array is the script to execute
+     * the optional second element is the name of the scripting engine to use.
+     * 
+     * @return The result of executing the expression.
+     * 
+     * @throws RuntimeException when the script execution fails.
+     */
     @Override
     public Object mergeObjects(Object value, String[] extraParam) {
         
+        //delegate to 'the one' method.
+        return doMergeObjects(value, extraParam);
+    }
+
+    /**
+     * Merge the input objects by evaluating a scripting expression given on the
+     * first extraParam. The result is the execution of the expression by the
+     * selected script engine. <br />
+     * 
+     * If extraParam array has a second element, then it must be a valid script
+     * engine name, this script engine will be used to evaluate the script on
+     * the first parameter. <br />
+     * 
+     * @param values the values to merge. This value will be available to the 
+     * script expression under the 'sourceValues' variable.
+     * @param extraParam the first element of this array is the script to execute
+     * the optional second element is the name of the scripting engine to use.
+     * 
+     * @return The result of executing the expression.
+     * 
+     * @throws RuntimeException when the script execution fails.
+     */    
+    @Override
+    public Object mergeObjects(List<Object> values, String[] extraParam) {
+        //delegate to 'the one' method
+        return doMergeObjects(values, extraParam);
+    }    
+    
+    @Override
+    public boolean isRestoreSupported(String[] params) {
+        return false;
+    }
+
+    @Override
+    public Object restoreObject(Object object, String[] params) {
+        return null;
+    }
+    
+    private ScriptEngine initializeScriptEngine(String[] extraParam) {
         String engineName = DEFAULT_SCRIPT_ENGINE;
-        String script;
-        
-        if (ArrayUtils.isEmpty(extraParam) || StringUtils.isEmpty(extraParam[0])) {
-            logger.error("Invalid script to evaluate");
-            throw new IllegalArgumentException("You need to configure the "
-                    + "script expression to be evaluated.");
-        }
-        
-        script = extraParam[0];
         
         //the script engine may be configured as the second parameter.
         if (extraParam.length > 1 && !StringUtils.isEmpty(extraParam[1])) {
@@ -89,27 +139,45 @@ public class ScriptMerger implements SinglePropertyValueMerger<Object, Object> {
                     + "could be found with name: " + engineName);
         }
         
-        //populate local variables
-        engine.put("sourceValue", value);
+        return engine;
+    }
+    
+    private String extractScript(String[] extraParam) {
         
+        if (ArrayUtils.isEmpty(extraParam) || StringUtils.isEmpty(extraParam[0])) {
+            logger.error("Invalid script to evaluate");
+            throw new IllegalArgumentException("You need to configure the "
+                    + "script expression to be evaluated.");
+        }
         
-        //try to execute the script.
+        return extraParam[0];
+    }
+    
+    private Object executeScript(ScriptEngine engine, String script) {
+        
         try {
             return engine.eval(script);
         } catch (ScriptException ex) {
+            String engineName = engine.toString();
             logger.error("Could not execute script in engine: " + engineName, ex);
-            return null;
+            throw new RuntimeException("Failure while executing script", ex);
         }
     }
-
-    @Override
-    public boolean isRestoreSupported(String[] params) {
-        return false;
-    }
-
-    @Override
-    public Object restoreObject(Object object, String[] params) {
-        return null;
-    }
     
+    
+    private Object doMergeObjects(Object value, String[] extraParam) {
+        String script = extractScript(extraParam);
+        ScriptEngine engine = initializeScriptEngine(extraParam);
+        
+        //populate local variables
+        engine.put("sourceValue", value);
+        
+        //if the value is a list then, just make it available as sourceValues
+        if (value instanceof List) {
+            engine.put("sourceValues", value);
+        }
+        
+        //try to execute the script.
+        return executeScript(engine, script);
+    }
 }
