@@ -1,6 +1,8 @@
 jDTO Binder - Java DTO/OOM Framework
 ====================================
 
+Status of the builds: [![Build Status](https://travis-ci.org/jDTOBinder/jDTO-Binder.png?branch=master)](https://travis-ci.org/jDTOBinder/jDTO-Binder)
+
 To get started, please visit http://www.jdto.org and get more information and links to documentation.
 
 To learn how to use the framework please take a look at the book [https://github.com/jDTOBinder/jDTO-Binder/raw/master/book/jdto.pdf], further documentation and examples will be developed and published on the website news feed and Google+ page.
