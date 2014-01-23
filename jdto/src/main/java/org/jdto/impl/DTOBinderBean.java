@@ -90,9 +90,11 @@ public class DTOBinderBean implements DTOBinder {
         boolean shouldReleaseThreadLocal = initBindingContextIfNecessary();
         try {
             if (businessObjects[0] == null) {
-                return null;
+                return dtoClass.newInstance();            	
             }
             return implementationDelegate.bindFromBusinessObject(metadata, dtoClass, businessObjects);
+        }catch(Exception e){
+        	return null;
         } finally {
             releaseBindingContext(shouldReleaseThreadLocal);
         }
@@ -136,6 +138,15 @@ public class DTOBinderBean implements DTOBinder {
     @Override
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return implementationDelegate.extractFromDto(metadata, businessObjectClass, dto);
+    }
+    
+    @Override
+    public <T> T extractFromDto2BussinessObject(Class<T> businessObjectClass, Object dto, Object businessObject) {    	
+    	if (businessObject == null){
+    		return implementationDelegate.extractFromDto(metadata, businessObjectClass, dto);
+    	}else{
+    		return implementationDelegate.extractFromDto2BussinesObject(metadata, businessObjectClass, dto, businessObject);
+    	}
     }
 
     @Override

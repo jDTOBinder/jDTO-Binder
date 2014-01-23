@@ -106,6 +106,9 @@ public class BeanClassUtils {
 
         T ret = null;
         try {
+        	 if (Set.class.isAssignableFrom(collectionClass)) {
+                 return (T) new HashSet();
+             }
             ret = (T) collectionClass.newInstance();
         } catch (Exception ex) {
             if (List.class.isAssignableFrom(collectionClass)) {

@@ -133,6 +133,11 @@ public class SpringDTOBinder implements InitializingBean, DTOBinder, Application
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto) {
         return delegate.extractFromDto(businessObjectClass, dto);
     }
+	
+	@Override
+    public <T> T extractFromDto2BussinessObject(Class<T> businessObjectClass, Object dto, Object businessObject) {      
+		return delegate.extractFromDto2BussinessObject(businessObjectClass, dto, businessObject);
+    }
 
     /**
      * Get the resource where to find the XML configuration file.

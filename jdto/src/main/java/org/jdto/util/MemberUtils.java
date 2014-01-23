@@ -77,7 +77,7 @@ public class MemberUtils {
     static boolean isSynthetic(Member m) {
         if (IS_SYNTHETIC != null) {
             try {
-                return ((Boolean) IS_SYNTHETIC.invoke(m, null)).booleanValue();
+                return ((Boolean) IS_SYNTHETIC.invoke(m, new Object[0])).booleanValue();
             } catch (Exception e) {
             }
         }

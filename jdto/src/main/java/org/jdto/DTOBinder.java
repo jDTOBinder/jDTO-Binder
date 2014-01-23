@@ -124,6 +124,7 @@ public interface DTOBinder extends Serializable{
      */
     public <T> T extractFromDto(Class<T> businessObjectClass, Object dto);
     
+    public <T> T extractFromDto2BussinessObject(Class<T> businessObjectClass, Object dto, Object businessObject);    
     
     /**
      * Get an instance of a given property value merger. <br />

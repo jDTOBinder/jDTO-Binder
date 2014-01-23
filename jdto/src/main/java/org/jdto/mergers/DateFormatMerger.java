@@ -91,7 +91,7 @@ public class DateFormatMerger implements SinglePropertyValueMerger<String, Objec
     @Override
     public Object restoreObject(String object, String[] params) {
         try {
-            if (object == null) {
+            if (object == null || object.trim().length()==0) {
                 return null; //nothing to do
             }
             

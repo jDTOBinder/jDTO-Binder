@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.jdto.DTOBindingContext;
 import org.jdto.mergers.FirstObjectPropertyValueMerger;
 import org.jdto.mergers.IdentityPropertyValueMerger;
@@ -101,7 +102,11 @@ abstract class AbstractBeanInspector implements Serializable {
 
     private <T> void inspectImmutableBean(Class<T> beanClass, BeanMetadata beanMetadata) {
         Constructor constructor = findAppropiateConstructor(beanClass);
-
+        
+        if(constructor == null){
+        	return;
+        }
+        	
         //set the constructor to use in metadata.
         beanMetadata.setImmutableConstructor(constructor);
 
@@ -331,8 +336,9 @@ abstract class AbstractBeanInspector implements Serializable {
             accessorType = readAccesor.getReturnType();
         }
         target.setCascadePresent(true);
-
-        if (List.class.isAssignableFrom(accessorType)) {
+        if (Set.class.isAssignableFrom(accessorType)) {
+            cascadeType = CascadeType.COLLECTION;
+        }else if (List.class.isAssignableFrom(accessorType)) {
             cascadeType = CascadeType.COLLECTION;
         } else if (accessorType.isArray()) {
             cascadeType = CascadeType.ARRAY;
