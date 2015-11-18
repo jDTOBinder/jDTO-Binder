@@ -1,8 +1,9 @@
 package org.jdto.util;
 
+import org.apache.commons.lang3.exception.CloneFailedException;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import org.jdto.util.exception.CloneFailedException;
 
 /**
  * This class has been extracted from the ObjectUtils provided on the Apache

@@ -16,7 +16,7 @@
 
 package org.jdto.spring;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.impl.BaseBeanModifier;
 import org.jdto.impl.BeanClassUtils;
 import org.jdto.impl.ValueConversionHelper;

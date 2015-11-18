@@ -15,10 +15,14 @@
  */
 package org.jdto.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.impl.xml.DTOConstructorArg;
 import org.jdto.impl.xml.DTOElement;
 import org.jdto.impl.xml.DTOMappings;
 import org.jdto.impl.xml.DTOTargetField;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -26,9 +30,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * WARNING: THIS CLASS IS NOT PART OF JDTO PUBLIC API

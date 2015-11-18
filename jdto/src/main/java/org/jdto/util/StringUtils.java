@@ -16,7 +16,7 @@
  */
 package org.jdto.util;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * This class has been extracted from the MemberUtils provided on the Apache
@@ -81,7 +81,7 @@ public class StringUtils {
         }
         for (int i = 0; i < searchStrings.length; i++) {
             String searchString = searchStrings[i];
-            if (org.apache.commons.lang.StringUtils.startsWith(string, searchString)) {
+            if (org.apache.commons.lang3.StringUtils.startsWith(string, searchString)) {
                 return true;
             }
         }

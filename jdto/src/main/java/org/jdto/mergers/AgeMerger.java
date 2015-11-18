@@ -16,11 +16,12 @@
 
 package org.jdto.mergers;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jdto.SinglePropertyValueMerger;
+
 import java.util.Calendar;
 import java.util.Date;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Merge the value of a Date or Calendar source object by calculating its age

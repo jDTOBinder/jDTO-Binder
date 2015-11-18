@@ -16,11 +16,12 @@
 
 package org.jdto.tools;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import org.apache.commons.lang.StringUtils;
 
 
 

@@ -16,7 +16,7 @@
 
 package org.jdto.util;
 
-import org.jdto.util.exception.CloneFailedException;
+import org.apache.commons.lang3.exception.CloneFailedException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

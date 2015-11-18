@@ -16,11 +16,12 @@
 
 package org.jdto.mergers;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.jdto.MultiPropertyValueMerger;
 import org.jdto.SinglePropertyValueMerger;
+
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * This merger takes the formatting string (see {@link String#format(java.lang.String, java.lang.Object[]) })

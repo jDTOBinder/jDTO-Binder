@@ -16,13 +16,15 @@
 
 package org.jdto.tools.verifiercases;
 
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.jdto.tools.CompilerTestCase;
+
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-import org.apache.commons.lang.StringUtils;
-import org.jdto.tools.CompilerTestCase;
-import static org.junit.Assert.*;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 /**
  *

@@ -15,12 +15,13 @@
  */
 package org.jdto.mergers;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jdto.MultiPropertyValueMerger;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdto.MultiPropertyValueMerger;
 
 /**
  * Estimate the time between two {@link java.util.Date Dates} or {@link java.util.Calendar Calendars}.

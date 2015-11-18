@@ -18,13 +18,14 @@ package org.jdto.mergers;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import java.io.Serializable;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.jdto.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 /**
  * Base class for groovy mergers, contains the logic needed to bootstrap the groovy

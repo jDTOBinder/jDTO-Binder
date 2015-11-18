@@ -15,13 +15,14 @@
  */
 package org.jdto.impl;
 
-import java.io.Serializable;
-import java.util.*;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Class responsible for binding the DTOs for real.
