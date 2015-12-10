@@ -99,7 +99,7 @@ public abstract class AbstractGroovyMerger implements Serializable {
         ImportCustomizer ic = new ImportCustomizer();
         
         ic.addStarImports(
-                "org.apache.commons.lang", //import commons
+                "org.apache.commons.lang3", //import commons
                 "java.util", //import java util
                 "java.math" //import java math
                 );
