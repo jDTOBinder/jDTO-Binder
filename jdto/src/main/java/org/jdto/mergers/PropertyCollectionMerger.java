@@ -15,15 +15,16 @@
  */
 package org.jdto.mergers;
 
-import java.util.Collection;
-import org.apache.commons.lang.ArrayUtils;
-import org.jdto.util.ObjectUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jdto.BeanModifier;
 import org.jdto.BeanModifierAware;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.impl.BeanClassUtils;
+import org.jdto.util.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * Merge a Collection of complex objects into a Collection of a property given 

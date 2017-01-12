@@ -16,7 +16,7 @@
 package org.jdto.impl;
 
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.impl.xml.DTOElement;
 import org.jdto.impl.xml.DTOSourceField;
 import org.jdto.impl.xml.DTOTargetConfig;

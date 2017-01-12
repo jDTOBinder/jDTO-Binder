@@ -17,7 +17,7 @@ package org.jdto.mergers;
 
 import org.jdto.impl.InstancePool;
 import org.jdto.util.expression.Expression;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Expression merger which will sum the result of a calculation given by an 

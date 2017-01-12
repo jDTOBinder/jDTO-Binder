@@ -16,13 +16,15 @@
  */
 package org.jdto.util;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.JavaVersion;
+import org.apache.commons.lang3.SystemUtils;
+
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * This class has been extracted from the MemberUtils provided on the Apache
@@ -40,7 +42,7 @@ public class MemberUtils {
 
     static {
         Method isSynthetic = null;
-        if (SystemUtils.isJavaVersionAtLeast(1.5f)) {
+        if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_1_5)) {
             // cannot call synthetic methods:
             try {
                 isSynthetic = Member.class.getMethod("isSynthetic",

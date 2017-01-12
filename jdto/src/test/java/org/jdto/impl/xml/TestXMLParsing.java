@@ -16,18 +16,14 @@
 
 package org.jdto.impl.xml;
 
-import org.jdto.impl.xml.DTOConstructorArg;
-import org.jdto.impl.xml.DTOTargetField;
-import org.jdto.impl.xml.DTOMappings;
-import org.jdto.impl.xml.DTOElement;
-import org.jdto.impl.xml.DTOSourceField;
-import org.jdto.impl.XMLBeanInspector;
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.dtos.XMLTesterDTO;
-import java.util.HashMap;
 import org.jdto.impl.BeanMetadata;
-import org.apache.commons.lang.StringUtils;
+import org.jdto.impl.XMLBeanInspector;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 /**

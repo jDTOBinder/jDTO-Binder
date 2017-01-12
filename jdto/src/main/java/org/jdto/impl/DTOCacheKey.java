@@ -15,9 +15,10 @@
  */
 package org.jdto.impl;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.io.Serializable;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
 
 /**
  * Wrapper object to allow the caching of DTO results.

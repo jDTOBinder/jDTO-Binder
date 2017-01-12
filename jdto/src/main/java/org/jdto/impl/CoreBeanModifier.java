@@ -16,13 +16,13 @@
 
 package org.jdto.impl;
 
-import org.jdto.BeanModifier;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of bean modifier, basicly to let the user to not depend

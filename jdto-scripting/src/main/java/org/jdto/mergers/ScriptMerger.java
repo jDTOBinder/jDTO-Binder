@@ -16,16 +16,17 @@
 
 package org.jdto.mergers;
 
-import java.util.List;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdto.MultiPropertyValueMerger;
 import org.jdto.SinglePropertyValueMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.util.List;
 
 /**
  * Merge the source value by evaluating a Script Expression. <br />

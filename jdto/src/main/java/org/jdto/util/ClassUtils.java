@@ -19,7 +19,7 @@ package org.jdto.util;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * This class has been extracted from the ClassUtils provided on the Apache

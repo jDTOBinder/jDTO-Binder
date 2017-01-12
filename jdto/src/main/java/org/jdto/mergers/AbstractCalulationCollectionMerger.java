@@ -20,7 +20,7 @@ import org.jdto.BeanModifier;
 import org.jdto.BeanModifierAware;
 import org.jdto.SinglePropertyValueMerger;
 import org.jdto.impl.util.UniversalIterable;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Base class to implement a merger based on looping over a collection or array 

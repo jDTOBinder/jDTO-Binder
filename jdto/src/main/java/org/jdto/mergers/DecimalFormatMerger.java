@@ -15,10 +15,11 @@
  */
 package org.jdto.mergers;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.jdto.SinglePropertyValueMerger;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import org.apache.commons.lang.ArrayUtils;
-import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Format a given number using a {@link DecimalFormat} instance with the format

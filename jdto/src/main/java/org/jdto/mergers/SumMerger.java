@@ -15,7 +15,7 @@
  */
 package org.jdto.mergers;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Merge all the parameters on a collection or array by adding them one to

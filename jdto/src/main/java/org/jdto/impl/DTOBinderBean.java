@@ -15,18 +15,18 @@
  */
 package org.jdto.impl;
 
-import java.util.Collection;
 import org.jdto.BeanModifier;
 import org.jdto.DTOBinder;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import org.apache.commons.lang.ArrayUtils;
 import org.jdto.PropertyValueMerger;
 import org.jdto.PropertyValueMergerInstanceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Basic implementation of the DTO binding lifecycle. Subclasses can extend this

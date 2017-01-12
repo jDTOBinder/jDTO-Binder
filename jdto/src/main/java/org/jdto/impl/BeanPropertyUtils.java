@@ -15,9 +15,10 @@
  */
 package org.jdto.impl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.*;
 import java.util.HashMap;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Utility class for extracting properties by matching fields and getter methods. <br /> 

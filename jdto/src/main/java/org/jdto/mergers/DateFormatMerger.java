@@ -16,12 +16,13 @@
 
 package org.jdto.mergers;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.jdto.SinglePropertyValueMerger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import org.apache.commons.lang.ArrayUtils;
-import org.jdto.SinglePropertyValueMerger;
 
 /**
  * Merge a {@link Date} or {@link Calendar} using a {@link SimpleDateFormat} 
